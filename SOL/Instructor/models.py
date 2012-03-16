@@ -19,7 +19,7 @@ class Announcements(models.Model):
 	date_posted = models.DateTimeField()
 	
 class AnnounceRead(models.Model):
-	anid = models.ForeignKey(Annoucements)
+	anid = models.ForeignKey(Announcements)
 	uid = models.ForeignKey(UserProfile)
 	read = models.BooleanField()
 	

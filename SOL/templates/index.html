@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+	{% if user.is_authenticated %}
+		Hello, {{ user.first_name }} {{ user.last_name }} ( {{ user.userprofile.sfu_id }}). 
+			<a href="/accounts/logout">[Logout]</a>
+		{% if user.userprofile.active %}
+			<h1>Welcome to SFU Synergy Online Login!</h1>
+				<p>THINGS GO HERE RAAAAWR</p>
+		{% else %}
+			<p>Bitch, you ain't even active!</p>
+		{% endif %}
+	{% else %}
+		<h1>Welcome to SFU Synergy Online!</h1>
+		{% include "registration/login.html" %}	
+	{% endif %}
+{% endblock %}
