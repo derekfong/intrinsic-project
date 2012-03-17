@@ -12,4 +12,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
 	url(r'^accounts/', include('Main.urls')),
+	
+	url(r'^course/(?P<course_id>[a-z]+\d+)/instructor/', include('Instructor.urls')),
+	
+	#url(r'^course/(?P<course_id>[a-z]+\d+)/', include('Student.urls')),
+
 )
