@@ -5,7 +5,7 @@ from django.contrib import auth
 
 # Create your views here.
 def index(request):
-	return render_to_response('index.html',context_instance=RequestContext(request))
+	return render_to_response('main/index.html',context_instance=RequestContext(request))
 
 def logout_view(request):
 	auth.logout(request)
