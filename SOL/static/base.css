@@ -18,13 +18,14 @@ body {
 
 
 p {
-
+	padding: 10px;
 	line-height: 15px;
 	margin: 0px;
 }
 
 
 h1 {
+	padding: 10px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
@@ -45,7 +46,10 @@ h1.logo {
 }
 
 #logoPlacerBottom {
-
+	position: absolute;
+	display: block;
+	bottom: 3px;
+	right: 0px;
 }
 
 #container {
@@ -57,19 +61,19 @@ h1.logo {
 
 
 #header {
+	position: relative;
 	background-color: #B5111A; 
 	margin-bottom: 0px;
 	display: block;
 	min-height: 200px;
-	padding: 10px;
 }
 
 
 #tabs{
 	background-color: #CDCDC6;
-	width: 200px;
+	width: 190px;
 	min-height: 600px;
-	padding: 10px;
+
 
 }
 
@@ -78,16 +82,17 @@ h1.logo {
 	background-color: #FFFFFF;
 	float: right;
 	width: 780px;
-	margin: 0px;
+	padding-left: 10px;
 	min-height: 600px;	
-	padding: 10px;
 
 }
 
 #footer{
 	position: absolute;
 	height: 30px;
-	width: 100%;
+	width: 980px;
 	margin-top: 0px;
 	background-color: #BBBBBB;
 }
+
+
