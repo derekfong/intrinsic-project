@@ -1,3 +1,4 @@
+
 html {
 	height: 100%;
 	background: #A7A8A0;
@@ -5,19 +6,46 @@ html {
 	margin: 0px;
 }
 
+
 body {
 	height: 100%;
 	margin-top: 0px;
 	margin-left: auto;
 	margin-right: auto;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
 }
 
+
 p {
-	font-family: arial;
-	font-size: 12px;
-	padding: 5px;
+
 	line-height: 15px;
 	margin: 0px;
+}
+
+
+h1 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+h1.logo {
+	font-size: 36px;
+	font-family: Cambria;
+}
+
+
+#logoPlacer1 {
+	float: left;
+}
+
+
+#logoPlacer2 {
+	float: right;
+}
+
+#logoPlacerBottom {
+
 }
 
 #container {
@@ -33,6 +61,7 @@ p {
 	margin-bottom: 0px;
 	display: block;
 	min-height: 200px;
+	padding: 10px;
 }
 
 
@@ -40,6 +69,8 @@ p {
 	background-color: #CDCDC6;
 	width: 200px;
 	min-height: 600px;
+	padding: 10px;
+
 }
 
 
@@ -47,8 +78,10 @@ p {
 	background-color: #FFFFFF;
 	float: right;
 	width: 780px;
-	margin: 0px 0px 0px 0px;
+	margin: 0px;
 	min-height: 600px;	
+	padding: 10px;
+
 }
 
 #footer{
