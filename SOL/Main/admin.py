@@ -34,7 +34,7 @@ class CourseAdmin(admin.ModelAdmin):
 	
 class ClassListAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['uid', 'cid', 'is_instructor']})
+		(None, {'fields': ['uid', 'cid', 'is_instructor', 'is_ta']})
 	]
 	list_display=('uid','cid',)
 

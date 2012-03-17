@@ -68,7 +68,8 @@ class Course(models.Model):
 class ClassList(models.Model):
 	uid = models.ForeignKey(UserProfile, verbose_name='SFU ID')
 	cid = models.ForeignKey(Course, verbose_name='course')
-	is_instructor = models.BooleanField(verbose_name='instructor/TA?')
+	is_instructor = models.BooleanField(verbose_name='is the instructor?')
+	is_ta = models.BooleanField(verbose_name='is a TA?')
 	
 
 	
