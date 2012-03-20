@@ -11,15 +11,15 @@ class UserProfile(models.Model):
 
 class Course(models.Model):
 	DEPARTMENT_CHOICES = (
-		(u'bisc', u'Biological Sciences'),
-		(u'bus', u'Business Administration'),
-		(u'chem', u'Chemisty'),
-		(u'cmpt', u'Computing Sciences'),
-		(u'engl', u'English'),
-		(u'easc', u'Earth Sciences'),
-		(u'ensc', u'Engineering Sciences'),
-		(u'macm', u'Mathematics & Computing Science'),
-		(u'math', u'Mathematics'),	
+		(u'BISC', u'Biological Sciences'),
+		(u'BUS', u'Business Administration'),
+		(u'CHEM', u'Chemisty'),
+		(u'CMPT', u'Computing Sciences'),
+		(u'ENGL', u'English'),
+		(u'EASC', u'Earth Sciences'),
+		(u'ENSC', u'Engineering Sciences'),
+		(u'MACM', u'Mathematics & Computing Science'),
+		(u'MATH', u'Mathematics'),	
 	)
 	
 	FACULTY_CHOICES = (
@@ -34,9 +34,9 @@ class Course(models.Model):
 	)
 	
 	SEMESTER_CHOICES = (
-		(u'spring', u'Spring'),
-		(u'summer', u'Summer'),
-		(u'fall', u'Fall'),
+		(u'Spring', u'Spring'),
+		(u'Summer', u'Summer'),
+		(u'Fall', u'Fall'),
 	)
 	
 	YEAR_CHOICES = (
@@ -55,6 +55,7 @@ class Course(models.Model):
 		(2024, u'2024'),
 		(2025, u'2025'),
 	)
+	
 	cid = models.AutoField(primary_key=True)
 	class_name = models.CharField(max_length=256)
 	class_number = models.CharField(max_length=3)
@@ -62,15 +63,12 @@ class Course(models.Model):
 	faculty = models.CharField(max_length=256, choices=FACULTY_CHOICES)
 	semester = models.CharField(max_length=16, choices=SEMESTER_CHOICES)
 	year = models.IntegerField(choices=YEAR_CHOICES)
+	section = models.CharField(max_length=4)
 	def __unicode__(self):
-		return self.department+self.class_number+" "+self.semester+u'%s' %self.year
+		return self.department+self.class_number+" "+self.semester+u'%s' %self.year+" "+self.section
 	
 class ClassList(models.Model):
 	uid = models.ForeignKey(UserProfile, verbose_name='SFU ID')
 	cid = models.ForeignKey(Course, verbose_name='course')
 	is_instructor = models.BooleanField(verbose_name='is the instructor?')
 	is_ta = models.BooleanField(verbose_name='is a TA?')
-	
-
-	
-	

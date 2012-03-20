@@ -1,22 +1,27 @@
 # Django settings for SOL project.
+#import os
+#import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
+#CHARTIT_DIR = '/Users/kevin/Desktop/pgollakota-django-chartit-5554e5b'
+#JQUERY_ROOT = '/home/csmadmin/tools/jquery'
+#sys.path = [CHARTIT_DIR] + sys.path
+#PROJECT_ROOT = os.path.dirname(__file__)
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Kevin Mann', 'kma50@sfu.ca'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'testDB',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'weather66',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'synergydb',
+        'USER': 'root',
+        'PASSWORD': 'snowball1',     
+        'HOST': '127.0.0.1',          
+        'PORT': '',                   
     }
 }
 
@@ -27,7 +32,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Vancouver'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -45,7 +50,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = '/Users/kevin/Dropbox/intrinsic-project/SOL/static/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -62,6 +67,8 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+CHARTIT_JS_REL_PATH = '/chartit/js/'
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
@@ -72,7 +79,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/allison/Desktop/CMPT470/intrinsic-project/SOL/static',
+	"/Users/kevin/Dropbox/intrinsic-project/SOL/static",
 )
 
 # List of finder classes that know how to find static files in
@@ -90,8 +97,7 @@ SECRET_KEY = 'n3y)_h3wm$dy834c&ptb*4c6&q#*#%r$-4976tu6t-%iy9=qg4'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-	#'django.template.loaders.eggs.Loader',
-
+#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -101,6 +107,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
+AUTH_PROFILE_MODULE = 'Main.UserProfile'
 
 ROOT_URLCONF = 'SOL.urls'
 
@@ -108,7 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/allison/Desktop/CMPT470/intrinsic-project/SOL/templates',
+	"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
 )
 
 INSTALLED_APPS = (
@@ -118,10 +125,15 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+	#'chartit', 
+	
+	'SOL.Calendar',
+	'SOL.Gradebook',
+	'SOL.Instructor',
+	'SOL.Main',
+	'SOL.Student',
 )
 
 # A sample logging configuration. The only tangible logging

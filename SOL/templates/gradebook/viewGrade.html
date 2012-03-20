@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+	{% if accessToStudent %}
+		<h2>{{ class.department }} {{class.class_number }} | {{ activity.aid.activity_name }}</h2>
+		<h3>Grade Information</h3>
+		<!-- <div id='container'> Chart will be rendered here </div>-->
+		<table width=400>
+			<tr>
+				<td>Name: </td><td>{{ activity.aid.activity_name }}</td>
+			</tr>
+			<tr>
+				<td>Due Date: </td><td>{{ activity.aid.due_date }}</td>
+			</tr>
+			<tr>
+				<td>Status: </td><td>
+					{% if activity.aid.status == 0 %}
+						Due date not passed
+					{% else %}
+						{% if activity.aid.status == 1 %}
+							Due but not marked
+						{% else %}
+							Marks released
+						{% endif %}
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td>Worth: </td><td>{{ activity.aid.worth }}%</td>
+			</tr>
+			<tr>
+				<td>Grade: </td><td>{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent }}%)</td>
+			</tr>
+		</table>
+		<h3>Statistics</h3>
+		<table width=400>
+			<tr>
+				<td>Count: </td><td>{{ stats.mark__count }}</td>
+			</tr>
+			<tr>
+				<td>Mean Grade: </td><td>{{ stats.mark__avg }}/{{ activity.aid.out_of }}</td>
+			</tr>
+			<tr>
+				<td>Median: </td><td>{{ median }}/{{ activity.aid.out_of }}</td>
+			</tr>
+			<tr>
+				<td>Standard Deviation:</td><td>{{ stats.mark__stddev }}</td>
+			</tr>
+			<tr>
+				<td>Maximum: </td><td>{{ stats.mark__max }}/{{ activity.aid.out_of }}</td>
+			</tr>
+			<tr>
+				<td>Minimum: </td><td>{{ stats.mark__min }}/{{ activity.aid.out_of }}</td>
+			</tr>
+		</table>
+		{% if comments.count > 0 %}
+			<h3>Comments</h3>
+			<table width=400>
+				{% for comment in comments %}
+					<tr>
+						<td><strong>{{ comment.description }}:</strong></td>
+					</tr>
+					<tr>
+						<td>{{ comment.comment }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+	{% else %}
+		<p class="error">You are not enrolled in this class</p>
+	{% endif %}
+</body>
+</html>
+{% endblock %}

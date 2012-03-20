@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+	{% if accessToStudent %}
+		<h2>{{ class.department }} {{class.class_number }} | {{ class.class_name }}</h2>
+		<ul>
+			<li><a href="content/">[Course Content]</a></li>
+			<li><a href="activities/">[Graded Activities]</a></li>
+			<li><a href="grades">[View Grades]</a></li>
+			{% if accessToInst %}
+				<li><a href="instructor/">[Instructor View]</a></li>
+			{% endif %}
+		</ul>
+		<h3>Announcements: </h3>
+		{% for announcement in latestAnnouncements %}
+			<strong>{{ announcement.title }}</strong>
+			<p>{{ announcement.content }}</p>
+		{% endfor %}
+		<a href="announcements">[View All]</a>
+		<h3>Instructor</h3>
+		{% for instructor in instructors %}
+			<strong>Name</strong> {{ instructor.user.first_name }} {{ instructor.user.last_name}}<br />
+			<strong>Email:</strong> {{ instructor.user.email }}<br><br>
+		{% endfor %}
+		
+		<h3>TAs</h3>
+		{% for ta in tas %}
+			<strong>Name:</strong> {{ ta.user.first_name }} {{ ta.user.last_name }}<br />
+			<strong>Email:</strong> {{ ta.user.email }}<br /><br />
+		{% endfor %}
+		
+		<h3>Students</h3>
+		{% for student in students %}
+			<strong>Name:</strong> {{ student.user.first_name }} {{ student.user.last_name}}<br>
+			<strong>Email:</strong> {{ student.user.email }}<br><br>
+		{% endfor %}
+		
+	{% else %}
+		<p class="error">You are not enrolled in this class</p>
+	{% endif %}
+{% endblock %}

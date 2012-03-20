@@ -1,0 +1,20 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+	<h2>Post An Announcement</h2>
+	<form action="" method="POST">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Post">
+	</form>
+	<h2>Past Announcements</h2>
+	<table>
+	{% for announcement in announcements %}
+		<tr>
+			<td><strong>{{ announcement.title }}</strong> ({{ announcement.date_posted }}) <a href="#edit">[edit]</a> <a href="#remove">[remove]</a></td>
+		</tr>
+		<tr>
+			<td>{{ announcement.content }}</td>
+		</tr>
+	{% endfor %}
+	</table> 
+{% endblock %}

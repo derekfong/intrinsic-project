@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+	{% if accessToStudent %}
+		<h2>{{ class.department }} {{class.class_number }} | Graded Activities</h2>
+		<h3>Activities</h3>
+		<ul>
+		{% for activity in activities %}
+			<li><a href="{{ activity.activity_name }}">{{ activity.activity_name }}</a></li>
+		{% endfor %}
+	{% else %}
+		<p class="error">You are not enrolled in this class</p>
+	{% endif %}
+{% endblock %}

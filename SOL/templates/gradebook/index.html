@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+	{% if accessToStudent %}
+		<h2>{{ class.department }} {{class.class_number }} | Grades</h2>
+		<table border=1 width=750>
+			{{ user.id }}
+		{% for grade in grades %}
+				<tr>
+					<td width=250>
+						{{ grade.aid.activity_name }} 
+					</td>
+					<td width=200>
+						{% if grade.aid.status == 2 %}
+							{{ grade.mark }}/{{ grade.aid.out_of }} ({{ grade.percent }}%)
+						{% else %}
+							Assignment not marked
+						{% endif %}
+					</td>
+					<td width=150>
+						<a href="{{ grade.aid.aid }}">View Details</a>
+					</td>
+					<td width=150>
+						<a href="#submission">View Submission</a>
+					</td>
+				</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p class="error">You are not enrolled in this class</p>
+	{% endif %}
+{% endblock %}

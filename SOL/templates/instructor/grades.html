@@ -1,0 +1,41 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+	<h2>Activity Creation Form</h2>
+	<form action="" method="POST">
+		{% csrf_token %}
+		{{ form.as_p}}
+		<input type="submit" value="Create Activity">
+	</form>
+	<h2>Current Activities</h2>
+	{% for activity in activities %}
+		<table>
+			<td>Activity Name:</td><td>{{ activity.activity_name }}</td>
+		</tr>
+		<tr>
+			<td>Out Of:</td><td>{{ activity.out_of }}</td>
+		</tr>
+		<tr>
+			<td>Worth:</td><td>{{ activity.worth }}%</td>
+		</tr>
+		<tr>
+			<td>Due Date:</td><td>{{ activity.due_date }}</td>
+		</tr>
+		<tr>
+			<td>Status:</td><td>
+				{% if activity.status == 0 %}
+					Not Marked
+				{% else %}
+					{% if activity.status == 1 %}
+						Marked but not released
+					{% else %}
+						Marked and released
+					{% endif %}
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td>Actions:</td><td><a href="#edit">[edit]</a> <a href="#remove">[remove]</a></td>
+		<tr>
+		</table><br>
+	{% endfor %}
+{% endblock %}

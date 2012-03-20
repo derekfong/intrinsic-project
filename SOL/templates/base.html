@@ -3,6 +3,7 @@
 <head>
 	<title>SOL Synergy Online Learning</title>
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}base.css" />
+	{% block head %}{% endblock %}
 </head>
 <body>
 
@@ -22,21 +23,36 @@ side tabs for notices and dates tab;
 		</div>
 
 		<div id="logoPlacer2">
+			{% if user.is_authenticated %}
 			<!-- add actual link set uphere-->
-			<p>Settings
-				<br /> Log out
+			<p><a href="#settings">Settings</a>
+				<br /> 
+				<a href="/accounts/logout">Logout</a>
+			{% endif %}
+					
 			</p>
 		</div>
 
 		<div id="logoPlacerBottom">
-			<p>Welcome USER to this page. Today is {{ current_date }}</p>
+			{% if user.is_authenticated %}
+				<p>Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }}). Today is {% now "F jS Y" %}</p>
+			{% endif %}
 		</div>
 	</div><!--header-->
 
 	<div id="mainBox">
 
 		<div id="content"> <!-- RIGHT-->
-		{% block content %}{% endblock %}
+			{% if user.is_authenticated %}
+				{% if user.is_active %}
+					{% block content %}{% endblock %}
+				{% else %}
+					<p>Bitch, you ain't even active!</p>
+				{% endif %}
+			{% else %}
+				<h1>Welcome to Synergy Online! Please Login</h1>
+				{% include "registration/login.html" %}
+			{% endif %}
 		</div>
 
 		<div id="tabs"> <!-- LEFT-->

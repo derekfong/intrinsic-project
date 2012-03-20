@@ -1,4 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-	HELLO WORLD, course {{ cid }}
+	{% if accessToInst %}
+		{% block instructorcontent %}
+			<h2>{{ class.class_name }} - Instructor</h2>
+			<ul>
+				<li><a href="syllabus/">Syllabus</a></li>
+				<li><a href="announcement/">Add/Modify Announcements</a></li>
+				<li><a href="activity/">Add/Modify Graded Activities</a></li>
+				<li><a href="grades/">Input/Modify Student Grades</a></li>
+			</ul>
+		{% endblock %}
+	{% else %}
+		<p class="error">You are not an instructor or a TA for this class</p>
+	{% endif %}
 {% endblock %}

@@ -6,4 +6,5 @@ urlpatterns = patterns('Instructor.views',
 	url(r'^syllabus/$', 'syllabus'),
 	url(r'^activity/$', 'activity'),
 	url(r'^announcement/$', 'announcement'),
+	url(r'^grades/$', 'grades'),
 )
