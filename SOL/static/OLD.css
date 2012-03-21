@@ -1,0 +1,99 @@
+html, body {
+	background: #A7A8A0;
+	height: 100%;
+	margin-top: 0px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+}
+
+
+p {
+	padding: 10px;
+	line-height: 15px;
+	margin: 0px;
+}
+
+
+h1 {
+	padding: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+h1.logo {
+	font-size: 36px;
+	font-family: Cambria;
+}
+
+
+#logoPlacer1 {
+	float: left;
+}
+
+
+#logoPlacer2 {
+	float: right;
+}
+
+#logoPlacerBottom {
+	position: absolute;
+	display: block;
+	bottom: 3px;
+	right: 0px;
+}
+
+#container {
+	min-height: 100%;
+	width: 980px;	
+	position: relative;
+	margin: 0px auto -1px auto;
+}
+
+
+#header {
+	/*position: relative;*/
+	background-color: #B5111A; 
+	/*margin-bottom: 0px;*/
+	/*display: block;*/
+	height: 200px;
+	width: 100%;
+}
+
+#mainBox {
+	background-color: #FFFFFF;
+	padding-bottom: 30px;
+}
+
+#tabs{
+	background-color: #CDCDC6;
+	padding: 10px;
+	width: 200px;
+	float: left;
+}
+
+
+#content{
+	float: right;
+	width: 780px;
+	padding: 10px;
+	background-color: #FFFFFF;
+	/*padding: 10px 10px 10px 210px;
+	background-color: #FFFFFF;
+	float: right;
+	width: 780px;
+	padding-left: 10px;
+	min-height: 600px;*/	
+
+}
+
+#footer{
+	/*position: absolute;*/
+	clear: both;
+	/*height: 30px;
+	width: 100%;*/
+	padding: 5px 10px;
+	background-color: #BBBBBB;
+	/*bottom: 0;*/
+}
