@@ -23,10 +23,13 @@ class Activity(models.Model):
 class Announcement(models.Model):
 	anid = models.AutoField(primary_key=True)
 	cid = models.ForeignKey(Course, verbose_name='Class')
-	uid = models.ForeignKey(UserProfile, verbose_name='User')
+	uid = models.ForeignKey(UserProfile, verbose_name='User', related_name='uid')
 	title = models.CharField(max_length=256)
 	content = models.TextField()
 	date_posted = models.DateTimeField()
+	was_updated = models.BooleanField(default=0, blank=True)
+	updated_by = models.ForeignKey(UserProfile, blank=True, related_name='updated_by')
+	updated_on = models.DateTimeField(blank=True)
 	
 class AnnounceRead(models.Model):
 	anid = models.ForeignKey(Announcement)

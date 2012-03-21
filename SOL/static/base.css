@@ -10,7 +10,7 @@ html, body {
 #container
 {
 	margin: 0 auto;
-	width:  1080px;
+	width:  1030px;
 	background: #fff;
 	height: 100%;
 }
@@ -80,7 +80,7 @@ html, body {
 {
 	clear: left;
 	float: left;
-	width: 280px;
+	width: 230px;
 	padding: 10px;
 }
 
@@ -97,9 +97,10 @@ html, body {
 #footer
 {
 	background-color: #BBBBBB;
-	padding: 10px;
-	height: 15px;
+	font-size: 12px;
+	padding: 8px;
+	height: 14px;
 	clear: both;
 	bottom: 0;
-	width: 1060px;
+	width: 1014px;
 }

@@ -50,12 +50,56 @@ def activity(request, department, class_number, year, semester, section):
 		form = ActivityForm(request.POST, instance=activity)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect("../")
+			return HttpResponseRedirect("")
 	else:
 		form = ActivityForm()
 	
-	return render_to_response('instructor/activity.html', {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities}, 
+	return render_to_response('instructor/activity.html', {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0}, 
 		context_instance=RequestContext(request))
+		
+def updateActivity(request, department, class_number, year, semester, section, aid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	a = get_object_or_404(Activity, pk=aid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	activities = Activity.objects.filter(cid=class_id)
+
+	if request.method == 'POST':
+		activity = Activity(cid=c, aid=aid)
+		form = ActivityForm(request.POST, instance=activity)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("..")
+	else:
+		tmp = Activity.objects.get(aid=aid)
+		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'due_date': tmp.due_date, 'status': tmp.status, })
+
+	return render_to_response('instructor/activity.html', {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':1}, 
+		context_instance=RequestContext(request))
+		
+def removeActivity(request, department, class_number, year, semester, section, aid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	a = get_object_or_404(Activity, pk=aid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+
+	if accessToInst:
+		activity = Activity.objects.get(aid=aid)
+		activity.delete()
+		return HttpResponseRedirect("..")
+	else:
+		return render_to_response('instructor/announcement.html', {'accessToInst': accessToInst, }, 
+			context_instance=RequestContext(request))
 		
 def announcement(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
@@ -80,6 +124,49 @@ def announcement(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/announcement.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'announcements': announcements }, 
 		context_instance=RequestContext(request))
 		
+def updateAnnouncement(request, department, class_number, year, semester, section, anid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	an = get_object_or_404(Announcement, pk=anid)
+	
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	
+	accessToInst = instAccess(instructors, tas, user)
+	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
+	
+	if request.method == "POST":
+		announce = Announcement(cid=c, uid=user.userprofile, date_posted=datetime.datetime.now(), anid=anid)
+		form = AnnounceForm(request.POST, instance=announce)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("..")
+	else:
+		tmp = Announcement.objects.get(anid=anid)
+		form = AnnounceForm(initial={'title': tmp.title, 'content': tmp.content })
+	return render_to_response('instructor/announcement.html', {'form': form, 'announcements': announcements, 'accessToInst': accessToInst }, 
+		context_instance=RequestContext(request))
+
+def removeAnnouncement(request, department, class_number, year, semester, section, anid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	an = get_object_or_404(Announcement, pk=anid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+
+	if accessToInst:
+		announcement = Announcement.objects.get(anid=anid)
+		announcement.delete()
+		return HttpResponseRedirect("..")
+	else:
+		return render_to_response('instructor/announcement.html', {'accessToInst': accessToInst, }, 
+			context_instance=RequestContext(request))
+
 def grades(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
 	c = get_object_or_404(Course, pk=class_id)
@@ -100,7 +187,7 @@ def grades(request, department, class_number, year, semester, section):
 	else:
 		form = AnnounceForm()
 
-	return render_to_response('instructor/grades.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'announcements': announcements , 'students': students}, 
+	return render_to_response('instructor/grades.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'students': students}, 
 		context_instance=RequestContext(request))
 		
 #def getRequiredContent(department, class_number, year, semester, section):

@@ -10,7 +10,7 @@
 	<table>
 	{% for announcement in announcements %}
 		<tr>
-			<td><strong>{{ announcement.title }}</strong> ({{ announcement.date_posted }}) <a href="#edit">[edit]</a> <a href="#remove">[remove]</a></td>
+			<td><strong>{{ announcement.title }}</strong> ({{ announcement.date_posted }}) <a href="{{ announcement.anid }}">[edit]</a> <a href="{{ announcement.anid }}/remove">[remove]</a></td>
 		</tr>
 		<tr>
 			<td>{{ announcement.content }}</td>

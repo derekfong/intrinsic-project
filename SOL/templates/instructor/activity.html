@@ -1,10 +1,18 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
-	<h2>Activity Creation Form</h2>
+	{% if update %}
+		<h2>Activity Update Form</h2>
+	{% else %}
+		<h2>Activity Creation Form</h2>
+	{% endif %}
 	<form action="" method="POST">
 		{% csrf_token %}
 		{{ form.as_p}}
-		<input type="submit" value="Create Activity">
+		{% if update %}
+			<input type="submit" value="Update Activity">
+		{% else %}
+			<input type="submit" value="Create Activity">
+		{% endif %}
 	</form>
 	<h2>Current Activities</h2>
 	{% for activity in activities %}
@@ -34,7 +42,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Actions:</td><td><a href="#edit">[edit]</a> <a href="#remove">[remove]</a></td>
+			<td>Actions:</td><td><a href="{{ activity.aid }}">[edit]</a> <a href="{{ activity.aid }}/remove">[remove]</a></td>
 		<tr>
 		</table><br>
 	{% endfor %}

@@ -37,33 +37,32 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	
 	tmpGrade = Grade.objects.filter(aid=aid).order_by('mark')
 	sortGrade = percentAll(tmpGrade)
-	#barChart = [0,0,0,0,0,0,0,0,0,0,0]
-	barChart = [6,3,8,6,9,4,7,4,9,7,1]
+	barChart = [0,0,0,0,0,0,0,0,0,0,0,0,0]
 	for aGrade in sortGrade:
-		if aGrade.percent < 10:
+		if aGrade.percent < "%.2f" %10:
 			barChart[0] += 1
-		elif aGrade.percent < 20:
+		elif aGrade.percent < "%.2f" %20:
 			barChart[1] += 1
-		elif aGrade.percent < 30:
+		elif aGrade.percent < "%.2f" %30:
 			barChart[2] += 1
-		elif aGrade.percent < 40:
+		elif aGrade.percent < "%.2f" %40:
 			barChart[3] += 1
-		elif aGrade.percent < 50:
+		elif aGrade.percent < "%.2f" %50:
 			barChart[4] += 1
-		elif aGrade.percent < 60:
+		elif aGrade.percent < "%.2f" %60:
 			barChart[5] += 1
-		elif aGrade.percent < 70:
+		elif aGrade.percent < "%.2f" %70:
 			barChart[6] += 1
-		elif aGrade.percent < 80:
+		elif aGrade.percent < "%.2f" %80:
 			barChart[7] += 1
-		elif aGrade.percent < 90:
+		elif aGrade.percent < "%.2f" %90:
 			barChart[8] += 1
-		elif aGrade.percent < 100:
+		elif aGrade.percent < "%.2f" %100:
 			barChart[9] += 1
 		else:
 			barChart[10] += 1
-	#barChart = [a,b,k,d,e,f,g,h,i,j]
-	
+	barChart[11] = max(barChart)
+		
 	if sortGrade.count() % 2 == 1:
 		median = sortGrade[(sortGrade.count()-1)/2].mark
 	else:
