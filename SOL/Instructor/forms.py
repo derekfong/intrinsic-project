@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from Instructor.models import Announcement, Activity
+from Instructor.models import Announcement, Activity, CourseContent
 import datetime
 
 class AnnounceForm(ModelForm):
@@ -11,4 +11,9 @@ class AnnounceForm(ModelForm):
 class ActivityForm(ModelForm):
 	class Meta:
 		model = Activity
+		exclude = ('cid',)
+		
+class CourseForm(ModelForm):
+	class Meta:
+		model = CourseContent
 		exclude = ('cid',)

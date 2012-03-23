@@ -1,16 +1,9 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
+	<h2>Create Syllabus</h2>
 	<form action="" method="POST">
 		{% csrf_token %}
-		<label for="instructor">Instructor:</label>
-		<input type="text" name="instructor" value="">
-		<label for="office">Office Location:</label>
-		<input type="text" name="office" value="">
-		<label for="phone">Phone Number:</label>
-		<input type="text" name="phone" value="">
-		<label for="email">Email:</label>
-		<input type="text" name="email" value="">
-		<label for="instructor">Instructor:</label>
-		<input type="text" name="instructor" value="">
+		{{ form.as_p }}
+		<input type="submit" value="Enter">
 	</form>
 {% endblock %}

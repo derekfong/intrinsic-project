@@ -1,49 +1,78 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
 	{% if update %}
-		<h2>Activity Update Form</h2>
+		<h2 class="title">Activity Update Form</h2>
 	{% else %}
-		<h2>Activity Creation Form</h2>
+		<h2 class="title">Activity Creation Form</h2>
 	{% endif %}
 	<form action="" method="POST">
 		{% csrf_token %}
-		{{ form.as_p}}
-		{% if update %}
-			<input type="submit" value="Update Activity">
-		{% else %}
-			<input type="submit" value="Create Activity">
-		{% endif %}
-	</form>
-	<h2>Current Activities</h2>
-	{% for activity in activities %}
-		<table>
-			<td>Activity Name:</td><td>{{ activity.activity_name }}</td>
-		</tr>
-		<tr>
-			<td>Out Of:</td><td>{{ activity.out_of }}</td>
-		</tr>
-		<tr>
-			<td>Worth:</td><td>{{ activity.worth }}%</td>
-		</tr>
-		<tr>
-			<td>Due Date:</td><td>{{ activity.due_date }}</td>
-		</tr>
-		<tr>
-			<td>Status:</td><td>
-				{% if activity.status == 0 %}
-					Not Marked
+		<div id="table">
+			{% for field in form %}
+			<div id="fieldWrapper">
+				<div id="fieldLeft">
+					{{ field.label_tag }}: 
+				</div>
+				<div id="fieldRight">
+					{{ field.errors }}
+					{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+				{% if update %}
+					<input type="submit" value="Update Activity">
 				{% else %}
-					{% if activity.status == 1 %}
-						Marked but not released
-					{% else %}
-						Marked and released
-					{% endif %}
+					<input type="submit" value="Create Activity">
 				{% endif %}
-			</td>
-		</tr>
-		<tr>
-			<td>Actions:</td><td><a href="{{ activity.aid }}">[edit]</a> <a href="{{ activity.aid }}/remove">[remove]</a></td>
-		<tr>
-		</table><br>
-	{% endfor %}
+			</div>
+		</div>
+	</form>
+	
+	<div id="bottomPosts">
+		<h2 class="title">Current Activities</h2>
+		{% for activity in activities %}
+			<div id="table">
+				<div id="actWrapper">
+					<div id="actLeft">Activity Name: </div>
+					<div id="actRight">{{ activity.activity_name }}</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Out Of: </div>
+					<div id="actRight">{{ activity.out_of }}</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Worth: </div>
+					<div id="actRight">{{ activity.worth }}%</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Due Date: </div>
+					<div id="actRight">{{ activity.due_date }}</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Status: </div>
+					<div id="actRight">
+						{% if activity.status == 0 %}
+							Not Marked
+						{% else %}
+							{% if activity.status == 1 %}
+								Marked but not released
+							{% else %}
+								Marked and released
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Actions: </div>
+					<div id="actRight">
+						<span class="postLinks">
+							<a href="{{ activity.aid }}">Edit</a> <a href="{{ activity.aid }}/remove">Remove</a>
+						</span>
+					</div>
+				</div>
+				<div id="endAct"></div>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}

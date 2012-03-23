@@ -1,20 +1,49 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
-	<h2>Post An Announcement</h2>
+	<h2 class="title">Post An Announcement</h2>
 	<form action="" method="POST">
+		<div id="table">
 		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Post">
+			{% for field in form %}
+			<div id="fieldWrapper">
+				<div id="fieldLeft">
+					{{ field.label_tag }}: 
+				</div>
+					<div id="fieldRight">
+						{{ field.errors }}
+						{{ field }}
+					</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
 	</form>
-	<h2>Past Announcements</h2>
-	<table>
-	{% for announcement in announcements %}
-		<tr>
-			<td><strong>{{ announcement.title }}</strong> ({{ announcement.date_posted }}) <a href="{{ announcement.anid }}">[edit]</a> <a href="{{ announcement.anid }}/remove">[remove]</a></td>
-		</tr>
-		<tr>
-			<td>{{ announcement.content }}</td>
-		</tr>
-	{% endfor %}
-	</table> 
+	<div id="bottomPosts">
+		<h2 class="title">Past Announcements</h2>
+		{% for announcement in announcements %}
+			<div id="table">
+				<div id="postTop">
+					<strong>{{ announcement.title }}</strong> 
+					<span class="postDate">({{ announcement.date_posted }}) </span>
+					<span class="postLinks">
+						<a href="{{ announcement.anid }}">Edit</a> <a href="{{ announcement.anid }}/remove">Remove</a>
+					</span>
+				</div>
+				<div id="edit">
+					{% if announcement.was_updated == 1 %}
+						<span class="edit">
+						Updated: {{ announcement.updated_on }} 
+						{{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
+						</span>
+					{% endif %}
+				</div>
+				<div id="postBottom">
+					{{ announcement.content }}
+				</div>
+			</div>
+		{% endfor %}
+		</div> 
+	</div>
 {% endblock %}

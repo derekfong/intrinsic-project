@@ -1,6 +1,6 @@
 html, body {
 	background: #A7A8A0;
-	margin-top: 0px;
+	color: #323232;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	padding: 0px;
@@ -103,4 +103,15 @@ html, body {
 	clear: both;
 	bottom: 0;
 	width: 1014px;
+}
+
+#visualization
+{
+	font-size: 8px;
+}
+
+h2.title
+{
+	padding: 0;
+	margin: 10px 5px 5px 0 ;
 }
