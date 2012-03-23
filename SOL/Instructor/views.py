@@ -2,12 +2,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from Main.models import Course, ClassList
-<<<<<<< HEAD
 from Instructor.models import Announcement, Activity, CourseContent
-=======
-from Instructor.models import Announcement, Activity
 from Gradebook.models import UploadGrade
->>>>>>> 9303b49bef2a56083b8a052c0ca79e2edffb86ba
 from Student.views import instAccess, getInsts, getTas, getStudents
 from forms import AnnounceForm, ActivityForm, CourseForm
 import datetime
@@ -210,7 +206,7 @@ def grades(request, department, class_number, year, semester, section):
 		#	form.save()
 		#	return HttpResponseRedirect("")
 	else:
-        form = UploadGrade()
+		form = UploadGrade()
 
 	return render_to_response('instructor/grades.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'students': students}, 
 		context_instance=RequestContext(request))
