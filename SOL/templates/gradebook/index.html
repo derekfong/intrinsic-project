@@ -1,7 +1,15 @@
 {% extends "base.html" %}
+{% block sidebar %}
+	<h3>Announcements: </h3>
+	{% for announcement in latestAnnouncements %}
+		<strong>{{ announcement.title|title }}</strong>
+		<p>{{ announcement.content }}</p>
+	{% endfor %}
+	<a href="/course/{{ class.department }}/{{ class.class_number }}/{{ class.year }}/{{ class.semester }}/{{ class.section }}/announcements">View All</a>
+{% endblock %}
 {% block content %}
 	{% if accessToStudent %}
-		<h2>{{ class.department }} {{class.class_number }} | Grades</h2>
+		<h2>{{ class.department }} {{class.class_number }} | View Grades</h2>
 		<table border=1 width=750>
 		{% for grade in grades %}
 				<tr>

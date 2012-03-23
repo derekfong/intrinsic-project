@@ -3,9 +3,10 @@
 <head>
 	<title>SOL Synergy Online Learning</title>
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}base.css" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fields.css" />
 	{% block head %}{% endblock %}
 </head>
-<body>
+<body >
 
 <!-- divided into 3 parts:
 header with logo, signout, settings;
@@ -36,7 +37,7 @@ side tabs for notices and dates tab;
 	</div>
 	<div id="navigation">
 		<ul>
-			<li><a href="#">Home</a></li>
+			<li><a href="/">Home</a></li>
 			<li><a href="#">About</a></li>
 			<li><a href="#">Services</a></li>
 			<li><a href="#">Contact us</a></li>
@@ -44,10 +45,7 @@ side tabs for notices and dates tab;
 	</div>
 	<div id="content-container">
 		<div id="sidebar">
-			<h3>
-				Sidebar
-			</h3>
-			<p>Tab stuff goes here</p>
+			{% block sidebar %}{% endblock %}
 		</div>
 		<div id="content">
 			{% if user.is_authenticated %}
@@ -62,7 +60,7 @@ side tabs for notices and dates tab;
 			{% endif %}
 		</div>
 		<div id="footer">
-			Copyright (c) 2012 to Group 12: Intrinsic
+			Made by Intrinsic Team [Group 12] | Created by: Kevin Mann, Derek Fong, Allison Ng
 		</div>
 	</div>
 </div>
