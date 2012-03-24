@@ -275,7 +275,7 @@ def grades(request, department, class_number, year, semester, section):
 		options = Activity.objects.filter(cid=class_id)
 		form = UploadGrade(cid=class_id)
 		
-	content = {'c': c, 'form': form, 'message': message, 'accessToInst': accessToInst, 'students': students}
+	content = {'class': c, 'form': form, 'message': message, 'accessToInst': accessToInst, 'students': students}
 	return render_to_response('instructor/grades.html', content, 
 		context_instance=RequestContext(request))
 

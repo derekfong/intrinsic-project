@@ -11,6 +11,6 @@ urlpatterns = patterns('Instructor.views',
 	url(r'^announcement/(?P<anid>\d+)/remove$', 'removeAnnouncement'),
 	url(r'^announcement/(?P<anid>\d+)$', 'updateAnnouncement'),
 	url(r'^announcement/$', 'announcement'),
-	url(r'^roster/$', 'roster'),
+	url(r'^roster/$', 'roster')
 	url(r'^grades/$', 'grades'),
 )

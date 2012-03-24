@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from Main.models import Course, ClassList, UploadUserList
+from Main.models import Course, ClassList, UploadUserList, UploadClassList
 from Instructor.models import Activity, Announcement
 from Student.models import Submission
 from Gradebook.models import Grade, GradeComment
@@ -30,11 +30,11 @@ class CustomUserAdmin(UserAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['faculty', 'department', 'class_number', 'class_name', 'semester', 'year', 'section']})
+		(None, {'fields': ['department', 'class_number', 'class_name', 'semester', 'year', 'section']})
 	]
-	list_filter= ['faculty', 'department', 'semester', 'year']
+	list_filter= ['department', 'semester', 'year']
 	search_fields = ['department']
-	list_display=('class_number', 'department', 'faculty', 'semester', 'year', 'section')
+	list_display=('class_number', 'department', 'semester', 'year', 'section')
 	
 class ClassListAdmin(admin.ModelAdmin):
 	fieldsets = [
@@ -43,6 +43,7 @@ class ClassListAdmin(admin.ModelAdmin):
 	list_filter=['uid', 'cid']
 	search_fields = ['uid']
 	list_display=('uid','cid',)
+	actions = ['enroll_students']
 
 class ActivityAdmin(admin.ModelAdmin):
 	fieldsets = [
@@ -113,6 +114,31 @@ class UploadUserListAdmin(admin.ModelAdmin):
 		self.message_user(request, "%s user list(s) imported successfully" % len(queryset))
     import_users.short_description = "Import users from Excel file"
 
+class UploadClassListAdmin(admin.ModelAdmin):
+    fieldsets = [
+		(None, {'fields': ['cid', 'upload_date', 'file_path']})
+	]
+    list_display = ('cid', 'upload_date', 'is_enrolled')
+    actions = ['enroll_students']
+    
+    def enroll_students(self, request, queryset):
+		for obj in queryset:
+			class_list = UploadClassList.objects.get(id=obj.id)
+			xls_file = class_list.file_path
+			excel_book = xlrd.open_workbook(file_contents=xls_file.read())
+			sheet = excel_book.sheet_by_index(0)
+			num_of_rows = range(1,sheet.nrows)
+			
+			for row in num_of_rows:
+				sfu_id = int(sheet.cell_value(row,3))
+				user = UserProfile.objects.get(sfu_id=sfu_id)
+				new_class_list = ClassList(uid=user, cid=class_list.cid)
+				new_class_list.save()
+			class_list.is_enrolled = True
+			class_list.save()
+		self.message_user(request, "%s class list(s) enrolled successfully" % len(queryset))
+    enroll_students.short_description = "Enroll students into class from Excel file"
+
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Course, CourseAdmin)
@@ -122,3 +148,4 @@ admin.site.register(Announcement, AnnouncementAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(UploadUserList, UploadUserListAdmin)
+admin.site.register(UploadClassList, UploadClassListAdmin)
