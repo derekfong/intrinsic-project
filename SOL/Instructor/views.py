@@ -3,12 +3,15 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent
-from Gradebook.models import UploadGrade
+from Gradebook.models import Grade, UploadGrade
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm
-import datetime
+from decimal import Decimal, getcontext
+import datetime, xlrd, xlwt
 from reportlab.pdfgen import canvas
 from django.forms.models import modelformset_factory
+from django.contrib.auth.models import User
+from Main.models import UserProfile
 
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
@@ -241,7 +244,7 @@ def roster(request, department, class_number, year, semester, section):
 	content = {'class': c, 'accessToInst': accessToInst, 'instructors': instructors, 'tas':tas, 'students': students, 'classUrl': getClassUrl(c)}
 	return render_to_response('instructor/roster.html', content, 
 		context_instance=RequestContext(request))
-	
+
 def formTable(form, students):
 	foo = []
 	i = 0;
@@ -249,6 +252,48 @@ def formTable(form, students):
 		foo.insert(i, GradeForm(initial={'uid':student.user.id, }))
 		i += 1
 	return foo
+
+def grades(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	students = getStudents(class_id)
+	
+	message = ""
+	
+	if request.method == 'POST':
+		form = UploadGrade(request.POST, request.FILES, cid=class_id)
+		if form.is_valid():
+			upload_grades(request.FILES['file_path'], request.POST['activity_name'])
+			message = "Successfully uploaded grades."
+	else:
+		options = Activity.objects.filter(cid=class_id)
+		form = UploadGrade(cid=class_id)
 		
+	content = {'c': c, 'form': form, 'message': message, 'accessToInst': accessToInst, 'students': students}
+	return render_to_response('instructor/grades.html', content, 
+		context_instance=RequestContext(request))
+
+def upload_grades(input_file, aid):
+	excel_book = xlrd.open_workbook(file_contents=input_file.read())
+	sheet = excel_book.sheet_by_index(0)
+	num_of_rows = range(1,sheet.nrows)
+	
+	activity = Activity.objects.get(aid=aid)
+	getcontext().prec = 2
+	for row in num_of_rows:
+		sfu_id = int(sheet.cell_value(row,3))
+		mark = Decimal(sheet.cell_value(row,4))
+		user = UserProfile.objects.get(sfu_id=sfu_id)
+		new_grade = Grade(uid=user, aid=activity)
+		new_grade.mark = mark
+		new_grade.save()
+
+
 #def getRequiredContent(department, class_number, year, semester, section):
 	
