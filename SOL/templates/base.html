@@ -39,8 +39,10 @@ side tabs for notices and dates tab;
 		<ul>
 			<li><a href="/">Home</a></li>
 			<li><a href="#">About</a></li>
-			<li><a href="#">Services</a></li>
-			<li><a href="#">Contact us</a></li>
+			{% if user.is_authenticated %}
+				<li><a href="#settings">Settings</a></li>
+				<li><a href="/accounts/logout">Logout</a></li>
+			{% endif %}
 		</ul>
 	</div>
 	<div id="content-container">

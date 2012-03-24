@@ -8,12 +8,13 @@
 		<li>Create Contact Us to learn email feature</li>
 		<li>Announcements read</li>
 		<li>Settings (opt-in notification emails)</li>
+		<li>Comments</li>
 	</ul>
 	<h2>Current Courses</h2>
 	<ul>
 	{% for course in class_list %}
 		<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
-			{{ course.department }}{{ course.class_number }} {{course.section}} - {{ course.class_name }}
+			{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
 		</a></li>
 	{% endfor %}
 	</ul>

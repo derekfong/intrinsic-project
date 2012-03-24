@@ -5,19 +5,19 @@ from Main.models import UserProfile, Course
 # Create your models here.
 class CourseContent(models.Model):
 	cid = models.ForeignKey(Course, verbose_name="Course")
-	officeHrs = models.CharField(max_length=128)
-	officeLocation = models.CharField(max_length=128)
-	phoneNumber = models.CharField(max_length=12)
-	TaOfficeLocation = models.CharField(max_length=128)
-	TaOfficeHrs = models.CharField(max_length=128)
-	lectTime = models.CharField(max_length=128)
-	prereq = models.CharField(max_length=128)
-	books = models.TextField()
-	topics = models.TextField()
-	markingScheme = models.TextField()
-	academicHonesty = models.TextField()
-	additionalInfo = models.TextField()
-	file_path = models.FileField(upload_to='syllabus', blank=True) #MAKE SUBMISSION FOLDER IN MEDIA ROOT
+	officeHrs = models.CharField(max_length=128, verbose_name="Office Hours")
+	officeLocation = models.CharField(max_length=128, verbose_name="Office Location")
+	phoneNumber = models.CharField(max_length=12, verbose_name="Phone Number")
+	TaOfficeLocation = models.CharField(max_length=128, verbose_name="TA Office Locat")
+	TaOfficeHrs = models.CharField(max_length=128, verbose_name="TA's Ofice Hours")
+	lectTime = models.CharField(max_length=128, verbose_name="Lecture Time")
+	prereq = models.CharField(max_length=128, verbose_name="Prerequisites")
+	books = models.TextField(verbose_name="Books")
+	topics = models.TextField(verbose_name="Topics Covered")
+	markingScheme = models.TextField(verbose_name="Marking Scheme")
+	academicHonesty = models.TextField(verbose_name="Academic Honesty")
+	additionalInfo = models.TextField(verbose_name="Additional Field")
+	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
 	
 class Activity(models.Model):
 	STATUS_CHOICES = (

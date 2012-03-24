@@ -34,8 +34,8 @@
 				<div id="edit">
 					{% if announcement.was_updated == 1 %}
 						<span class="edit">
-						Updated: {{ announcement.updated_on }} 
-						{{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
+						Updated on: {{ announcement.updated_on }} 
+						By: {{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
 						</span>
 					{% endif %}
 				</div>

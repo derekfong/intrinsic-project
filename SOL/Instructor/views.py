@@ -4,10 +4,11 @@ from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent
 from Gradebook.models import UploadGrade
-from Student.views import instAccess, getInsts, getTas, getStudents
-from forms import AnnounceForm, ActivityForm, CourseForm
+from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl
+from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm
 import datetime
 from reportlab.pdfgen import canvas
+from django.forms.models import modelformset_factory
 
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
@@ -19,8 +20,9 @@ def index(request, department, class_number, year, semester, section):
 	tas = getTas(class_id)
 	
 	accessToInst = instAccess(instructors, tas, user)
-		
-	return render_to_response('instructor/index.html', {'class': c, 'accessToInst': accessToInst, },
+	
+	content = {'class': c, 'classUrl': getClassUrl(c), 'accessToInst': accessToInst, }	
+	return render_to_response('instructor/index.html', content,
 		context_instance=RequestContext(request))
 
 def syllabus(request, department, class_number, year, semester, section):
@@ -32,6 +34,7 @@ def syllabus(request, department, class_number, year, semester, section):
 	tas = getTas(class_id)
 	
 	accessToInst = instAccess(instructors, tas, user)
+	
 	
 	if request.method == 'POST':
 		content = CourseContent(cid=class_id)
@@ -47,7 +50,8 @@ def syllabus(request, department, class_number, year, semester, section):
 		else:
 			form = CourseForm()
 	
-	return render_to_response('instructor/syllabus.html', {'class': c, 'accessToInst': accessToInst, 'form': form}, 
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': getClassUrl(c), }
+	return render_to_response('instructor/syllabus.html', content, 
 		context_instance=RequestContext(request))
 			
 		
@@ -71,7 +75,8 @@ def activity(request, department, class_number, year, semester, section):
 	else:
 		form = ActivityForm()
 	
-	return render_to_response('instructor/activity.html', {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0}, 
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0, 'classUrl': getClassUrl(c), }
+	return render_to_response('instructor/activity.html', content, 
 		context_instance=RequestContext(request))
 		
 def updateActivity(request, department, class_number, year, semester, section, aid):
@@ -97,7 +102,8 @@ def updateActivity(request, department, class_number, year, semester, section, a
 		tmp = Activity.objects.get(aid=aid)
 		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'due_date': tmp.due_date, 'status': tmp.status, })
 
-	return render_to_response('instructor/activity.html', {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':1}, 
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':1, 'classUrl': getClassUrl(c), }
+	return render_to_response('instructor/activity.html', content, 
 		context_instance=RequestContext(request))
 		
 def removeActivity(request, department, class_number, year, semester, section, aid):
@@ -117,7 +123,8 @@ def removeActivity(request, department, class_number, year, semester, section, a
 		url ='/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/instructor/activity'
 		return HttpResponseRedirect(url)
 	else:
-		return render_to_response('instructor/announcement.html', {'accessToInst': accessToInst, }, 
+		content = {'accessToInst': accessToInst, 'classUrl': getClassUrl(c)}
+		return render_to_response('instructor/announcement.html', content, 
 			context_instance=RequestContext(request))
 		
 def announcement(request, department, class_number, year, semester, section):
@@ -140,7 +147,8 @@ def announcement(request, department, class_number, year, semester, section):
 	else:
 		form = AnnounceForm()
 	
-	return render_to_response('instructor/announcement.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'announcements': announcements }, 
+	content = {'class': c, 'form': form, 'accessToInst': accessToInst, 'announcements': announcements, 'classUrl': getClassUrl(c) }
+	return render_to_response('instructor/announcement.html', content, 
 		context_instance=RequestContext(request))
 		
 def updateAnnouncement(request, department, class_number, year, semester, section, anid):
@@ -165,7 +173,9 @@ def updateAnnouncement(request, department, class_number, year, semester, sectio
 	else:
 		tmp = Announcement.objects.get(anid=anid)
 		form = AnnounceForm(initial={'title': tmp.title, 'content': tmp.content })
-	return render_to_response('instructor/announcement.html', {'form': form, 'announcements': announcements, 'accessToInst': accessToInst }, 
+	
+	content = {'class': c, 'form': form, 'announcements': announcements, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c) }
+	return render_to_response('instructor/announcement.html', content, 
 		context_instance=RequestContext(request))
 
 def removeAnnouncement(request, department, class_number, year, semester, section, anid):
@@ -185,12 +195,14 @@ def removeAnnouncement(request, department, class_number, year, semester, sectio
 		url ='/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/instructor/announcement'
 		return HttpResponseRedirect(url)
 	else:
-		return render_to_response('instructor/announcement.html', {'accessToInst': accessToInst, }, 
+		content = {'accessToInst': accessToInst, 'classUrl': getClassUrl(c), }
+		return render_to_response('instructor/announcement.html', content, 
 			context_instance=RequestContext(request))
 
-def grades(request, department, class_number, year, semester, section):
+def addGrades(request, department, class_number, year, semester, section, aid):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
 	c = get_object_or_404(Course, pk=class_id)
+	a = get_object_or_404(Activity, pk=aid)
 
 	user = request.user
 	instructors = getInsts(class_id)
@@ -200,16 +212,43 @@ def grades(request, department, class_number, year, semester, section):
 	students = getStudents(class_id)
 	
 	if request.method == 'POST':
-		#announce = Announcement(cid=c, uid=user.userprofile, date_posted=datetime.datetime.now())
-		form = UploadGrade(request.POST, request.FILES)
-		#if form.is_valid():
-		#	form.save()
-		#	return HttpResponseRedirect("")
+		#form = UploadGrade(request.POST, request.FILES)
+		grade = Grade(aid=aid)
+		form = GradeForm(request.Post, instance=grade)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("")
 	else:
-		form = UploadGrade()
+		theForm = GradeForm()
+		GradeFormSet = modelformset_factory(GradeForm)
+		formset = GradeFormSet()
 
-	return render_to_response('instructor/grades.html', {'c': c, 'form': form, 'accessToInst': accessToInst, 'students': students}, 
+	content = {'class': c, 'formset': formset, 'accessToInst': accessToInst, 'students': students, 'classUrl': getClassUrl(c)}
+	return render_to_response('instructor/grades.html', content, 
 		context_instance=RequestContext(request))
+		
+def roster(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)		
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	students = getStudents(class_id)
+	
+	content = {'class': c, 'accessToInst': accessToInst, 'instructors': instructors, 'tas':tas, 'students': students, 'classUrl': getClassUrl(c)}
+	return render_to_response('instructor/roster.html', content, 
+		context_instance=RequestContext(request))
+	
+def formTable(form, students):
+	foo = []
+	i = 0;
+	for student in students:
+		foo.insert(i, GradeForm(initial={'uid':student.user.id, }))
+		i += 1
+	return foo
 		
 #def getRequiredContent(department, class_number, year, semester, section):
 	

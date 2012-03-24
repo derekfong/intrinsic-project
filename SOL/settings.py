@@ -67,7 +67,7 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-CHARTIT_JS_REL_PATH = '/chartit/js/'
+#CHARTIT_JS_REL_PATH = '/chartit/js/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.

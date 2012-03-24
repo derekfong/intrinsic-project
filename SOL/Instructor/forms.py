@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from Instructor.models import Announcement, Activity, CourseContent
+from Gradebook.models import Grade
 import datetime
 
 class AnnounceForm(ModelForm):
@@ -17,3 +18,8 @@ class CourseForm(ModelForm):
 	class Meta:
 		model = CourseContent
 		exclude = ('cid',)
+
+class GradeForm(ModelForm):
+	class Meta:
+		model = Grade
+	#	fields = ('uid', 'mark')

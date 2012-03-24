@@ -1,4 +1,8 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
-	
+	<form action="" method="POST">
+		{% csrf_token %}
+		{% for form in formset %}
+			{{ form.as_table }}</br>
+		{% endfor %}
 {% endblock %}

@@ -5,6 +5,7 @@ from django.contrib import auth
 from Main.models import Course
 from Gradebook.models import Grade, GradeComment
 from Instructor.models import Activity, Announcement
+from Instructor.views import getClassUrl
 from Student.views import instAccess, studentAccess, getInsts, getTas, getEnrolled, getAnnouncements
 from django.db.models import Avg, Max, Min, Count, StdDev
 from array import *
@@ -21,11 +22,13 @@ def index(request, department, class_number, year, semester, section):
 	accessToStudent = studentAccess(getEnrolled(class_id), user) 
 	latestAnnouncements = getAnnouncements(class_id)
 	
-	
 	tmpGrades = Grade.objects.filter(aid__cid=class_id, uid=user.id)
 	grades = percentAll(tmpGrades)
+	
+	activities = Activity.objects.filter(cid = class_id)
 
-	return render_to_response('gradebook/index.html', {'class': c, 'accessToStudent': accessToStudent, 'grades': grades, 'latestAnnouncements': latestAnnouncements},
+	content = {'class': c, 'activities': activities,'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'grades': grades, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c)}
+	return render_to_response('gradebook/index.html', content,
 		context_instance=RequestContext(request))
 		
 def viewGrade(request, department, class_number, year, semester, section, aid):
@@ -33,14 +36,16 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
 	
-	tmpActivity = Grade.objects.select_related().get(aid=aid, uid=user.id)
+	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
+	
+	tmpActivity = Grade.objects.get(aid=aid, uid=user.id)
 	activity = percentOne(tmpActivity)
 	comments = GradeComment.objects.filter(gid=activity.gid)
 	latestAnnouncements = getAnnouncements(class_id)
 	
 	tmpGrade = Grade.objects.filter(aid=aid).order_by('mark')
 	sortGrade = percentAll(tmpGrade)
-	barChart = [0,0,6,9,4,8,7,0,11,15,0,0]
+	barChart = [0,0,0,0,0,0,0,0,0,0,0,0]
 	for aGrade in sortGrade:
 		if aGrade.percent < "%.2f" %10:
 			barChart[0] += 1
@@ -79,21 +84,18 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
 	accessToStudent = studentAccess(getEnrolled(class_id), user) or accessToInst
 	
-	content = {'class': c, 'accessToStudent': accessToStudent, 'activity': activity, 'latestAnnouncements': latestAnnouncements, 'comments': comments, 'stats': stats, 'median': median, 'barChart': barChart, }
+	content = {'class': c, 'accessToStudent': accessToStudent, 'activity': activity, 'latestAnnouncements': latestAnnouncements, 'comments': comments, 'stats': stats, 'median': median, 'barChart': barChart, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c)}
 	return render_to_response('gradebook/viewGrade.html', content,
 		context_instance=RequestContext(request))
 		
-
 #Non-view Functions
 def percentAll(grades):
 	for grade in grades:
 		tmpPercent = ((grade.mark / grade.aid.out_of) * 100)
 		grade.percent = "%.2f" % tmpPercent
-		grade.aid.out_of = "%.2f" %float(89)
 	return grades
 
 def percentOne(grades):
 	tmpPercent = ((grades.mark / grades.aid.out_of) * 100)
 	grades.percent = "%.2f" % tmpPercent
-	grades.aid.out_of = "%.2f" %float(grades.aid.out_of)
 	return grades

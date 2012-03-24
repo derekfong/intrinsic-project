@@ -110,8 +110,24 @@ html, body {
 	font-size: 8px;
 }
 
+h3.title
+{
+	padding: 0;
+	margin: 0;
+	padding-bottom: 10px;
+}
+
 h2.title
 {
 	padding: 0;
 	margin: 10px 5px 5px 0 ;
+}
+
+a {
+	text-decoration: none;
+	color: #0a7ed7;
+}
+
+a:hover {
+	text-decoration: underline;
 }

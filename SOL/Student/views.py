@@ -24,7 +24,7 @@ def index(request, department, class_number, year, semester, section):
 	accessToStudent = studentAccess(enrolled, user)
 	
 	content = {'class': c , 'instructors': instructors, 'tas': tas, 'students': students, 'accessToInst': accessToInst, 
-		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements}
+		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), }
 	
 	return render_to_response('student/index.html', content,
 		context_instance=RequestContext(request))
@@ -34,9 +34,14 @@ def syllabus(request, department, class_number, year, semester, section):
 	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
 	enrolled = getEnrolled(class_id)
+	
+	accessToInst = instAccess(instructors, tas, user)
 	accessToStudent = studentAccess(enrolled, user)
+	
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
+	students = getStudents(class_id)
+	enrolled = getEnrolled(class_id)
 	
 	# Create the HttpResponse object with the appropriate PDF headers.
 	response = HttpResponse(mimetype='application/pdf')
@@ -110,7 +115,10 @@ def activities(request, department, class_number, year, semester, section):
 	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
 
-	students = getEnrolled(class_id)
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	students = getStudents(class_id)
+	enrolled = getEnrolled(class_id)
 	
 	activities = Activity.objects.filter(cid=class_id).order_by('due_date')
 	for activity in activities:
@@ -118,8 +126,10 @@ def activities(request, department, class_number, year, semester, section):
 		
 	latestAnnouncements = getAnnouncements(class_id)
 
-	accessToStudent = studentAccess(students, user)
-	content = {'accessToStudent': accessToStudent, 'class': c, 'activities': activities, 'latestAnnouncements': latestAnnouncements,}
+	accessToStudent = studentAccess(enrolled, user)
+	accessToInst = instAccess(instructors, tas, user)
+	
+	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activities': activities, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), }
 	return render_to_response('student/activities.html', content, 
 		context_instance=RequestContext(request))
 
@@ -128,13 +138,18 @@ def announcements(request, department, class_number, year, semester, section):
 	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
 
-	students = getEnrolled(class_id)
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	students = getStudents(class_id)
+	enrolled = getEnrolled(class_id)
 
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
 	latestAnnouncements = getAnnouncements(class_id)
 
-	accessToStudent = studentAccess(students, user)
-	content = {'accessToStudent': accessToStudent, 'class': c, 'announcements': announcements, 'latestAnnouncements': latestAnnouncements }
+	accessToStudent = studentAccess(enrolled, user)
+	accessToInst = instAccess(instructors, tas, user)
+	
+	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'announcements': announcements, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c),  }
 	
 	return render_to_response('student/announcements.html', content, 
 		context_instance=RequestContext(request))			
@@ -147,8 +162,8 @@ def getAnnouncements(class_id):
 		else:
 			announcement.title = announcement.title
 			
-		if len(announcement.content) > 50:
-			announcement.content = announcement.content[:50] + '...'
+		if len(announcement.content) > 100:
+			announcement.content = announcement.content[:100] + '...'
 		else:
 			announcement.content = announcement.content
 	return latestAnnouncements	
@@ -185,3 +200,7 @@ def getStudents(class_id):
 	
 def getEnrolled(class_id):
 	return UserProfile.objects.filter(classlist__cid=class_id)
+		
+def getClassUrl(c):
+	classUrl = '/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/'
+	return classUrl

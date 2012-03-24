@@ -2,8 +2,22 @@
 {% block instructorcontent %}
 	<h2>Create Syllabus</h2>
 	<form action="" method="POST">
+		<div id="table">
 		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Enter">
+			{% for field in form %}
+			<div id="fieldWrapper">
+				<div id="fieldLeft">
+					{{ field.label_tag }}: 
+				</div>
+					<div id="fieldRight">
+						{{ field.errors }}
+						{{ field }}
+					</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
 	</form>
 {% endblock %}

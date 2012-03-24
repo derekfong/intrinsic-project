@@ -1,65 +1,53 @@
-{% extends "base.html" %}
-{% block sidebar %}
-	<h3>Announcements: </h3>
-	{% for announcement in latestAnnouncements %}
-		<strong>{{ announcement.title|title }}</strong>
-		<p>{{ announcement.content }}</p>
-	{% endfor %}
-	<a href="/course/{{ class.department }}/{{ class.class_number }}/{{ class.year }}/{{ class.semester }}/{{ class.section }}/announcements">View All</a>
-{% endblock %}
-{% block content %}
-	{% if accessToStudent %}
+{% extends "student/index.html" %}
+{% block student %}
 		<div id="bottomPosts">
-			<h2 class="title">{{ class.department }} {{ class.class_number }} - Graded Activities</h2>
-			{% for activity in activities %}
-				<div id="table">
-					<div id="actWrapper">
-						<div id="actLeft">Activity Name: </div>
-						<div id="actRight">{{ activity.activity_name }}</div>
-					</div>
-					<div id="actWrapper">
-						<div id="actLeft">Out Of: </div>
-						<div id="actRight">{{ activity.out_of }}</div>
-					</div>
-					<div id="actWrapper">
-						<div id="actLeft">Worth: </div>
-						<div id="actRight">{{ activity.worth }}%</div>
-					</div>
-					<div id="actWrapper">
-						<div id="actLeft">Due Date: </div>
-						<div id="actRight">{{ activity.due_date }}</div>
-					</div>
-					<div id="actWrapper">
-						<div id="actLeft">Status: </div>
-						<div id="actRight">
-							{% if activity.status == 0 %}
-								Not Marked
-							{% else %}
-								{% if activity.status == 1 %}
-									Marked but not released
-								{% else %}
-									Marked and released
-								{% endif %}
-							{% endif %}
-						</div>
-					</div>
-					<div id="actWrapper">
-						<div id="actLeft">Actions: </div>
-						<div id="actRight">
-							{% if activity.pastDue %}
-								None
-							{% else %}
-								<span class="postLinks">
-									<a href="{{ activity.aid }}/submission">Make Submission</a>
-								</span>
-							{% endif %}
-						</div>
-					</div>
-					<div id="endAct"></div>
+		<h2 class="title">{{ class.department }} {{ class.class_number }} - Graded Activities</h2>
+		{% for activity in activities %}
+			<div id="table">
+				<div id="actWrapper">
+					<div id="actLeft">Activity Name: </div>
+					<div id="actRight">{{ activity.activity_name }}</div>
 				</div>
-			{% endfor %}
-		</div>
-	{% else %}
-		<p class="error">You are not enrolled in this class</p>
-	{% endif %}
+				<div id="actWrapper">
+					<div id="actLeft">Out Of: </div>
+					<div id="actRight">{{ activity.out_of }}</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Worth: </div>
+					<div id="actRight">{{ activity.worth }}%</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Due Date: </div>
+					<div id="actRight">{{ activity.due_date }}</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Status: </div>
+					<div id="actRight">
+						{% if activity.status == 0 %}
+							Not Marked
+						{% else %}
+							{% if activity.status == 1 %}
+								Marked but not released
+							{% else %}
+								Marked and released
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">Actions: </div>
+					<div id="actRight">
+						{% if activity.pastDue %}
+							None
+						{% else %}
+							<span class="postLinks">
+								<a href="{{ activity.aid }}/submission">Make Submission</a>
+							</span>
+						{% endif %}
+					</div>
+				</div>
+				<div id="endAct"></div>
+			</div>
+		{% endfor %}
+	</div>
 {% endblock %}
