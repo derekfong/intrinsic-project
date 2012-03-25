@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block sidebar %}
+	<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
+	<ul>
+		{% if accessToInst %}
+			<li><a href="{{ classUrl }}instructor">Instructor View</a></li>
+		{% endif %}
+		<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
+		<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
+		<li><a href="{{ classUrl }}grades">View Grades</a></li>
+	</ul>
 	<h2 class="announce">Announcements</h2>
 	{% for announcement in latestAnnouncements %}
 		<div id="announceTitle">
@@ -18,15 +27,7 @@
 {% endblock %}
 {% block content %}
 	{% if accessToStudent %}
-		<h2>{{ class.department }} {{class.class_number }} | {{ class.class_name }}</h2>
-		<ul>
-			<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
-			<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
-			<li><a href="{{ classUrl }}grades">View Grades</a></li>
-			{% if accessToInst %}
-				<li><a href="{{ classUrl }}instructor">Instructor View</a></li>
-			{% endif %}
-		</ul>
+		
 		{% block student %}
 		{% endblock %}
 	{% else %}

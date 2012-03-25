@@ -1,0 +1,87 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+	<h2 class="title">Class Roster</h2>
+	<div id="table">
+		{% if instructor.count > 1 %}
+			<h3 class="title">Instructors</h3>
+		{% else %}
+			<h3 class="title">Instructor</h3>
+		{% endif %}
+		{% for instructor in instructors %}
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Name:
+				</div>
+				<div id="rosterRight">
+					 {{ instructor.user.first_name }} {{ instructor.user.last_name}}
+				</div>
+			</div>
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Email:
+				</div>
+				<div id="rosteRight">
+					 {{ instructor.user.email }}
+				</div>
+			</div>
+			<div id="endAct"></div>
+			{% if not forloop.last %}
+				<br />
+			{% endif %}
+		{% endfor %}
+	</div>
+	<div id="table">
+		{% if tas.count > 1 %}
+			<h3 class="title">Teaching Assistants</h3>
+		{% else %}
+			<h3 class="title">Teaching Assistant</h3>
+		{% endif %}
+		{% for ta in tas %}
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Name:
+				</div>
+				<div id="rosterRight">
+					 {{ ta.user.first_name }} {{ ta.user.last_name}}
+				</div>
+			</div>
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Email:
+				</div>
+				<div id="rosteRight">
+					 {{ ta.user.email }}
+				</div>
+			</div>
+			<div id="endAct"></div>
+			{% if not forloop.last %}
+				<br />
+			{% endif %}
+		{% endfor %}
+	</div>
+	<div id="table">
+		<h3 class="title">Students</h3>
+		{% for student in students %}
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Name:
+				</div>
+				<div id="rosterRight">
+					 {{ student.user.first_name }} {{ student.user.last_name}}
+				</div>
+			</div>
+			<div id="rosterWrapper">
+				<div id="rosterLeft">
+					Email:
+				</div>
+				<div id="rosteRight">
+					 {{ student.user.email }}
+				</div>
+			</div>
+			<div id="endAct"></div>
+			{% if not forloop.last %}
+				<br />
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endblock %}

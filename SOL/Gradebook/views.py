@@ -26,23 +26,35 @@ def index(request, department, class_number, year, semester, section):
 	grades = percentAll(tmpGrades)
 	
 	activities = Activity.objects.filter(cid = class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 
-	content = {'class': c, 'activities': activities,'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'grades': grades, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c)}
+	content = {'class': c, 'activities': activities,'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'grades': grades, 
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list}
 	return render_to_response('gradebook/index.html', content,
 		context_instance=RequestContext(request))
 		
 def viewGrade(request, department, class_number, year, semester, section, aid):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
 	c = get_object_or_404(Course, pk=class_id)
+	a = get_object_or_404(Activity, pk=aid)
 	user = request.user
 	
 	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 	
-	tmpActivity = Grade.objects.get(aid=aid, uid=user.id)
-	activity = percentOne(tmpActivity)
-	comments = GradeComment.objects.filter(gid=activity.gid)
-	latestAnnouncements = getAnnouncements(class_id)
-	
+	activity = []
+	comments = []
+	stats = []
+	median = 0
+	barChart = []
+	message = ''
+	##### NEEDS FIXING: When no grade for student, must output 0. ############## 
+	try:
+		tmpActivity = Grade.objects.get(aid=aid, uid=user.id)
+		activity = percentOne(tmpActivity)
+		comments = GradeComment.objects.filter(gid=activity.gid)
+	except Grade.DoesNotExist:
+		message = 'Assignment has not been graded'
 	tmpGrade = Grade.objects.filter(aid=aid).order_by('mark')
 	sortGrade = percentAll(tmpGrade)
 	barChart = [0,0,0,0,0,0,0,0,0,0,0,0]
@@ -70,21 +82,23 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 		else:
 			barChart[10] += 1
 	barChart[11] = max(barChart)
-		
+	stats = Grade.objects.filter(aid=aid).aggregate(Avg('mark'), Max('mark'), Min('mark'), Count('mark'), StdDev('mark'))
 	if sortGrade.count() % 2 == 1:
 		median = sortGrade[(sortGrade.count()-1)/2].mark
 	else:
 		leftMed = sortGrade[(sortGrade.count()/2)-1].mark
 		rightMed = sortGrade[(sortGrade.count()/2)].mark
 		median = (leftMed + rightMed)/2
-					
-			
-	stats = Grade.objects.filter(aid=aid).aggregate(Avg('mark'), Max('mark'), Min('mark'), Count('mark'), StdDev('mark'))
+	isMarked = a.status
+	
+	latestAnnouncements = getAnnouncements(class_id)
 	
 	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
 	accessToStudent = studentAccess(getEnrolled(class_id), user) or accessToInst
 	
-	content = {'class': c, 'accessToStudent': accessToStudent, 'activity': activity, 'latestAnnouncements': latestAnnouncements, 'comments': comments, 'stats': stats, 'median': median, 'barChart': barChart, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c)}
+	content = {'class': c, 'accessToStudent': accessToStudent, 'activity': activity, 'latestAnnouncements': latestAnnouncements, 
+	'comments': comments, 'stats': stats, 'median': median, 'barChart': barChart, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c), 
+	'messsage': message, 'isMarked': isMarked, 'class_list': class_list}
 	return render_to_response('gradebook/viewGrade.html', content,
 		context_instance=RequestContext(request))
 		

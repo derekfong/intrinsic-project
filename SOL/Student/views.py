@@ -22,9 +22,10 @@ def index(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	accessToStudent = studentAccess(enrolled, user)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 	
 	content = {'class': c , 'instructors': instructors, 'tas': tas, 'students': students, 'accessToInst': accessToInst, 
-		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), }
+		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list }
 	
 	return render_to_response('student/index.html', content,
 		context_instance=RequestContext(request))
@@ -32,83 +33,34 @@ def index(request, department, class_number, year, semester, section):
 def syllabus(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
 	c = get_object_or_404(Course, pk=class_id)
+	
 	user = request.user
 	enrolled = getEnrolled(class_id)
-	
-	accessToInst = instAccess(instructors, tas, user)
-	accessToStudent = studentAccess(enrolled, user)
 	
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
 	students = getStudents(class_id)
-	enrolled = getEnrolled(class_id)
 	
-	# Create the HttpResponse object with the appropriate PDF headers.
-	response = HttpResponse(mimetype='application/pdf')
-	response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
-
-    # Create the PDF object, using the response object as its "file."
-	p = canvas.Canvas(response)
-	p.setLineWidth(.3)
-	p.setFont('Helvetica', 12)
+	accessToInst = instAccess(instructors, tas, user)
+	accessToStudent = studentAccess(enrolled, user)
 	
-	content = CourseContent.objects.get(cid=class_id)
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-	yaxis=750
-	p.drawCentredString(200, yaxis, '%s' %c.class_name)
-	yaxis -= 20
-	p.drawCentredString(250, yaxis, '%s ' %c.semester + '%s' %c.year)
-	yaxis -= 20
+	latestAnnouncements = getAnnouncements(class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 	
-	if instructors.count() > 0:
-		p.drawString(50, yaxis, 'Instructors')
-		yaxis -= 10
-		p.line(50,yaxis,580, (yaxis-10))
-		yaxis -= 10
-		for instructor in instructors:
-			p.drawString(70, yaxis, 'Name: ' + '%s ' %instructor.user.first_name + '%s' %instructor.user.last_name)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Email: ' + '%s' %instructor.user.email)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Office Hours: ' + '%s ' %content.officeHrs)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Office Location: ' + '%s ' %content.officeLocation)
-			yaxis -= 20
-			
-	if tas.count() > 0:
-		p.drawString(50, yaxis, 'Teaching Assitants')
-		yaxis -= 10
-		p.line(480,yaxis,580,yaxis)
-		yaxis -= 10
-		for ta in tas:
-			p.drawString(70, yaxis, 'Name: ' + '%s ' %ta.user.first_name + '%s' %ta.user.last_name)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Email: ' + '%s' %ta.user.email)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Office Hours: ' + '%s ' %content.TaOfficeHrs)
-			yaxis -= 20
-			p.drawString(70, yaxis, 'Office Location: ' + '%s ' %content.TaOfficeLocation)
-			yaxis -= 20
-			
-	p.drawString(50, yaxis, 'Other Information')
-	yaxis -= 20
-	p.drawString(70, yaxis, 'Lecture Time: ' + '%s ' %content.lectTime)
-	yaxis -= 20
-	p.drawString(70, yaxis, 'Pre-Requisites: ' + '%s ' %content.prereq)
-	yaxis -= 20
-	p.drawString(70, yaxis, 'Marking Scheme: ' + '%s ' %content.markingScheme)
-	yaxis -= 20
-	p.drawString(70, yaxis, 'Academic Honesty: ' + '%s ' %content.academicHonesty)
-	yaxis -= 20
-	p.drawString(70, yaxis, 'Additional Information: ' + '%s ' %content.additionalInfo)	
-	yaxis -= 20
-	#p.drawText('Additional Information: ' + '%s ' %content.additionalInfo)
-
-    # Close the PDF object cleanly, and we're done.
-	p.showPage()
-	p.save()
-	return response
+	message = ''
+	try:
+		syllabus = CourseContent.objects.get(cid = class_id)
+	except CourseContent.DoesNotExist:
+		message = 'No syllabus has been created for this class.'
+		###########TRY TO FIND A BETTER WAY TO SEND A BLANK SYLLABUS
+		syllabus = []
+		##########
+		
+	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'syllabus': syllabus, 
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'students': students, 'tas': tas, 'instructors': instructors,
+	'message': message, 'class_list': class_list}
+	return render_to_response('student/syllabus.html', content, 
+		context_instance=RequestContext(request))
 
 def activities(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
@@ -119,6 +71,7 @@ def activities(request, department, class_number, year, semester, section):
 	tas = getTas(class_id)
 	students = getStudents(class_id)
 	enrolled = getEnrolled(class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 	
 	activities = Activity.objects.filter(cid=class_id).order_by('due_date')
 	for activity in activities:
@@ -129,7 +82,8 @@ def activities(request, department, class_number, year, semester, section):
 	accessToStudent = studentAccess(enrolled, user)
 	accessToInst = instAccess(instructors, tas, user)
 	
-	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activities': activities, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), }
+	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activities': activities, 
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list}
 	return render_to_response('student/activities.html', content, 
 		context_instance=RequestContext(request))
 
@@ -145,11 +99,13 @@ def announcements(request, department, class_number, year, semester, section):
 
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
 	latestAnnouncements = getAnnouncements(class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
 
 	accessToStudent = studentAccess(enrolled, user)
 	accessToInst = instAccess(instructors, tas, user)
 	
-	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'announcements': announcements, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c),  }
+	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'announcements': announcements, 
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list }
 	
 	return render_to_response('student/announcements.html', content, 
 		context_instance=RequestContext(request))			

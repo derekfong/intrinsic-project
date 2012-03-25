@@ -17,11 +17,12 @@ html, body {
 
 #header
 {
+	background-image:url('/static/images/sol_logo.png');
+	background-repeat: no-repeat;
 	position: relative;
 	display: block;
 	background-color: #B5111A; 
-	height: 180px;
-	padding: 10px;
+	height: 150px;
 }
 
 #logoPlacer1 {
@@ -67,6 +68,15 @@ html, body {
 	color: #fff;
 	text-decoration: none;
 	border-right: 1px solid #fff;
+}
+
+.greeting
+{
+	display: block;
+	float: right;
+	padding: 5px 10px;
+	color: #fff;
+	text-decoration: none;
 }
 
 #content-container
@@ -123,11 +133,20 @@ h2.title
 	margin: 10px 5px 5px 0 ;
 }
 
-a {
+a 
+{
 	text-decoration: none;
 	color: #0a7ed7;
 }
 
-a:hover {
+a:hover 
+{
 	text-decoration: underline;
+}
+
+.time
+{
+	font-size: 12px;
+	padding: 0px;
+	margin: 10px;
 }

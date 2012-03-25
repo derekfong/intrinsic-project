@@ -6,10 +6,10 @@
 		{% csrf_token %}
 			{% for field in form %}
 			<div id="fieldWrapper">
-				<div id="fieldLeft">
+				<div id="fieldSylLeft">
 					{{ field.label_tag }}: 
 				</div>
-					<div id="fieldRight">
+					<div id="fieldSylRight">
 						{{ field.errors }}
 						{{ field }}
 					</div>

@@ -16,7 +16,10 @@ class CourseContent(models.Model):
 	topics = models.TextField(verbose_name="Topics Covered")
 	markingScheme = models.TextField(verbose_name="Marking Scheme")
 	academicHonesty = models.TextField(verbose_name="Academic Honesty")
-	additionalInfo = models.TextField(verbose_name="Additional Field")
+	additionalInfo = models.TextField(blank=True, verbose_name="Additional Info")
+	created_on = models.DateTimeField()
+	was_updated = models.BooleanField(default=0)
+	updated_on = models.DateTimeField()
 	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
 	
 class Activity(models.Model):

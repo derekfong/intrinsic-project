@@ -4,25 +4,22 @@ from Instructor.models import Announcement, Activity, CourseContent
 from Gradebook.models import Grade
 import datetime
 
-# Limits the Annoucement form to render only the 'title' and 'content' fields
 class AnnounceForm(ModelForm):
+	#send_email = forms.BooleanField(required=False, label='Send Email?')
 	class Meta:
 		model = Announcement
-		fields = ('title', 'content')
+		fields = ('title', 'content', )
 
-# Excludes the 'cid' field from the Activity model
 class ActivityForm(ModelForm):
 	class Meta:
 		model = Activity
 		exclude = ('cid',)
-
-# Excludes the 'cid' field from the CourseContent model
+		
 class CourseForm(ModelForm):
 	class Meta:
 		model = CourseContent
-		exclude = ('cid',)
+		exclude = ('cid', 'was_updated', 'updated_on', 'created_on')
 
-# Excludes the 'cid' field from the Activity model
 class GradeForm(ModelForm):
 	class Meta:
 		model = Grade

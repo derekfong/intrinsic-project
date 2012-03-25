@@ -4,6 +4,7 @@
 	<title>SOL Synergy Online Learning</title>
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}base.css" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fields.css" />
+	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif" />
 	{% block head %}{% endblock %}
 </head>
 <body >
@@ -15,35 +16,25 @@ side tabs for notices and dates tab;
 -->
 <div id="container">
 	<div id="header">
-		<div id="logoPlacer1">
-			<h1 class="logo">Synergy Online Learning</h1>
-			<p>Engaging the world. Lol k</p>
-		</div>
-
-		<div id="logoPlacer2">
-			{% if user.is_authenticated %}
-				<!-- add actual link set uphere-->
-				<p><a href="#settings">Settings</a>
-					<br /> 
-					<a href="/accounts/logout">Logout</a>
-			{% endif %}		
-			</p>
-		</div>
-		<div id="logoPlacerBottom">
-			{% if user.is_authenticated %}
-				<p>Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }}). Today is {% now "F jS Y" %}</p>
-			{% endif %}
-		</div>
+		
 	</div>
 	<div id="navigation">
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="#">About</a></li>
 			{% if user.is_authenticated %}
+				{% for course in class_list %}
+					<li>
+						<a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">{{ course.department }} {{ course.class_number }}</a>
+					</li>
+				{% endfor %}
 				<li><a href="#settings">Settings</a></li>
 				<li><a href="/accounts/logout">Logout</a></li>
 			{% endif %}
 		</ul>
+		{% if user.is_authenticated %}
+			<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+		{% endif %}
+		
 	</div>
 	<div id="content-container">
 		<div id="sidebar">
@@ -54,10 +45,10 @@ side tabs for notices and dates tab;
 				{% if user.is_active %}
 					{% block content %}{% endblock %}
 				{% else %}
-					<p>Bitch, you ain't even active!</p>
+					<p>Your account is not active!</p>
 				{% endif %}
 			{% else %}
-				<h1>Welcome to Synergy Online! Please Login</h1>
+				<h1>Welcome to Synergy Online</h1>
 				{% include "registration/login.html" %}
 			{% endif %}
 		</div>

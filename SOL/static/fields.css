@@ -1,0 +1,157 @@
+#table 
+{
+	border: 1px solid #A7A8A0;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+#fieldWrapper, #actWrapper, #rosterWrapper, #sylWrapper
+{
+	float: left;
+	padding-bottom: 10px;
+}
+
+#fieldWrapper, #actWrapper
+{
+	width: 700px;
+}
+
+#rosterWrapper
+{
+	width: 650px;
+}
+
+#fieldLeft, #actLeft, #rosterLeft, #sylLeft, #fieldSylLeft
+{
+	clear: left;
+	float: left;
+	font-weight: bold;
+}
+
+#sylLeft
+{
+	width: 175px;
+}
+#rosterLeft
+{
+	width: 75px;
+}
+
+#fieldLeft, #actLeft, #fieldSylLeft
+{
+	width: 125px;
+}
+
+#fieldLeft
+{
+	padding-top: 5px;
+}
+
+#fieldRight, #actRight, #fieldSylRight
+{
+	float: right;
+	width: 575px;
+}
+
+#sylRight
+{
+	float: right;
+	width: 525px;
+}
+
+ul.errorlist {
+	list-style-type: none;
+	color: red;
+	padding: 0;
+	margin: 0;
+}
+
+#fieldRight input, #fieldRight textarea
+{
+	border: 1px solid #323232;
+	font-size: 12px;
+	padding: 3px;
+	width: 300px;
+}
+
+#fieldSylRight input, #fieldSylRight textArea
+{
+	border: 1px solid #323232;
+	font-size: 12px;
+	padding: 3px;
+	width: 500px;
+} 
+
+#submit, #endAct
+{
+	clear: both;
+}
+
+#submit
+{
+	padding-top: 10px;
+	padding-left: 125px;
+}
+
+#bottomPosts
+{
+	padding-top: 10px;
+	clear: both;
+}
+
+#postWrapper
+{
+	padding: 10px 0 5px 0;
+}
+
+.postLinks a
+{
+	font-size: 12px;
+	text-decoration: none;
+	padding: 0px;
+}
+
+#postTop
+{
+	font-size: 15px;
+}
+
+#postBottom
+{
+	padding: 5px 0 10px 25px;
+}
+
+#edit
+{
+	font-size: 10px;
+}
+
+#announceTitle
+{
+	font-weight: bold;
+	font-size: 14px;
+	padding-left: 10px;
+}
+
+#announceContent
+{
+	padding-bottom: 10px;
+	padding-left: 10px;
+	font-size: 12px;
+}
+
+h2.announce
+{
+	padding: 0;
+	margin: 0;
+	padding-bottom: 5px;
+	padding-top: 15px;
+}
+
+.announceLink
+{
+	font-size: 12px;
+	padding-left: 10px;
+}
+
+
