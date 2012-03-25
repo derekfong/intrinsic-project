@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent
@@ -7,11 +7,11 @@ from Gradebook.models import Grade, UploadGrade
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm
 from decimal import Decimal, getcontext
-import datetime, xlrd, xlwt
 from reportlab.pdfgen import canvas
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
 from Main.models import UserProfile
+import datetime, xlrd, xlwt, re
 
 # Create your views here.
 def index(request, department, class_number, year, semester, section):

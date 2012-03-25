@@ -1,0 +1,10 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+    <h2>Input Student Grades</h2>
+    <p>{{ message }}</p>
+    <form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="Upload Grades" /></p>
+    </form>
+{% endblock %}
