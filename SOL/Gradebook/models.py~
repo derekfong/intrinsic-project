@@ -23,8 +23,4 @@ class UploadGrade(forms.Form):
 		self.fields['activity_name'] = forms.ModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
 		self.fields['file_path'] = forms.FileField()
 
-class DownloadGrade(forms.Form):
-    def __init__(self, *args, **kwargs):
-		cid=kwargs.pop('cid')
-		super(DownloadGrade, self).__init__(*args, **kwargs)
-		self.fields['activity_name'] = forms.ModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
+		

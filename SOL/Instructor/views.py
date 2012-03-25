@@ -1,13 +1,12 @@
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent
-from Gradebook.models import Grade, UploadGrade
+from Gradebook.models import Grade, UploadGrade, DownloadGrade
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm
 from decimal import Decimal, getcontext
-import datetime, xlrd, xlwt
 from reportlab.pdfgen import canvas
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
@@ -16,7 +15,7 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+import datetime, xlrd, xlwt, re
 
 #View to generate the page for the main view of Instructor App
 def index(request, department, class_number, year, semester, section):
@@ -359,16 +358,28 @@ def grades(request, department, class_number, year, semester, section):
 	message = ""
 	
 	if request.method == 'POST':
-		form = UploadGrade(request.POST, request.FILES, cid=class_id)
-		if form.is_valid():
-			upload_grades(request.FILES['file_path'], request.POST['activity_name'])
-			message = "Successfully uploaded grades."
+		if 'upload' in request.POST:
+			form_upload = UploadGrade(request.POST, request.FILES, cid=class_id)
+			form_download = DownloadGrade(cid=class_id)
+			if form_upload.is_valid():
+				upload_grades(request.FILES['file_path'], request.POST['activity_name'])
+				message = "Successfully uploaded grades."
+		elif 'download' in request.POST:
+			form_download = DownloadGrade(request.POST, cid=class_id)
+			form_upload = UploadGrade(cid=class_id)
+			if form_download.is_valid():
+				file_and_name = download_grades(class_id, request.POST['activity_name'])
+				file_to_send = file_and_name['file']
+				file_name = file_and_name['file_name']
+				response = HttpResponse(file_to_send, content_type='application/vnd.ms-excel')
+				response['Content-Disposition'] = 'attachment; filename='+file_name
+				return response
 	else:
-		options = Activity.objects.filter(cid=class_id)
-		form = UploadGrade(cid=class_id)
-		
-	content = {'class': c, 'form': form, 'message': message, 'accessToInst': accessToInst, 'students': students, 
-	'classUrl': getClassUrl(c), 'class_list': class_list}
+		#options = Activity.objects.filter(cid=class_id)
+		form_upload = UploadGrade(cid=class_id)
+		form_download = DownloadGrade(cid=class_id)
+	
+	content = {'class': c, 'classUrl': getClassUrl(c), 'form_up': form_upload, 'form_down': form_download, 'message': message, 'accessToInst': accessToInst, 'students': students}
 	return render_to_response('instructor/grades.html', content, 
 		context_instance=RequestContext(request))
 
@@ -381,11 +392,66 @@ def upload_grades(input_file, aid):
 	getcontext().prec = 2
 	for row in num_of_rows:
 		sfu_id = int(sheet.cell_value(row,3))
-		mark = Decimal(str(sheet.cell_value(row,4)))
 		user = UserProfile.objects.get(sfu_id=sfu_id)
-		new_grade = Grade(uid=user, aid=activity)
-		new_grade.mark = mark
-		new_grade.save()
+		
+		# Validating marks column for proper type
+		mark_value = str(sheet.cell_value(row,4))
+		if re.match("^[0-9.]+$", mark_value):
+			if mark_value == '.':
+				mark = Decimal(0)
+			else:
+				mark = Decimal(mark_value)
+		else:
+			mark = Decimal(0)
+		
+		# Check if user already has a grade recorded for the assignment:
+		# - If they don't, then make a new Grade
+		# - If they do, then update the grade to the new grade
+		if Grade.objects.filter(uid=user.id, aid=aid).count() < 1:
+			new_grade = Grade(uid=user, aid=activity)
+			new_grade.mark = mark
+			new_grade.save()
+		else:
+			update_grade = Grade.objects.get(uid=user.id, aid=aid)
+			update_grade.mark = mark
+			update_grade.save()
+
+def download_grades(cid, aid):
+	mark_file = xlwt.Workbook()
+	sheet = mark_file.add_sheet('Marks')
+	
+	# Header row
+	sheet.write(0,0, 'USERNAME')
+	sheet.write(0,1, 'FIRST NAME')
+	sheet.write(0,2, 'LAST NAME')
+	sheet.write(0,3, 'SFU ID')
+	sheet.write(0,4, 'MARK')
+	
+	activity = Activity.objects.get(aid=aid)
+	file_name = activity.activity_name+".xls"
+	class_list = ClassList.objects.filter(cid=cid)
+	row = 1
+	for person in class_list:
+		if not person.is_instructor and not person.is_ta:
+			username = person.uid.user.username
+			first_name = person.uid.user.first_name
+			last_name = person.uid.user.last_name
+			sfu_id = person.uid.sfu_id
+			try:
+				mark = Grade.objects.get(uid=person.uid.user.id, aid=aid).mark
+			except Grade.DoesNotExist:
+				mark = None
+			
+			sheet.write(row,0, username)
+			sheet.write(row,1, first_name)
+			sheet.write(row,2, last_name)
+			sheet.write(row,3, sfu_id)
+			sheet.write(row,4, mark)
+			row = row + 1
+	mark_file.save("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
+	file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
+	return { 'file': file_to_send, 'file_name': file_name }
+
 
 
 #def getRequiredContent(department, class_number, year, semester, section):
