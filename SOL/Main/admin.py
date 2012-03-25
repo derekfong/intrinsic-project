@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from Main.models import Course, ClassList, UploadUserList, UploadClassList
-from Instructor.models import Activity, Announcement
+from Instructor.models import Activity, Announcement, Slide
 from Student.models import Submission
 from Gradebook.models import Grade, GradeComment
 from models import UserProfile
@@ -139,6 +139,14 @@ class UploadClassListAdmin(admin.ModelAdmin):
 		self.message_user(request, "%s class list(s) enrolled successfully" % len(queryset))
     enroll_students.short_description = "Enroll students into class from Excel file"
 
+class SlideAdmin(admin.ModelAdmin):
+	fieldsets = [
+		(None, {'fields': ['cid', 'title', 'uploaded_on', 'file_path']})
+	]
+	list_filter=['cid']
+	search_fields=['cid']
+	list_display = ('cid', 'title')
+	
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Course, CourseAdmin)
@@ -149,3 +157,4 @@ admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(UploadUserList, UploadUserListAdmin)
 admin.site.register(UploadClassList, UploadClassListAdmin)
+admin.site.register(Slide, SlideAdmin)

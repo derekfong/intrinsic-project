@@ -1,0 +1,13 @@
+{% extends "student/index.html" %}
+{% block student %}
+	<div id="bottomPosts">
+		<h2 class="title">Lecture Slides</h2>
+			<div id="table">
+				<ul>
+				{% for slide in slides %}
+					<li><a href="{{ STATIC_URL }}{{ slide.file_path }}">{{ slide.title }}</a></li>
+				{% endfor %}
+			</div>
+		</div> 
+	</div>
+{% endblock %}

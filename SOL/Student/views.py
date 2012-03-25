@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
-from Instructor.models import Activity, Announcement, CourseContent
+from Instructor.models import Activity, Announcement, CourseContent, Slide
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 import datetime
@@ -62,6 +62,30 @@ def syllabus(request, department, class_number, year, semester, section):
 	return render_to_response('student/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
+def slides(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
+	c = get_object_or_404(Course, pk=class_id)
+
+	user = request.user
+	enrolled = getEnrolled(class_id)
+
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	students = getStudents(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	accessToStudent = studentAccess(enrolled, user)
+
+	latestAnnouncements = getAnnouncements(class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	slides = Slide.objects.filter(cid = class_id)
+
+	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'latestAnnouncements': latestAnnouncements, 
+	'classUrl': getClassUrl(c),  'class_list': class_list, 'slides': slides}
+	return render_to_response('student/slides.html', content, 
+		context_instance=RequestContext(request))
+	
 def activities(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
 	c = get_object_or_404(Course, pk=class_id)

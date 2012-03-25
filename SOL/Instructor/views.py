@@ -2,10 +2,10 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
-from Instructor.models import Announcement, Activity, CourseContent
+from Instructor.models import Announcement, Activity, CourseContent, Slide
 from Gradebook.models import Grade, UploadGrade, DownloadGrade
-from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled
-from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm
+from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements
+from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
 from decimal import Decimal, getcontext
 from reportlab.pdfgen import canvas
 from django.forms.models import modelformset_factory
@@ -94,6 +94,31 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': classUrl, 'class_list': class_list}
 	return render_to_response('instructor/syllabus.html', content, 
+		context_instance=RequestContext(request))
+
+def slides(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	enrolled = getEnrolled(class_id)
+	
+	accessToInst = instAccess(instructors, tas, user)
+	activities = Activity.objects.filter(cid=class_id)
+	class_list = Course.objects.filter(classlist__uid=user.id)
+	if request.method == 'POST':
+		slide = Slide(cid=c, uploaded_on=datetime.datetime.now())
+		form = SlideForm(request.POST, request.FILES, instance=slide)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("")
+	else:
+		form = SlideForm()
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0, 'classUrl': getClassUrl(c),
+	'class_list': class_list }
+	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
 			
 #View to generate the page for the graded activities view of Instructor App

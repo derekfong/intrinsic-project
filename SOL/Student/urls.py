@@ -6,4 +6,5 @@ urlpatterns = patterns('Student.views',
 	url(r'^activities/$', 'activities'),
 	url(r'^syllabus/$', 'syllabus'),
 	url(r'^announcements/$', 'announcements'),
+	url(r'^slides/$', 'slides'),
 )

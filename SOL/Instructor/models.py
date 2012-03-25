@@ -22,6 +22,12 @@ class CourseContent(models.Model):
 	updated_on = models.DateTimeField()
 	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
 	
+class Slide(models.Model):
+	cid = models.ForeignKey(Course, verbose_name="Course")
+	title = models.CharField(max_length=128)
+	uploaded_on = models.DateTimeField()
+	file_path = models.FileField(upload_to='slides')
+
 class Activity(models.Model):
 	STATUS_CHOICES = (
 		(0, u'Not Marked'),

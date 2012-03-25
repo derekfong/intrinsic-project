@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from Instructor.models import Announcement, Activity, CourseContent
+from Instructor.models import Announcement, Activity, CourseContent, Slide
 from Gradebook.models import Grade
 import datetime
 
@@ -24,3 +24,8 @@ class GradeForm(ModelForm):
 	class Meta:
 		model = Grade
 	#	fields = ('uid', 'mark')
+	
+class SlideForm(ModelForm):
+	class Meta:
+		model = Slide
+		exclude = ('cid', 'uploaded_on')

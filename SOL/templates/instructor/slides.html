@@ -1,0 +1,23 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+	<h2>Upload Lecture Slides</h2>
+	<form action="" method="POST">
+		<div id="table">
+		{% csrf_token %}
+			{% for field in form %}
+			<div id="fieldWrapper">
+				<div id="fieldSylLeft">
+					{{ field.label_tag }}: 
+				</div>
+					<div id="fieldSylRight">
+						{{ field.errors }}
+						{{ field }}
+					</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
+	</form>
+{% endblock %}
