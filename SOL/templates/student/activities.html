@@ -1,53 +1,63 @@
 {% extends "student/index.html" %}
 {% block student %}
+	{% if isCurrent %}
 		<div id="bottomPosts">
-		<h2 class="title">{{ class.department }} {{ class.class_number }} - Graded Activities</h2>
-		{% for activity in activities %}
-			<div id="table">
-				<div id="actWrapper">
-					<div id="actLeft">Activity Name: </div>
-					<div id="actRight">{{ activity.activity_name }}</div>
-				</div>
-				<div id="actWrapper">
-					<div id="actLeft">Out Of: </div>
-					<div id="actRight">{{ activity.out_of }}</div>
-				</div>
-				<div id="actWrapper">
-					<div id="actLeft">Worth: </div>
-					<div id="actRight">{{ activity.worth }}%</div>
-				</div>
-				<div id="actWrapper">
-					<div id="actLeft">Due Date: </div>
-					<div id="actRight">{{ activity.due_date }}</div>
-				</div>
-				<div id="actWrapper">
-					<div id="actLeft">Status: </div>
-					<div id="actRight">
-						{% if activity.status == 0 %}
-							Not Marked
-						{% else %}
-							{% if activity.status == 1 %}
-								Marked but not released
+		<h2 class="title">Graded Activities</h2>
+		{% if activities.count > 0 %}
+			{% for activity in activities %}
+				<div id="table">
+					<div id="actWrapper">
+						<div id="actLeft">Activity Name: </div>
+						<div id="actRight">{{ activity.activity_name }}</div>
+					</div>
+					<div id="actWrapper">
+						<div id="actLeft">Out Of: </div>
+						<div id="actRight">{{ activity.out_of }}</div>
+					</div>
+					<div id="actWrapper">
+						<div id="actLeft">Worth: </div>
+						<div id="actRight">{{ activity.worth }}%</div>
+					</div>
+					<div id="actWrapper">
+						<div id="actLeft">Due Date: </div>
+						<div id="actRight">{{ activity.due_date }}</div>
+					</div>
+					<div id="actWrapper">
+						<div id="actLeft">Status: </div>
+						<div id="actRight">
+							{% if activity.status == 0 %}
+								Not Marked
 							{% else %}
-								Marked and released
+								{% if activity.status == 1 %}
+									Marked but not released
+								{% else %}
+									Marked and released
+								{% endif %}
 							{% endif %}
-						{% endif %}
+						</div>
 					</div>
-				</div>
-				<div id="actWrapper">
-					<div id="actLeft">Actions: </div>
-					<div id="actRight">
-						{% if activity.pastDue %}
-							None
-						{% else %}
-							<span class="postLinks">
-								<a href="{{ activity.aid }}/submission">Make Submission</a>
-							</span>
-						{% endif %}
+					<div id="actWrapper">
+						<div id="actLeft">Actions: </div>
+						<div id="actRight">
+							{% if activity.pastDue %}
+								None
+							{% else %}
+								<span class="postLinks">
+									<a href="{{ activity.aid }}/submission">Make Submission</a>
+								</span>
+							{% endif %}
+						</div>
 					</div>
+					<div id="endAct"></div>
 				</div>
-				<div id="endAct"></div>
+			{% endfor %}
+		{% else %}
+			<div id="table">
+				<p>There are no activities posted.</p>
 			</div>
-		{% endfor %}
-	</div>
+		{% endif %}
+		</div>
+	{% else %}
+	 	<p>You are not currently enrolled in this class.</p>
+	{% endif %}
 {% endblock %}

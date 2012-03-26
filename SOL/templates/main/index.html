@@ -1,15 +1,21 @@
 {% extends "base.html" %}
+
+{% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+{% endblock %}
+
 {% block content %}
 	<h1>Welcome to SFU Synergy Online!</h1>
 	<h2>Global Announcements</h2>
 	<ul>
-		<li>Set courses so that it only displays current course, and disable access to old (except grades)</li>
 		<li>Announcements read</li>
 		<li>Settings (opt-in notification emails)</li>
 		<li>Restrict File Types for Upload</li>
-		<li>Handle Uploaded Files</li>
 	</ul>
 	<h2>Current Courses</h2>
+	{% if class_list.count > 0 %}
 	<ul>
 	{% for course in class_list %}
 		<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
@@ -17,8 +23,23 @@
 		</a></li>
 	{% endfor %}
 	</ul>
+	{% else %}
+		<p>You are not enrolled in any classes this semester.</p>
+	{% endif %}
+		
 	<h2>Past Course Grades</h2>
-	<p>View Old Grades</p>
+	{% if old_class_list.count > 0 %}
+	<ul>
+	{% for course in old_class_list %}
+		<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
+			{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
+		</a>(<strong>{{ course.semester }} {{ course.year }}</strong>)</li>
+	{% endfor %}
+	</ul>
+	{% else %}
+		<p>You have no past classes.</p>
+	{% endif %}
+		
 	<h2>Calendar</h2>
 	<img src="{{ STATIC_URL }}images/monthpage.gif">
 {% endblock %}

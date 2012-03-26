@@ -7,12 +7,12 @@
 	<h3>New Announcement in {{ class.department }} {{ class.class_number }}</h3>
 	<div id="table">
 		<div id="postTop">
-			<strong>{{ announcement.title }}</strong> 
-			<span class="postDate">({{ announcement.date_posted }}) </span>
+			<strong>{{ title }}</strong> 
+			<span class="postDate">({{ date_posted }}) </span>
 		</div>
 		
 		<div id="postBottom">
-			{{ announcement.content }}
+			{{ content }}
 		</div>
 	</div>
 	<a href="http://localhost:8000/course/{{ class.department }}/{{ class.class_number }}/{{ class.year }}/{{ class.semester}}/{{ class.section}}/announcements/">

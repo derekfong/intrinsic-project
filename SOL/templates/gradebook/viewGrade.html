@@ -1,169 +1,175 @@
 {% extends "student/index.html" %}
 
 {% block head %}
-	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load('visualization', '1.1', {packages: ['barchart']});
-    </script>
-	<script type="text/javascript">
-		google.load("visualization", "1", {packages:["corechart"]});
-		google.setOnLoadCallback(drawChart);
-		function drawChart() {
-		  var data = new google.visualization.DataTable();
-		  data.addColumn('string', 'Percent');
-		  data.addColumn('number', 'Count');
-		  data.addRows([
-		    ['0-10%', {{ barChart.0 }}, ],
-		    ['10-20%', {{ barChart.1 }}, ],
-		    ['20-30%', {{ barChart.2 }}, ],
-		    ['30-40%', {{ barChart.3 }}, ],
-		    ['40-50%', {{ barChart.4 }}, ],
-		    ['50-60%', {{ barChart.5 }}, ],
-		    ['60-70%', {{ barChart.6 }}, ],
-		    ['70-80%', {{ barChart.7 }}, ],
-		    ['80-90%', {{ barChart.8 }}, ],
-		    ['90-100%', {{ barChart.9 }}, ],
-			{% if barChart.10 > 0 %}
-		    	['100%+', {{ barChart.10 }}, ]
-			{% endif %}
-		  ]);
+	{% if isMarked == 2 %}
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	    <script type="text/javascript">
+	      google.load('visualization', '1.1', {packages: ['barchart']});
+	    </script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawChart);
+			function drawChart() {
+			  var data = new google.visualization.DataTable();
+			  data.addColumn('string', 'Percent');
+			  data.addColumn('number', 'Count');
+			  data.addRows([
+			    ['0-10%', {{ barChart.0 }}, ],
+			    ['10-20%', {{ barChart.1 }}, ],
+			    ['20-30%', {{ barChart.2 }}, ],
+			    ['30-40%', {{ barChart.3 }}, ],
+			    ['40-50%', {{ barChart.4 }}, ],
+			    ['50-60%', {{ barChart.5 }}, ],
+			    ['60-70%', {{ barChart.6 }}, ],
+			    ['70-80%', {{ barChart.7 }}, ],
+			    ['80-90%', {{ barChart.8 }}, ],
+			    ['90-100%', {{ barChart.9 }}, ],
+				{% if barChart.10 > 0 %}
+			    	['100%+', {{ barChart.10 }}, ]
+				{% endif %}
+			  ]);
 
-		  var options = {
-			height: 425,
-			width: 560,
-			chartArea: {top:5, left: 75, height:365, width: 475},
-			hAxis: {gridlines: {count:6}},
-		  };
+			  var options = {
+				height: 425,
+				width: 560,
+				chartArea: {top:5, left: 75, height:365, width: 475},
+				hAxis: {gridlines: {count:6}},
+			  };
 
-		  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-		  chart.draw(data, options);
-		}
-	</script>
+			  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+			  chart.draw(data, options);
+			}
+		</script>
+	{% endif %}
 {% endblock %}
 
 {% block student %}
 	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }} Grades</h2>
-	<h3>Grade Information</h3>
-	<div id="table">
-		<div id="actWrapper">
-			<div id="actLeft">
-				Count:
-			</div>
-			<div id="actRight">
-				{{ activity.aid.activity_name }}
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Status: 
-			</div>
-			<div id="actRight">
-				{% if activity.aid.status == 0 %}
-					Due date not passed
-				{% else %}
-					{% if activity.aid.status == 1 %}
-						Due but not marked
-					{% else %}
-						Marks released
-					{% endif %}
-				{% endif %}
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Worth: 
-			</div>
-			<div id="actRight">
-				{{ activity.aid.worth }}%
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Due Date:
-			</div>
-			<div id="actRight">
-				{{ activity.aid.due_date }}
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Grade: 
-			</div>
-			<div id="actRight">
-				{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent }}%)
-			</div>
-		</div>
-		<div id="endAct"></div>
-	</div>
-	<h3>Comments</h3>
-	<div id="table">
-		{% if comments.count > 0 %}
-			{% for comment in comments %}
-				<div id="postWrapper">
-					<div id="postTop">
-						<strong>{{ comment.description }}:</strong>
-					</div>
-					<div id="postBottom">
-						{{ comment.comment }}
-					</div>
+	{% if isMarked == 2 %}
+		<h3>Grade Information</h3>
+		<div id="table">
+			<div id="actWrapper">
+				<div id="actLeft">
+					Count:
 				</div>
-			{% endfor %}
-		{% else %}
-			<p>There are no comments for this assignment</p>
-		{% endif %}
-	</div>
-	<h3>Statistics</h3>
-	<div id="table">
-		<div id="actWrapper">
-			<div id="actLeft">
-				Count:
+				<div id="actRight">
+					{{ activity.aid.activity_name }}
+				</div>
 			</div>
-			<div id="actRight">
-				{{ stats.mark__count }}
+			<div id="actWrapper">
+				<div id="actLeft">
+					Status: 
+				</div>
+				<div id="actRight">
+					{% if activity.aid.status == 0 %}
+						Due date not passed
+					{% else %}
+						{% if activity.aid.status == 1 %}
+							Due but not marked
+						{% else %}
+							Marks released
+						{% endif %}
+					{% endif %}
+				</div>
 			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Worth: 
+				</div>
+				<div id="actRight">
+					{{ activity.aid.worth }}%
+				</div>
+			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Due Date:
+				</div>
+				<div id="actRight">
+					{{ activity.aid.due_date }}
+				</div>
+			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Grade: 
+				</div>
+				<div id="actRight">
+					{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent }}%)
+				</div>
+			</div>
+			<div id="endAct"></div>
 		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Mean: 
-			</div>
-			<div id="actRight">
-				{{ stats.mark__avg|floatformat:2 }}/{{ activity.aid.out_of }}
-			</div>
+		<h3>Comments</h3>
+		<div id="table">
+			{% if comments.count > 0 %}
+				{% for comment in comments %}
+					<div id="postWrapper">
+						<div id="postTop">
+							<strong>{{ comment.description }}:</strong>
+						</div>
+						<div id="postBottom">
+							{{ comment.comment }}
+						</div>
+					</div>
+				{% endfor %}
+			{% else %}
+				<p>There are no comments for this assignment</p>
+			{% endif %}
 		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Median: 
+		<h3>Statistics</h3>
+		<div id="table">
+			<div id="actWrapper">
+				<div id="actLeft">
+					Count:
+				</div>
+				<div id="actRight">
+					{{ stats.mark__count }}
+				</div>
 			</div>
-			<div id="actRight">
-				{{ median }}/{{ activity.aid.out_of }}
+			<div id="actWrapper">
+				<div id="actLeft">
+					Mean: 
+				</div>
+				<div id="actRight">
+					{{ stats.mark__avg|floatformat:2 }}/{{ activity.aid.out_of }}
+				</div>
 			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Median: 
+				</div>
+				<div id="actRight">
+					{{ median }}/{{ activity.aid.out_of }}
+				</div>
+			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Standard Dev:
+				</div>
+				<div id="actRight">
+					{{ stats.mark__stddev|floatformat:2 }}
+				</div>
+			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Maximum: 
+				</div>
+				<div id="actRight">
+					{{ stats.mark__max }}/{{ activity.aid.out_of }}
+				</div>
+			</div>
+			<div id="actWrapper">
+				<div id="actLeft">
+					Minimum: 
+				</div>
+				<div id="actRight">
+					{{ stats.mark__min }}/{{ activity.aid.out_of }}
+				</div>
+			</div>
+			<div id="endAct"></div>
 		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Standard Dev:
-			</div>
-			<div id="actRight">
-				{{ stats.mark__stddev|floatformat:2 }}
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Maximum: 
-			</div>
-			<div id="actRight">
-				{{ stats.mark__max }}/{{ activity.aid.out_of }}
-			</div>
-		</div>
-		<div id="actWrapper">
-			<div id="actLeft">
-				Minimum: 
-			</div>
-			<div id="actRight">
-				{{ stats.mark__min }}/{{ activity.aid.out_of }}
-			</div>
-		</div>
-		<div id="endAct"></div>
-	</div>
-	<h3>Histogram</h3>
-	<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>		
+		<h3>Histogram</h3>
+		<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
+	{% else %}
+		<p>This assignment has not been marked yet.
+	{% endif %}
 {% endblock %}

@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 {% block sidebar %}
-<h2 class="title">{{ class.department }} {{class.class_number }} - Instructor</h2>
-<ul>
-	<li><a href="{{ classUrl }}">Student View</a></li>
-	<li><a href="{{ classUrl }}instructor/syllabus">Syllabus</a></li>
-	<li><a href="{{ classUrl }}instructor/roster">Class Roster</a></li>
-	<li><a href="{{ classUrl }}instructor/slides">Add/Modify Lecture Slides</a></li>
-	<li><a href="{{ classUrl }}instructor/announcement">Add/Modify Announcements</a></li>
-	<li><a href="{{ classUrl }}instructor/activity/">Add/Modify Graded Activities</a></li>
-	<li><a href="{{ classUrl }}instructor/grades">Input/Modify Student Grades</a></li>
-</ul>
+	{% if accessToInst %}
+		<h2 class="title">{{ class.department }} {{class.class_number }} - Instructor</h2>
+		<ul>
+			<li><a href="{{ classUrl }}">Student View</a></li>
+			<li><a href="{{ classUrl }}instructor/syllabus">Syllabus</a></li>
+			<li><a href="{{ classUrl }}instructor/roster">Class Roster</a></li>
+			<li><a href="{{ classUrl }}instructor/slides">Add/Modify Lecture Slides</a></li>
+			<li><a href="{{ classUrl }}instructor/announcement">Add/Modify Announcements</a></li>
+			<li><a href="{{ classUrl }}instructor/activity/">Add/Modify Graded Activities</a></li>
+			<li><a href="{{ classUrl }}instructor/grades">Input/Modify Student Grades</a></li>
+		</ul>
+	{% endif %}
 {% endblock %}
 {% block content %}
 	{% if accessToInst %}

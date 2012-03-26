@@ -1,5 +1,19 @@
 {% extends "instructor/index.html" %}
+{% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+{% endblock %}
 {% block instructorcontent %}
+	<script type="text/javascript">
+		$(function() {
+	    	$('#id_due_date').datetimepicker({
+				dateFormat: "yy-mm-dd"
+			});
+		});
+	</script>
 	{{ message }}
 	{% if update %}
 		<h2 class="title">Activity Update Form</h2>

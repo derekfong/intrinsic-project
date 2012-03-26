@@ -4,7 +4,7 @@ from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent, Slide
 from Gradebook.models import Grade, UploadGrade, DownloadGrade
-from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements
+from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
 from decimal import Decimal, getcontext
 from reportlab.pdfgen import canvas
@@ -30,7 +30,10 @@ def index(request, department, class_number, year, semester, section):
 	
 	#boolean field to see if user has access to instructor view
 	accessToInst = instAccess(instructors, tas, user)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	#render to specified template sending specified variables
 	content = {'class': c, 'classUrl': getClassUrl(c), 'accessToInst': accessToInst, 'class_list': class_list}	
@@ -48,7 +51,10 @@ def syllabus(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	classUrl = getClassUrl(c)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	if request.method == 'POST':
 		content = CourseContent(cid=c, created_on=datetime.datetime.now(), was_updated=0, updated_on=datetime.datetime.now() )
@@ -79,7 +85,10 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	
 	accessToInst = instAccess(instructors, tas, user)
 	classUrl = getClassUrl(c)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 
 	message = ''
 	if request.method == 'POST':
@@ -106,8 +115,13 @@ def slides(request, department, class_number, year, semester, section):
 	enrolled = getEnrolled(class_id)
 	
 	accessToInst = instAccess(instructors, tas, user)
-	activities = Activity.objects.filter(cid=class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	slides = Slide.objects.filter(cid=class_id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	
 	if request.method == 'POST':
 		slide = Slide(cid=c, uploaded_on=datetime.datetime.now())
 		form = SlideForm(request.POST, request.FILES, instance=slide)
@@ -116,10 +130,62 @@ def slides(request, department, class_number, year, semester, section):
 			return HttpResponseRedirect("")
 	else:
 		form = SlideForm()
-	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0, 'classUrl': getClassUrl(c),
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': getClassUrl(c), 'slides':slides,
 	'class_list': class_list }
 	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
+		
+def updateSlides(request, department, class_number, year, semester, section, slid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	s = get_object_or_404(Slide, pk=slid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+	enrolled = getEnrolled(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	
+	slides = Slide.objects.filter(cid=class_id)
+	
+	if request.method == 'POST':
+		slide = Slide(cid=c, uploaded_on=datetime.datetime.now(), id=slid)
+		form = SlideForm(request.POST, request.FILES, instance=slide)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("")
+	else:
+		form = SlideForm(initial={'title': s.title, 'file_path': s.file_path})
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': getClassUrl(c), 'slides': slides,
+	'class_list': class_list }
+	return render_to_response('instructor/slides.html', content, 
+		context_instance=RequestContext(request))
+		
+def removeSlides(request, department, class_number, year, semester, section, slid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	s = get_object_or_404(Slide, pk=slid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+
+	if accessToInst:
+		slide = Slide.objects.get(id=slid)
+		slide.delete()
+		url ='/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/instructor/slides'
+		return HttpResponseRedirect(url)
+	else:
+		content = {'accessToInst': accessToInst, 'classUrl': getClassUrl(c)}
+		return render_to_response('instructor/slides.html', content, 
+			context_instance=RequestContext(request))
 			
 #View to generate the page for the graded activities view of Instructor App
 def activity(request, department, class_number, year, semester, section):
@@ -133,15 +199,18 @@ def activity(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	activities = Activity.objects.filter(cid=class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	
 	if request.method == 'POST':
 		activity = Activity(cid=c)
 		form = ActivityForm(request.POST, instance=activity)
 		if form.is_valid():
 			form.save()
 			if form.cleaned_data['status'] == 2:
-				activity = Activity.objects.get(aid=aid)
-				subject = c.department+' %s' %c.class_number+': Grade released for '+activity.activity_name
+				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
 				for student in enrolled:
@@ -172,7 +241,10 @@ def updateActivity(request, department, class_number, year, semester, section, a
 
 	accessToInst = instAccess(instructors, tas, user)
 	activities = Activity.objects.filter(cid=class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 
 	if request.method == 'POST':
 		activity = Activity(cid=c, aid=aid)
@@ -180,13 +252,12 @@ def updateActivity(request, department, class_number, year, semester, section, a
 		if form.is_valid():
 			form.save()
 			if form.cleaned_data['status'] == 2:
-				activity = Activity.objects.get(aid=aid)
-				subject = c.department+' %s' %c.class_number+': Grade released for '+activity.activity_name
+				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
 				for student in enrolled:
 					to.append(student.user.email)
-				html_content = render_to_string('instructor/emailActivityTemplate.html', {'class': c, 'activity': activity,})
+				html_content = render_to_string('instructor/emailActivityTemplate.html', {'class': c, 'act_name': form.cleaned_data['activity_name'], 'act_aid': aid})
 				text_content = strip_tags(html_content)
 				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 				msg.attach_alternative(html_content, "text/html")
@@ -236,21 +307,22 @@ def announcement(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	if request.method == 'POST':
 		announce = Announcement(cid=c, uid=user.userprofile, was_updated=0, updated_on=datetime.datetime.now(), updated_by=user.userprofile, date_posted=datetime.datetime.now())
 		form = AnnounceForm(request.POST, instance=announce)
 		if form.is_valid():
 			form.save()
-			#if request.POST['send_email'] == 1:
-			announcement = Announcement.objects.filter(cid=class_id).order_by('-anid')[0]
 			subject = 'New Announcement in '+c.department+' %s' %c.class_number
 			from_email = 'itsatme@gmail.com'
 			to = []
 			for student in enrolled:
 				to.append(student.user.email)
-			html_content = render_to_string('instructor/emailAnnounceTemplate.html', {'class': c, 'announcement': announcement,})
+			html_content = render_to_string('instructor/emailAnnounceTemplate.html', {'class': c, 'title': form.cleaned_data['title'], 'content': form.cleaned_data['content'], 'date_posted': datetime.datetime.now()})
 			text_content = strip_tags(html_content)
 			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 			msg.attach_alternative(html_content, "text/html")
@@ -276,7 +348,10 @@ def updateAnnouncement(request, department, class_number, year, semester, sectio
 	
 	accessToInst = instAccess(instructors, tas, user)
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
-	class_list = Course.objects.filter(classlist__uid=user.id)
+
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	if request.method == "POST":
 		announce = Announcement(cid=c, date_posted=an.date_posted, uid=an.uid, was_updated=1, updated_by=user.userprofile, updated_on=datetime.datetime.now(), anid=anid)
@@ -326,7 +401,10 @@ def addGrades(request, department, class_number, year, semester, section, aid):
 
 	accessToInst = instAccess(instructors, tas, user)
 	students = getStudents(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	if request.method == 'POST':
 		#form = UploadGrade(request.POST, request.FILES)
@@ -351,7 +429,10 @@ def roster(request, department, class_number, year, semester, section):
 	user = request.user
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 
 	accessToInst = instAccess(instructors, tas, user)
 	students = getStudents(class_id)
@@ -380,6 +461,10 @@ def grades(request, department, class_number, year, semester, section):
 	accessToInst = instAccess(instructors, tas, user)
 	students = getStudents(class_id)
 	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	
 	message = ""
 	
 	if request.method == 'POST':
@@ -404,7 +489,8 @@ def grades(request, department, class_number, year, semester, section):
 		form_upload = UploadGrade(cid=class_id)
 		form_download = DownloadGrade(cid=class_id)
 	
-	content = {'class': c, 'classUrl': getClassUrl(c), 'form_up': form_upload, 'form_down': form_download, 'message': message, 'accessToInst': accessToInst, 'students': students}
+	content = {'class': c, 'classUrl': getClassUrl(c), 'form_up': form_upload, 'form_down': form_download, 'message': message,
+	'accessToInst': accessToInst, 'students': students, 'class_list': class_list}
 	return render_to_response('instructor/grades.html', content, 
 		context_instance=RequestContext(request))
 
@@ -476,8 +562,5 @@ def download_grades(cid, aid):
 	mark_file.save("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
-
-
-
 #def getRequiredContent(department, class_number, year, semester, section):
 	

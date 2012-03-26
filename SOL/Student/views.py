@@ -3,6 +3,7 @@ from django.template import RequestContext
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
 from Instructor.models import Activity, Announcement, CourseContent, Slide
+from Main.views import currentSemester
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 import datetime
@@ -22,10 +23,15 @@ def index(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	accessToStudent = studentAccess(enrolled, user)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	isCurrent = checkCurrent(c)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	content = {'class': c , 'instructors': instructors, 'tas': tas, 'students': students, 'accessToInst': accessToInst, 
-		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list }
+		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 
+		'isCurrent': isCurrent }
 	
 	return render_to_response('student/index.html', content,
 		context_instance=RequestContext(request))
@@ -43,9 +49,13 @@ def syllabus(request, department, class_number, year, semester, section):
 	
 	accessToInst = instAccess(instructors, tas, user)
 	accessToStudent = studentAccess(enrolled, user)
+	isCurrent = checkCurrent(c)
 	
 	latestAnnouncements = getAnnouncements(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	message = ''
 	try:
@@ -58,7 +68,7 @@ def syllabus(request, department, class_number, year, semester, section):
 		
 	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'syllabus': syllabus, 
 	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'students': students, 'tas': tas, 'instructors': instructors,
-	'message': message, 'class_list': class_list}
+	'message': message, 'class_list': class_list, 'isCurrent': isCurrent}
 	return render_to_response('student/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
@@ -75,14 +85,18 @@ def slides(request, department, class_number, year, semester, section):
 
 	accessToInst = instAccess(instructors, tas, user)
 	accessToStudent = studentAccess(enrolled, user)
+	isCurrent = checkCurrent(c)
 
 	latestAnnouncements = getAnnouncements(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
 	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+		
 	slides = Slide.objects.filter(cid = class_id)
 
 	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'latestAnnouncements': latestAnnouncements, 
-	'classUrl': getClassUrl(c),  'class_list': class_list, 'slides': slides}
+	'classUrl': getClassUrl(c),  'class_list': class_list, 'slides': slides, 'isCurrent': isCurrent}
 	return render_to_response('student/slides.html', content, 
 		context_instance=RequestContext(request))
 	
@@ -95,7 +109,10 @@ def activities(request, department, class_number, year, semester, section):
 	tas = getTas(class_id)
 	students = getStudents(class_id)
 	enrolled = getEnrolled(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
 	activities = Activity.objects.filter(cid=class_id).order_by('due_date')
 	for activity in activities:
@@ -105,9 +122,10 @@ def activities(request, department, class_number, year, semester, section):
 
 	accessToStudent = studentAccess(enrolled, user)
 	accessToInst = instAccess(instructors, tas, user)
+	isCurrent = checkCurrent(c)
 	
 	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activities': activities, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list}
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent}
 	return render_to_response('student/activities.html', content, 
 		context_instance=RequestContext(request))
 
@@ -123,13 +141,17 @@ def announcements(request, department, class_number, year, semester, section):
 
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
 	latestAnnouncements = getAnnouncements(class_id)
-	class_list = Course.objects.filter(classlist__uid=user.id)
+	
+	year = datetime.date.today().year
+	semester = currentSemester()
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 
 	accessToStudent = studentAccess(enrolled, user)
 	accessToInst = instAccess(instructors, tas, user)
+	isCurrent = checkCurrent(c)
 	
 	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'announcements': announcements, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list }
+	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent }
 	
 	return render_to_response('student/announcements.html', content, 
 		context_instance=RequestContext(request))			
@@ -184,3 +206,17 @@ def getEnrolled(class_id):
 def getClassUrl(c):
 	classUrl = '/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/'
 	return classUrl
+	
+def checkCurrent(c):
+	year = datetime.date.today().year
+	semester = currentSemester()
+	
+	if year == c.year and semester == c.semester:
+		return 1
+	else:
+		return 0
+	
+	
+	
+	
+	

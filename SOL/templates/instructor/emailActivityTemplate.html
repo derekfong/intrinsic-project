@@ -5,7 +5,7 @@
 </head>
 <body>
 	<h3>{{ activity.activity_name }} Grade Released in {{ class.department }} {{ class.class_number }}</h3>
-	<strong>Activity Name:</strong> {{ activity.activity_name }}<br/>
-	Click Here to <a href="http://localhost:8000/course/{{ class.department }}/{{ class.class_number }}/{{ class.year }}/{{ class.semester}}/{{ class.section}}/grades/{{ activity.aid }}/">View Grade</a>
+	<strong>Activity Name:</strong> {{ act_name }}<br/>
+	Click Here to <a href="http://localhost:8000/course/{{ class.department }}/{{ class.class_number }}/{{ class.year }}/{{ class.semester}}/{{ class.section}}/grades/{{ act_aid }}/">View Grade</a>
 </body>
 </html>

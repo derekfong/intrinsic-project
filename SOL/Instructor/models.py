@@ -26,7 +26,7 @@ class Slide(models.Model):
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	title = models.CharField(max_length=128)
 	uploaded_on = models.DateTimeField()
-	file_path = models.FileField(upload_to='slides')
+	file_path = models.FileField(upload_to='slides', verbose_name="Select File")
 
 class Activity(models.Model):
 	STATUS_CHOICES = (

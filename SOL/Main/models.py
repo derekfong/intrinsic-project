@@ -80,6 +80,7 @@ class Course(models.Model):
 	)
 	
 	YEAR_CHOICES = (
+		(2011, u'2011'),
 		(2012, u'2012'),
 		(2013, u'2013'),
 		(2014, u'2014'),
