@@ -40,7 +40,8 @@ class Activity(models.Model):
 	out_of = models.DecimalField(decimal_places=2, max_digits=5)
 	worth = models.IntegerField()
 	due_date = models.DateTimeField()
-	#description = models.TextField()
+	description = models.TextField(blank=True)
+	description_doc = models.FileField(upload_to='descriptions', blank=True, verbose_name="Add Description")
 	status = models.IntegerField(choices=STATUS_CHOICES)
 	def __unicode__(self):
 		return u"%s"%self.cid+" "+self.activity_name
@@ -52,6 +53,7 @@ class Announcement(models.Model):
 	title = models.CharField(max_length=256)
 	content = models.TextField()
 	date_posted = models.DateTimeField()
+	send_email = models.BooleanField(default=False, verbose_name="Send Email?")
 	was_updated = models.BooleanField(default=0)
 	updated_by = models.ForeignKey(UserProfile, related_name='updated_by')
 	updated_on = models.DateTimeField(blank=True)

@@ -3,7 +3,7 @@
 	<h2>Upload Lecture Slides</h2>
 	<form action="" method="POST" enctype="multipart/form-data">
 		<div id="table">
-		{% csrf_token %}
+			{% csrf_token %}
 			{% for field in form %}
 			<div id="fieldWrapper">
 				<div id="fieldSylLeft">

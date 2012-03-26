@@ -196,6 +196,7 @@ def activity(request, department, class_number, year, semester, section):
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
 	enrolled = getEnrolled(class_id)
+	emailStudents = UserProfile.objects.filter(classlist__cid=class_id, setting__email_activity=1)
 	
 	accessToInst = instAccess(instructors, tas, user)
 	activities = Activity.objects.filter(cid=class_id)
@@ -206,14 +207,14 @@ def activity(request, department, class_number, year, semester, section):
 	
 	if request.method == 'POST':
 		activity = Activity(cid=c)
-		form = ActivityForm(request.POST, instance=activity)
+		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
 			form.save()
 			if form.cleaned_data['status'] == 2:
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
-				for student in enrolled:
+				for student in emailStudents:
 					to.append(student.user.email)
 				html_content = render_to_string('instructor/emailActivityTemplate.html', {'class': c, 'activity': activity,})
 				text_content = strip_tags(html_content)
@@ -238,6 +239,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
 	enrolled = getEnrolled(class_id)
+	emailStudents = UserProfile.objects.filter(classlist__cid=class_id, setting__email_activity=1)
 
 	accessToInst = instAccess(instructors, tas, user)
 	activities = Activity.objects.filter(cid=class_id)
@@ -248,14 +250,14 @@ def updateActivity(request, department, class_number, year, semester, section, a
 
 	if request.method == 'POST':
 		activity = Activity(cid=c, aid=aid)
-		form = ActivityForm(request.POST, instance=activity)
+		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
 			form.save()
 			if form.cleaned_data['status'] == 2:
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
-				for student in enrolled:
+				for student in emailStudents:
 					to.append(student.user.email)
 				html_content = render_to_string('instructor/emailActivityTemplate.html', {'class': c, 'act_name': form.cleaned_data['activity_name'], 'act_aid': aid})
 				text_content = strip_tags(html_content)
@@ -266,7 +268,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			return HttpResponseRedirect(url)
 	else:
 		tmp = Activity.objects.get(aid=aid)
-		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'due_date': tmp.due_date, 'status': tmp.status, })
+		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
 
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':1, 'classUrl': getClassUrl(c),
 	'class_list': class_list }
@@ -304,6 +306,7 @@ def announcement(request, department, class_number, year, semester, section):
 	instructors = getInsts(class_id)
 	tas = getTas(class_id)
 	enrolled = getEnrolled(class_id)
+	emailStudents = UserProfile.objects.filter(classlist__cid=class_id, setting__email_announcement=1)
 	
 	accessToInst = instAccess(instructors, tas, user)
 	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
@@ -317,16 +320,17 @@ def announcement(request, department, class_number, year, semester, section):
 		form = AnnounceForm(request.POST, instance=announce)
 		if form.is_valid():
 			form.save()
-			subject = 'New Announcement in '+c.department+' %s' %c.class_number
-			from_email = 'itsatme@gmail.com'
-			to = []
-			for student in enrolled:
-				to.append(student.user.email)
-			html_content = render_to_string('instructor/emailAnnounceTemplate.html', {'class': c, 'title': form.cleaned_data['title'], 'content': form.cleaned_data['content'], 'date_posted': datetime.datetime.now()})
-			text_content = strip_tags(html_content)
-			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-			msg.attach_alternative(html_content, "text/html")
-			msg.send()
+			if form.cleaned_data['send_email']:
+				subject = 'New Announcement in '+c.department+' %s' %c.class_number
+				from_email = 'itsatme@gmail.com'
+				to = []
+				for student in emailStudents:
+					to.append(student.user.email)
+				html_content = render_to_string('instructor/emailAnnounceTemplate.html', {'class': c, 'title': form.cleaned_data['title'], 'content': form.cleaned_data['content'], 'date_posted': datetime.datetime.now()})
+				text_content = strip_tags(html_content)
+				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+				msg.attach_alternative(html_content, "text/html")
+				msg.send()
 			return HttpResponseRedirect("")
 	else:
 		form = AnnounceForm()
@@ -362,7 +366,7 @@ def updateAnnouncement(request, department, class_number, year, semester, sectio
 			return HttpResponseRedirect(url)
 	else:
 		tmp = Announcement.objects.get(anid=anid)
-		form = AnnounceForm(initial={'title': tmp.title, 'content': tmp.content })
+		form = AnnounceForm(initial={'title': tmp.title, 'content': tmp.content, 'send_email': tmp.send_email})
 	
 	content = {'class': c, 'form': form, 'announcements': announcements, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c),
 	'class_list': class_list }
@@ -464,7 +468,6 @@ def grades(request, department, class_number, year, semester, section):
 	year = datetime.date.today().year
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	
 	message = ""
 	
 	if request.method == 'POST':

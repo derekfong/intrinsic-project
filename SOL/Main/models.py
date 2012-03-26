@@ -126,4 +126,9 @@ class UploadClassList(models.Model):
 	upload_date = models.DateTimeField(verbose_name='Date class list was uploaded')
 	is_enrolled = models.BooleanField(verbose_name='Enrolled students already?')
 	file_path = models.FileField(upload_to='enrollment_lists')
+	
+class Setting(models.Model):
+	uid = models.ForeignKey(UserProfile, verbose_name="User")
+	email_announcement = models.BooleanField(default=False, verbose_name="Announcements")
+	email_activity = models.BooleanField(default=False, verbose_name="Grades Released")
 

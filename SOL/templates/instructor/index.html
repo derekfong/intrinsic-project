@@ -3,13 +3,14 @@
 	{% if accessToInst %}
 		<h2 class="title">{{ class.department }} {{class.class_number }} - Instructor</h2>
 		<ul>
-			<li><a href="{{ classUrl }}">Student View</a></li>
-			<li><a href="{{ classUrl }}instructor/syllabus">Syllabus</a></li>
+			<li><a href="{{ classUrl }}instructor">Instructor Home</a></li>
 			<li><a href="{{ classUrl }}instructor/roster">Class Roster</a></li>
+			<li><a href="{{ classUrl }}instructor/syllabus">Add/Modify Syllabus</a></li>
 			<li><a href="{{ classUrl }}instructor/slides">Add/Modify Lecture Slides</a></li>
 			<li><a href="{{ classUrl }}instructor/announcement">Add/Modify Announcements</a></li>
 			<li><a href="{{ classUrl }}instructor/activity/">Add/Modify Graded Activities</a></li>
 			<li><a href="{{ classUrl }}instructor/grades">Input/Modify Student Grades</a></li>
+			<li><a href="{{ classUrl }}"><strong>Go to Student View</strong></a></li>
 		</ul>
 	{% endif %}
 {% endblock %}
@@ -17,7 +18,30 @@
 	{% if accessToInst %}
 		
 		{% block instructorcontent %}
-			
+			<h2 class="title">Welcome to the {{ class.department }} {{ class.class_number }} Instructor Page</h2>
+			<p class="instructor">
+				From the instructor home page, you have the ability to fully manage all related course content.  By navigating through the links on the left, you will be able to do the following:
+				<ul>
+					<li>View and contact all students enrolled in the class.</li>
+					<li>Create and maintain a course syllabus by filling out a simple form.</li>
+						<ul>
+							<li>Alternatively, you can provide students with a custom made document.</li>
+						</ul>
+					<li>Add course lecture slides for students to view.</li>
+					<li>Publish and edit course announcements.</li>
+						<ul>
+							<li><strong>Note:</strong> These announcements will be emailed out to students.</li>
+						</ul>
+					<li>Add and edit graded activities</li>
+						<ul>
+							<li><strong>Note:</strong> When marks are released, an email will be sent out to students.</li>
+						</ul>
+					<li>Input and edit students grades.</li>
+						<ul>
+							<li>This can be done manually by inputting them into a simple form, or by downloading, completing, and uploading a Microsoft Excel file.</li>
+						</ul>
+				</ul>
+			</p>
 		{% endblock %}
 	{% else %}
 		<p class="error">You are not an instructor or a TA for this class</p>

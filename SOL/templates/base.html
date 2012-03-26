@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<title>SOL Synergy Online Learning</title>
+	<title>SFU Synergy Online Learning</title>
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
 	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css" />
 	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif" />
@@ -27,7 +27,7 @@ side tabs for notices and dates tab;
 						<a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">{{ course.department }} {{ course.class_number }}</a>
 					</li>
 				{% endfor %}
-				<li><a href="#settings">Settings</a></li>
+				<li><a href="/accounts/settings">Settings</a></li>
 				<li><a href="/accounts/logout">Logout</a></li>
 			{% endif %}
 		</ul>

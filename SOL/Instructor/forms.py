@@ -1,14 +1,14 @@
 from django import forms
 from django.forms import ModelForm
 from Instructor.models import Announcement, Activity, CourseContent, Slide
+from Main.models import Setting
 from Gradebook.models import Grade
 import datetime
 
 class AnnounceForm(ModelForm):
-	#send_email = forms.BooleanField(required=False, label='Send Email?')
 	class Meta:
 		model = Announcement
-		fields = ('title', 'content', )
+		fields = ('title', 'content', 'send_email' )
 
 class ActivityForm(ModelForm):
 	class Meta:
@@ -23,9 +23,13 @@ class CourseForm(ModelForm):
 class GradeForm(ModelForm):
 	class Meta:
 		model = Grade
-	#	fields = ('uid', 'mark')
 	
 class SlideForm(ModelForm):
 	class Meta:
 		model = Slide
 		exclude = ('cid', 'uploaded_on')
+		
+class SettingForm(ModelForm):
+	class Meta:
+		model = Setting
+		exclude = ['uid']

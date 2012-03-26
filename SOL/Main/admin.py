@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from Main.models import Course, ClassList, UploadUserList, UploadClassList
+from Main.models import Course, ClassList, UploadUserList, UploadClassList, Setting
 from Instructor.models import Activity, Announcement, Slide
 from Student.models import Submission
 from Gradebook.models import Grade, GradeComment
@@ -47,7 +47,7 @@ class ClassListAdmin(admin.ModelAdmin):
 
 class ActivityAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['cid', 'activity_name', 'out_of', 'worth', 'due_date', 'status']})
+		(None, {'fields': ['cid', 'activity_name', 'out_of', 'worth', 'due_date', 'status', 'description', 'description_doc']})
 	]
 	list_filter=['cid']
 	search_fields=['cid']
@@ -55,7 +55,7 @@ class ActivityAdmin(admin.ModelAdmin):
 	
 class AnnouncementAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['uid', 'cid', 'title', 'content', 'date_posted']})
+		(None, {'fields': ['uid', 'cid', 'title', 'content', 'date_posted', 'send_email']})
 	]
 	list_filter=['cid', 'uid']
 	search_filter=['cid', 'uid']
@@ -147,6 +147,12 @@ class SlideAdmin(admin.ModelAdmin):
 	search_fields=['cid']
 	list_display = ('cid', 'title')
 	
+class SettingAdmin(admin.ModelAdmin):
+	fieldsets = [
+		(None, {'fields': ['uid', 'email_announcement', 'email_activity']})
+	]
+	list_display = ('uid', 'email_announcement', 'email_activity')
+	
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Course, CourseAdmin)
@@ -158,3 +164,4 @@ admin.site.register(Grade, GradeAdmin)
 admin.site.register(UploadUserList, UploadUserListAdmin)
 admin.site.register(UploadClassList, UploadClassListAdmin)
 admin.site.register(Slide, SlideAdmin)
+admin.site.register(Setting, SettingAdmin)

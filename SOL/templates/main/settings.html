@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+	<h2 class="title">Account Settings</h2>
+	<div id="table">
+		<div id="fieldWrapper">
+			<div id="fieldSylLeft">
+				User: 
+			</div>
+				<div id="fieldSylRight">
+					{{ user.username }}
+				</div>
+		</div>
+		<div id="fieldWrapper">
+			<div id="fieldSylLeft">
+				SFU ID: 
+			</div>
+				<div id="fieldSylRight">
+					{{ user.userprofile.sfu_id}}
+				</div>
+		</div>
+		<div id="fieldWrapper">
+			<div id="fieldSylLeft">
+				Email: 
+			</div>
+				<div id="fieldSylRight">
+					{{ user.email }}
+				</div>
+		</div>
+		
+		<div id="bottomPosts">
+			<h3 class="setting">Email Notifications</h3>
+			<form action="" method="POST">
+				{% csrf_token %}
+				{% for field in form %}
+					<div id="fieldWrapper">
+						<div id="fieldSylLeft">
+							{{ field.label_tag }}: 
+						</div>
+							<div id="fieldSylRight">
+								{{ field.errors }}
+								{{ field }}
+							</div>
+					</div>
+				{% endfor %}
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+	</div>
+{% endblock %}

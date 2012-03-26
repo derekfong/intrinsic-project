@@ -5,4 +5,6 @@ urlpatterns = patterns('Main.views',
 	url(r'^$', 'index'),
 	url(r'login/$', login),
 	url(r'logout/$', 'logout_view'),
+	url(r'settings/$', 'setting'),
+	url(r'settings/update/$', 'updateSetting'),
 )

@@ -22,6 +22,27 @@
 						<div id="actLeft">Due Date: </div>
 						<div id="actRight">{{ activity.due_date }}</div>
 					</div>
+					{% if activity.description %}
+					<div id="actWrapper">
+						<div id="actLeft">Description: </div>
+						<div id="actRight">
+							{{ activity.description|linebreaksbr }}
+							{% if activity.description_doc %}
+								<br />
+								<a href="{{ STATIC_URL }}{{ activity.description_doc }}">View Description</a>
+							{% endif %}
+						</div>
+					</div>
+					{% else %}
+						{% if activity.description_doc %}
+							<div id="actWrapper">
+								<div id="actLeft">Description: </div>
+								<div id="actRight">
+										<a href="{{ STATIC_URL }}{{ activity.description_doc }}">View Description</a>
+								</div>
+							</div>
+						{% endif %}
+					{% endif %}
 					<div id="actWrapper">
 						<div id="actLeft">Status: </div>
 						<div id="actRight">

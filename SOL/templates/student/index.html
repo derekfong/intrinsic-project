@@ -2,9 +2,7 @@
 {% block sidebar %}
 	<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
 	<ul>
-		{% if accessToInst %}
-			<li><a href="{{ classUrl }}instructor">Instructor View</a></li>
-		{% endif %}
+		<li><a href="{{ classUrl }}">Course Home</a></li>
 		<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
 		{% if isCurrent %}
 			<li><a href="{{ classUrl }}announcements">Announcements</a></li>
@@ -12,6 +10,9 @@
 			<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
 		{% endif %}
 		<li><a href="{{ classUrl }}grades">View Grades</a></li>
+		{% if accessToInst %}
+			<li><a href="{{ classUrl }}instructor"><strong>Go to Instructor View</strong></a></li>
+		{% endif %}
 	</ul>
 	{% if isCurrent %}
 		<h2 class="announce">Announcements</h2>
@@ -47,6 +48,16 @@
 	{% if accessToStudent %}
 		
 		{% block student %}
+		
+			{% if isCurrent %}
+				<div id="bottomPosts">
+					<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}} - {{ class.class_name }}</h2>
+					<p class="intro">I would like to welcome you all to {{ class.department }} {{ class.class_number}}.  I look forward to this semester and you hope you all have fun and enjoy what I have to say.</p>
+				</div>
+			{% else %}
+				<p>You are not currently enrolled in this class.</p>
+			{% endif %}
+		
 		{% endblock %}
 	{% else %}
 		<p class="error">You are not enrolled in this class</p>
