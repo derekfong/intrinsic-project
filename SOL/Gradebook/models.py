@@ -3,6 +3,7 @@ from django.db import models
 from Instructor.models import Activity
 from Main.models import UserProfile, ClassList
 from django import forms
+from django.forms.models import ModelChoiceField
 
 # Create your models here.
 class Grade(models.Model):
@@ -20,11 +21,22 @@ class UploadGrade(forms.Form):
     def __init__(self, *args, **kwargs):
 		cid=kwargs.pop('cid')
 		super(UploadGrade, self).__init__(*args, **kwargs)
-		self.fields['activity_name'] = forms.ModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
+		self.fields['activity_name'] = ActivityModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
 		self.fields['file_path'] = forms.FileField()
 
 class DownloadGrade(forms.Form):
     def __init__(self, *args, **kwargs):
 		cid=kwargs.pop('cid')
 		super(DownloadGrade, self).__init__(*args, **kwargs)
-		self.fields['activity_name'] = forms.ModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
+		self.fields['activity_name'] = ActivityModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
+
+class OnlineGrade(forms.Form):
+    def __init__(self, *args, **kwargs):
+		cid=kwargs.pop('cid')
+		super(OnlineGrade, self).__init__(*args, **kwargs)
+		self.fields['activity_name'] = ActivityModelChoiceField(queryset=Activity.objects.filter(cid=cid), empty_label="<Choose Activity>")
+
+class ActivityModelChoiceField(ModelChoiceField):
+	def label_from_instance(self, obj):
+		return obj.activity_name
+
