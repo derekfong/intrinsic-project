@@ -4,7 +4,7 @@ from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
 from Instructor.models import Activity, Announcement, CourseContent, Slide
 from Main.views import currentSemester
-from reportlab.pdfgen import canvas
+#from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 import datetime
 
