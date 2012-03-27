@@ -2,15 +2,27 @@
 		<p class="error">Oops, invalid username or password</p>
 	{% endif %}
 	<div id="login">
-	<form action="/accounts/login/" method="POST">
-		{% csrf_token %}
-		<label for="username">Username:</label>
-		<input type="text" name="username" value="" id="username" class="loginInput">
-		<br />
-		<label for="password">Password:</label>
-		<input type="password" name="password" value="" id="password" class="loginInput">
-		<br />
-		<input type="submit" value="Login" />
-		<input type="hidden" name="next" value="/" />
-	</form>
+		<div id="table">
+			<form action="/accounts/login/" method="POST">
+				{% csrf_token %}
+				<div id="fieldWrapper">
+					<div id="fieldLeft">
+						<label for="username">Username:</label>
+					</div>
+					<div id="fieldRight">
+						<input type="text" name="username" value="" id="username" class="loginInput">
+					</div>
+				</div>
+				<div id="fieldWrapper">
+					<div id="fieldLeft">
+						<label for="password">Password:</label>
+					</div>
+					<div id="fieldRight">
+						<input type="password" name="password" value="" id="password" class="loginInput">
+					</div>
+				</div>
+				<input type="submit" value="Login" />
+				<input type="hidden" name="next" value="/" />
+			</form>
+		</div>
 	</div>
