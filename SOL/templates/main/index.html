@@ -8,11 +8,6 @@
 
 {% block content %}
 	<h1>Welcome to SFU Synergy Online!</h1>
-	<h2>Global Announcements</h2>
-	<ul>
-		<li>Announcements read</li>
-		<li>Restrict File Types for Upload</li>
-	</ul>
 	<h2>Current Courses</h2>
 	{% if class_list.count > 0 %}
 	<ul>
@@ -38,7 +33,4 @@
 	{% else %}
 		<p>You have no past classes.</p>
 	{% endif %}
-		
-	<h2>Calendar</h2>
-	<img src="{{ STATIC_URL }}images/monthpage.gif">
 {% endblock %}

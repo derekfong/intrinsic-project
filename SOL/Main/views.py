@@ -38,7 +38,7 @@ def setting(request):
 		try:
 			setting = Setting.objects.get(uid=user.id)
 			return HttpResponseRedirect("/accounts/settings/update/")
-		except CourseContent.DoesNotExist:
+		except Setting.DoesNotExist:
 			form = SettingForm()
 		
 	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form },

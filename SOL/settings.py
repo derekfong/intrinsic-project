@@ -8,6 +8,10 @@ TEMPLATE_DEBUG = DEBUG
 #JQUERY_ROOT = '/home/csmadmin/tools/jquery'
 #sys.path = [CHARTIT_DIR] + sys.path
 #PROJECT_ROOT = os.path.dirname(__file__)
+
+#import djcelery
+#djcelery.setup_loader()
+
 ADMINS = (
     ('Kevin Mann', 'kma50@sfu.ca'),
 )
@@ -135,6 +139,8 @@ INSTALLED_APPS = (
 	'SOL.Main',
 	'SOL.Student',
 )
+#INSTALLED_APPS += ( "djcelery", )
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'itsatme@gmail.com'

@@ -93,7 +93,7 @@
 					Grade: 
 				</div>
 				<div id="actRight">
-					{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent }}%)
+					{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent|floatformat:2 }}%)
 				</div>
 			</div>
 			<div id="endAct"></div>
