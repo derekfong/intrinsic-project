@@ -634,7 +634,14 @@ def grades_input(request, department, class_number, year, semester, section, aid
 				else:
 					mark = Decimal(0)
 				
-				student_grade = Grade.objects.get(uid=student.user.id)
+				uid = student.user.id
+				
+				try:
+					student_grade = Grade.objects.get(uid=uid, aid=aid)
+				except Grade.DoesNotExist:
+					student_grade = Grade(uid=student, aid=Activity.objects.get(aid=aid))
+				
+				
 				student_grade.mark = mark
 				student_grade.save()
 			message = "Successfully inputted student grades."
