@@ -7,7 +7,7 @@ from Gradebook.models import Grade, UploadGrade, DownloadGrade
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
 from decimal import Decimal, getcontext
-from reportlab.pdfgen import canvas
+#from reportlab.pdfgen import canvas
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
 from Main.models import UserProfile
