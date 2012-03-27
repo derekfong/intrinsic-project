@@ -71,7 +71,7 @@
 						{{ activity.description|linebreaksbr }}
 						{% if activity.description_doc %}
 							<br />
-							<a href="{{ STATIC_URL }}{{ activity.description_doc }}">View Description</a>
+							<a href="{{ MEDIA_URL }}{{ activity.description_doc }}">View Description</a>
 						{% endif %}
 					</div>
 				</div>
@@ -80,7 +80,7 @@
 						<div id="actWrapper">
 							<div id="actLeft">Description: </div>
 							<div id="actRight">
-									<a href="{{ STATIC_URL }}{{ activity.description_doc }}">View Description</a>
+									<a href="{{ MEDIA_URL }}{{ activity.description_doc }}">View Description</a>
 							</div>
 						</div>
 					{% endif %}
