@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.contrib import auth
 from Main.models import Course, Setting
 from datetime import date
-from forms import SettingForm
+from Instructor.forms import SettingForm
 import datetime
 
 # Create your views here.
