@@ -198,7 +198,7 @@ def getTas(class_id):
 	return UserProfile.objects.filter(classlist__cid=class_id, classlist__is_ta=1)
 
 def getStudents(class_id):
-	return UserProfile.objects.filter(classlist__cid=class_id, classlist__is_ta=0, classlist__is_instructor=0).order_by('user__last_name', 'user__first_name', 'sfu_id')
+	return UserProfile.objects.filter(classlist__cid=class_id, classlist__is_ta=0, classlist__is_instructor=0)
 	
 def getEnrolled(class_id):
 	return UserProfile.objects.filter(classlist__cid=class_id)
