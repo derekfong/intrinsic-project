@@ -20,7 +20,7 @@
 			{% if latestAnnouncements.count > 0 %}
 				{% for announcement in latestAnnouncements %}
 					<div id="announceTitle">
-						{{ announcement.title|title }}
+						{{ announcement.title }}
 					</div>
 					<div id="announceContent">
 						{{ announcement.content }}
