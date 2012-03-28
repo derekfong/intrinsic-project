@@ -9,10 +9,15 @@ from Gradebook.models import Grade, GradeComment
 from models import UserProfile
 import xlrd, xlwt
 
+## This page adds more features and overrides built in admin interface
+
 class ProfileInline(admin.StackedInline):
     model = UserProfile
     fk_name = 'user'
 	
+
+# below shows you all the additiona apps installed (Instructor, Main, Sites and Student app)
+# this enables you to upload files or view list of users, classes that are available, etc...
 class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         ('User Information', {
