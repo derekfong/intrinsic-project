@@ -2,14 +2,13 @@
 {% block instructorcontent %}
     <h2>Input Student Grades</h2>
     {% if form %}
-    	<div id="table">
 		<h3 class="title">Generate Grade Form:</h3>
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			{% for field in form %}
 			<div id="fieldWrapper">
 				<div id="fieldSylLeft">
-					{{ field.label_tag }}:
+					{{ field.label_tag }}
 				</div>
 				<div id="fieldSylRight">
 						{{ field.errors }}
@@ -21,7 +20,6 @@
 	    		<input type="submit" name="generate_form" value="Generate Grade Form" />
 	    	</div>
 		</form>
-		</div>
     
     {% else %}
     	<div id="table">

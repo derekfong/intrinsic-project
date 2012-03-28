@@ -6,32 +6,34 @@
     <div id="table">
     <h3 class="title">Download Grades Excel File:</h3>
     <form action="" method="POST">
-		{% csrf_token %}
-		{% for field in form_down %}
-		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
-				{{ field.label_tag }}:
+		<div id="table">
+			{% csrf_token %}
+			{% for field in form_down %}
+			<div id="fieldWrapper">
+				<div id="fieldSylLeft">
+					{{ field.label_tag }}
+				</div>
+				<div id="fieldSylRight">
+						{{ field.errors }}
+						{{ field }}
+				</div>
 			</div>
-			<div id="fieldSylRight">
-					{{ field.errors }}
-					{{ field }}
-			</div>
-		</div>
-		{% endfor %}
-		<div id="submit">
-    		<input type="submit" name="download" value="Download Grades" />
-    	</div>
+			{% endfor %}
+			<div id="submit">
+	    		<input type="submit" name="download" value="Download Grades" />
+	    	</div>
+	    </div>
     </form>
     </div>
     
     <div id="table">
-    <h3 class="title">Upload Grades Excel File:</h3>
+    <h3 class="title">Upload grades Excel file:</h3>
     <form action="" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		{% for field in form_up %}
 		<div id="fieldWrapper">
 			<div id="fieldSylLeft">
-				{{ field.label_tag }}:
+				{{ field.label_tag }}
 			</div>
 			<div id="fieldSylRight">
 					{{ field.errors }}
