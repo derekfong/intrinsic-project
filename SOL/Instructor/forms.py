@@ -5,6 +5,8 @@ from Main.models import Setting
 from Gradebook.models import Grade
 import datetime
 
+## this file overrides the built-in forms provided by Django
+
 class AnnounceForm(ModelForm):
 	class Meta:
 		model = Announcement
