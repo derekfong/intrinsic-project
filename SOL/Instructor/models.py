@@ -4,6 +4,8 @@ from Main.models import UserProfile, Course
 
 # Create your models here.
 class CourseContent(models.Model):
+	#verbose name is just anothr label to use it as
+	# below info will be filled in on website by prof
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	officeHrs = models.CharField(max_length=128, verbose_name="Office Hours")
 	officeLocation = models.CharField(max_length=128, verbose_name="Office Location")
@@ -21,14 +23,17 @@ class CourseContent(models.Model):
 	was_updated = models.BooleanField(default=0)
 	updated_on = models.DateTimeField()
 	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
+		# syllabus will be dl'able as pdf, hence media rot needed	
 	
 class Slide(models.Model):
+	#slide is the lecture notes
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	title = models.CharField(max_length=128)
 	uploaded_on = models.DateTimeField()
 	file_path = models.FileField(upload_to='slides', verbose_name="Select File")
 
 class Activity(models.Model):
+	# Activity is an assn, midterm, exam, checkpoint, etc of a course
 	STATUS_CHOICES = (
 		(0, u'Not Marked'),
 		(1, u'Marked but not Released'),
@@ -47,6 +52,7 @@ class Activity(models.Model):
 		return u"%s"%self.cid+" "+self.activity_name
 	
 class Announcement(models.Model):
+	# messages from instructor/TA that will show up on site
 	anid = models.AutoField(primary_key=True)
 	cid = models.ForeignKey(Course, verbose_name='Class')
 	uid = models.ForeignKey(UserProfile, verbose_name='User', related_name='uid')
@@ -59,6 +65,7 @@ class Announcement(models.Model):
 	updated_on = models.DateTimeField(blank=True)
 	
 class AnnounceRead(models.Model):
+	# makes note of whether an annoucement is read or not
 	anid = models.ForeignKey(Announcement)
 	uid = models.ForeignKey(UserProfile)
 	read = models.BooleanField()
