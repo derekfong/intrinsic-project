@@ -6,7 +6,7 @@ from Main.models import Course
 from Gradebook.models import Grade, GradeComment
 from Instructor.models import Activity, Announcement
 from Instructor.views import getClassUrl
-from Student.views import instAccess, studentAccess, getInsts, getTas, getEnrolled, getAnnouncements, checkCurrent, currentSemester
+from Student.views import instAccess, studentAccess, getInsts, getTas, getEnrolled, getAnnouncements, checkCurrent, currentSemester, getClassList, getClassObject
 from django.db.models import Avg, Max, Min, Count, StdDev
 import datetime
 #from chartit import DataPool, Chart
@@ -14,42 +14,25 @@ import datetime
 # Create your views here.
 
 def index(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
-	
-	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
-	accessToStudent = studentAccess(getEnrolled(class_id), user) 
-	isCurrent = checkCurrent(c)
-	
-	latestAnnouncements = getAnnouncements(class_id)
-	
-	tmpGrades = Grade.objects.filter(aid__cid=class_id, uid=user.id)
+	c = getClassObject(department, class_number, year, semester, section, user)
+
+	tmpGrades = Grade.objects.filter(aid__cid=c.cid, uid=user.id)
 	grades = percentAll(tmpGrades)
 	
-	activities = Activity.objects.filter(cid = class_id)
+	activities = Activity.objects.filter(cid = c.cid)
 	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	content = getContent(c, user)
+	content['activities'] = activities
+	content['grades'] = grades
 
-	content = {'class': c, 'activities': activities,'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'grades': grades, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent}
 	return render_to_response('gradebook/index.html', content,
 		context_instance=RequestContext(request))
 		
 def viewGrade(request, department, class_number, year, semester, section, aid):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
-	a = get_object_or_404(Activity, pk=aid)
 	user = request.user
-	
-	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
-	isCurrent = checkCurrent(c)
-	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	c = getClassObject(department, class_number, year, semester, section, user)
+	a = get_object_or_404(Activity, pk=aid)
 	
 	activity = []
 	comments = []
@@ -58,7 +41,6 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	barChart = []
 	message = ''
 	isMarked = 0
-	##### NEEDS FIXING: When no grade for student, must output 0. ############## 
 	try:
 		tmpActivity = Grade.objects.get(aid=aid, uid=user.id)
 		activity = percentOne(tmpActivity)
@@ -100,14 +82,15 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	except Grade.DoesNotExist:
 		message = 'Assignment has not been graded'
 	
-	latestAnnouncements = getAnnouncements(class_id)
+	content = getContent(c, user)
+	content['activity'] = activity
+	content['comments'] = comments
+	content['stats'] = stats
+	content['median'] = median
+	content['barChart'] = barChart
+	content['isMarked'] = isMarked
+	content['message'] = message
 	
-	accessToInst = instAccess(getInsts(class_id), getTas(class_id), user)
-	accessToStudent = studentAccess(getEnrolled(class_id), user) or accessToInst
-	
-	content = {'class': c, 'accessToStudent': accessToStudent, 'activity': activity, 'latestAnnouncements': latestAnnouncements, 
-	'comments': comments, 'stats': stats, 'median': median, 'barChart': barChart, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c), 
-	'messsage': message, 'isMarked': isMarked, 'class_list': class_list, 'isCurrent': isCurrent}
 	return render_to_response('gradebook/viewGrade.html', content,
 		context_instance=RequestContext(request))
 		
@@ -115,10 +98,14 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 def percentAll(grades):
 	for grade in grades:
 		grade.percent = ((grade.mark / grade.aid.out_of) * 100)
-		#grade.percent = "%.2f" % tmpPercent
 	return grades
 
 def percentOne(grades):
 	grades.percent = ((grades.mark / grades.aid.out_of) * 100)
-	#grades.percent = "%.2f" % tmpPercent
 	return grades
+
+def getContent(c, user):
+	content = {'class': c , 'accessToInst': instAccess(getInsts(c.cid), getTas(c.cid), user), 
+		'accessToStudent': studentAccess(getEnrolled(c.cid), user), 'latestAnnouncements': getAnnouncements(c.cid), 
+		'classUrl': getClassUrl(c), 'class_list': getClassList(user), 'isCurrent': checkCurrent(c) }
+	return content

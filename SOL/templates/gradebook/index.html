@@ -13,7 +13,7 @@
 							<strong>Due Date</strong>
 						</td>
 						<td width=175>
-							<strong>Mark</strong>
+							<strong>Status</strong>
 						</td>
 						<td>
 							<strong>Options</strong>
@@ -29,9 +29,9 @@
 							</td>
 							<td>
 								{% if grade.aid.status == 2 %}
-									{{ grade.mark }}/{{ grade.aid.out_of }} ({{ grade.percent }}%)
+									Grades have been released
 								{% else %}
-									Assignment not marked
+									Grades not yet released
 								{% endif %}
 							</td>
 							<td>

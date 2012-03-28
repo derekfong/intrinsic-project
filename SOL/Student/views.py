@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import Http404
 from django.template import RequestContext
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
@@ -7,151 +8,73 @@ from Main.views import currentSemester
 #from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 import datetime
-
+	
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
+	
 	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
 	
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-	enrolled = getEnrolled(class_id)
-	
-	latestAnnouncements = getAnnouncements(class_id)
-	
-	accessToInst = instAccess(instructors, tas, user)
-	accessToStudent = studentAccess(enrolled, user)
-	isCurrent = checkCurrent(c)
-	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	
-	content = {'class': c , 'instructors': instructors, 'tas': tas, 'students': students, 'accessToInst': accessToInst, 
-		'accessToStudent': accessToStudent, 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 
-		'isCurrent': isCurrent }
+	content = getContent(c, user)
 	
 	return render_to_response('student/index.html', content,
 		context_instance=RequestContext(request))
 		
 def syllabus(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
 	
 	user = request.user
-	enrolled = getEnrolled(class_id)
-	
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-	
-	accessToInst = instAccess(instructors, tas, user)
-	accessToStudent = studentAccess(enrolled, user)
-	isCurrent = checkCurrent(c)
-	
-	latestAnnouncements = getAnnouncements(class_id)
-	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	
+	c = getClassObject(department, class_number, year, semester, section, user)
+		
 	message = ''
 	try:
-		syllabus = CourseContent.objects.get(cid = class_id)
+		syllabus = CourseContent.objects.get(cid = c.cid)
 	except CourseContent.DoesNotExist:
 		message = 'No syllabus has been created for this class.'
-		###########TRY TO FIND A BETTER WAY TO SEND A BLANK SYLLABUS
 		syllabus = []
-		##########
 		
-	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'syllabus': syllabus, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'students': students, 'tas': tas, 'instructors': instructors,
-	'message': message, 'class_list': class_list, 'isCurrent': isCurrent}
+	content = getContent(c, user)
+	content['syllabus'] = syllabus
+	content['message'] = message
+	
 	return render_to_response('student/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
 def slides(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
-
-	user = request.user
-	enrolled = getEnrolled(class_id)
-
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-
-	accessToInst = instAccess(instructors, tas, user)
-	accessToStudent = studentAccess(enrolled, user)
-	isCurrent = checkCurrent(c)
-
-	latestAnnouncements = getAnnouncements(class_id)
 	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
 		
-	slides = Slide.objects.filter(cid = class_id)
+	slides = Slide.objects.filter(cid = c.cid)
 
-	content = {'class': c, 'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'latestAnnouncements': latestAnnouncements, 
-	'classUrl': getClassUrl(c),  'class_list': class_list, 'slides': slides, 'isCurrent': isCurrent}
+	content = getContent(c, user)
+	content['slides'] = slides
+
 	return render_to_response('student/slides.html', content, 
 		context_instance=RequestContext(request))
 	
 def activities(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
+	
 	user = request.user
-
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-	enrolled = getEnrolled(class_id)
+	c = getClassObject(department, class_number, year, semester, section, user)
 	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	
-	activities = Activity.objects.filter(cid=class_id).order_by('due_date')
+	activities = Activity.objects.filter(cid=c.cid).order_by('due_date')
 	for activity in activities:
 		activity.pastDue = pastDue(activity)
-		
-	latestAnnouncements = getAnnouncements(class_id)
-
-	accessToStudent = studentAccess(enrolled, user)
-	accessToInst = instAccess(instructors, tas, user)
-	isCurrent = checkCurrent(c)
 	
-	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activities': activities, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent}
+	content = getContent(c, user)
+	content['activities'] = activities
+	
 	return render_to_response('student/activities.html', content, 
 		context_instance=RequestContext(request))
 
 def announcements(request, department, class_number, year, semester, section):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
 
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-	enrolled = getEnrolled(class_id)
+	announcements = Announcement.objects.filter(cid=c.cid).order_by('-date_posted')
 
-	announcements = Announcement.objects.filter(cid=class_id).order_by('-date_posted')
-	latestAnnouncements = getAnnouncements(class_id)
-	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-
-	accessToStudent = studentAccess(enrolled, user)
-	accessToInst = instAccess(instructors, tas, user)
-	isCurrent = checkCurrent(c)
-	
-	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'announcements': announcements, 
-	'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent }
+	content = getContent(c, user)
+	content['announcements'] = announcements
 	
 	return render_to_response('student/announcements.html', content, 
 		context_instance=RequestContext(request))			
@@ -216,7 +139,27 @@ def checkCurrent(c):
 	else:
 		return 0
 	
+def getClassList(user):
+	year = datetime.date.today().year
+	semester = currentSemester()
+	return Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
-	
-	
-	
+def getClassObject(department, class_number, year, semester, section, user):
+	try:
+		class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
+	except Course.DoesNotExist:
+		raise Http404
+
+	return get_object_or_404(Course, pk=class_id)
+
+def getContent(c, user):
+	instructors = getInsts(c.cid)
+	tas = getTas(c.cid)
+	students = getStudents(c.cid)
+	enrolled = getEnrolled(c.cid)
+
+	content = {'class': c , 'instructors': instructors, 
+		'tas': tas, 'students': students, 'accessToInst': instAccess(instructors, tas, user), 
+		'accessToStudent': studentAccess(enrolled, user), 'latestAnnouncements': getAnnouncements(c.cid), 'classUrl': getClassUrl(c), 
+		'class_list': getClassList(user), 'isCurrent': checkCurrent(c) }
+	return content
