@@ -578,7 +578,7 @@ def download_grades(student_list, aid):
 	file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
 
-# View for inputting grades via an online form
+# View for rendering the grade form for mark input
 def grades_form(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
 	c = get_object_or_404(Course, pk=class_id)
