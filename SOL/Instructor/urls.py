@@ -3,7 +3,6 @@ from django.contrib.auth.views import login, logout
 
 urlpatterns = patterns('Instructor.views',
 	url(r'^$', 'index'),
-	url(r'^grades/(?P<aid>\d+)/$', 'addGrades'),
 	url(r'^syllabus/$', 'syllabus'),
 	url(r'^syllabus/update/(?P<sid>\d+)$', 'updateSyllabus'),
 	url(r'^activity/(?P<aid>\d+)/remove$', 'removeActivity'),

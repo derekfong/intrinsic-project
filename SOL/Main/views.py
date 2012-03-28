@@ -73,7 +73,6 @@ def updateSetting(request):
 		form = SettingForm(request.POST)
 		if form.is_valid():
 			getSetting = Setting.objects.filter(uid=user.id).update(email_announcement=form.cleaned_data['email_announcement'], email_activity=form.cleaned_data['email_activity'])
-			#return HttpResponseRedirect("/accounts/settings/update")
 			message = 'You have successfully updated your settings.'
 	else:
 		setting = Setting.objects.get(uid=user.id)
