@@ -14,7 +14,7 @@
     <h2>Input Student Grades</h2>
     {% if message %}
 		<div id="updateSuccess">
-			<h4 class="success">Upload Successfully</h4>
+			<h4 class="success">Updated Successfully</h4>
 			<p class="success">{{ message }}</p>
 		</div>
 	{% endif %}

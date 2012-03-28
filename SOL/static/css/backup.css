@@ -1,5 +1,5 @@
 html, body {
-	background: #A7A8A0;
+	background: #e54393;
 	color: #323232;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 14px;
@@ -83,7 +83,7 @@ html, body {
 {
 	float: left;
 	width: 100%;
-	background: #CDCDC6;
+	background: #f5a4cc;
 }
 
 #sidebar
@@ -106,7 +106,7 @@ html, body {
 
 #footer
 {
-	background-color: #BBBBBB;
+	background-color: #fe75b8;
 	font-size: 12px;
 	padding: 8px;
 	height: 14px;
@@ -140,11 +140,6 @@ h2.title
 	margin: 10px 5px 5px 0 ;
 }
 
-p.message
-{
-	color: #009900;
-}
-
 a 
 {
 	text-decoration: none;
@@ -161,42 +156,4 @@ a:hover
 	font-size: 12px;
 	padding: 0px;
 	margin: 10px;
-}
-
-#loginFail
-{
-	background: #edc1c1;
-	border: 1px solid red;
-	margin-bottom: 10px;
-	padding-left: 10px;
-}
-
-h4.error, p.error
-{
-	margin: 0px;
-	padding: 5px 0 5px 0;
-}
-
-p.error
-{
-	padding-bottom: 10px;
-}
-
-#updateSuccess
-{
-	background: #d0f4d0;
-	border: 1px solid green;
-	margin-bottom: 10px;
-	padding-left: 10px;
-}
-
-h4.success, p.success
-{
-	margin: 0px;
-	padding: 5px 0 5px 0;
-}
-
-p.success
-{
-	padding-bottom: 10px;
 }
