@@ -148,7 +148,7 @@ def getClassObject(department, class_number, year, semester, section, user):
 	try:
 		class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
 	except Course.DoesNotExist:
-		raise Http404
+		raise  Http404
 
 	return get_object_or_404(Course, pk=class_id)
 
