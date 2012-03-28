@@ -14,7 +14,7 @@ class Grade(models.Model):
 	mark = models.DecimalField(decimal_places=2, max_digits=10)
 
 class GradeComment(models.Model):
-	# comments marker can leave
+	# messages that marker can leave
 	gid = models.ForeignKey(Grade)
 	description = models.CharField(max_length=256)
 	comment = models.TextField()
