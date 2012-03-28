@@ -32,6 +32,8 @@ def syllabus(request, department, class_number, year, semester, section):
 	
 	message = ''
 	classUrl = getClassUrl(c)
+
+	# form that has defined fields for prof to fill out to create a syllabus
 	if request.method == 'POST':
 		content = CourseContent(cid=c, created_on=datetime.datetime.now(), was_updated=0, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=content)
@@ -59,6 +61,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	
 	message = ''
 	classUrl = getClassUrl(c)
+	# note that you cannot delete a syllabus once created
 	if request.method == 'POST':
 		course = CourseContent(id=sid, cid=c, created_on=s.created_on, was_updated=1, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=course)
@@ -77,6 +80,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 		context_instance=RequestContext(request))
 
 def slides(request, department, class_number, year, semester, section):
+	# slides are just lecture notes
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -142,6 +146,8 @@ def removeSlides(request, department, class_number, year, semester, section, sli
 			
 #View to generate the page for the graded activities view of Instructor App
 def activity(request, department, class_number, year, semester, section):
+	# activity is the assn, exam, midterm, etc of a course
+	# make sure activity corresponds to correct course
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -295,6 +301,7 @@ def removeAnnouncement(request, department, class_number, year, semester, sectio
 	c = getClassObject(department, class_number, year, semester, section, user)
 	an = get_object_or_404(Announcement, pk=anid)
 
+	# check if user is allowed to
 	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
 
 	if accessToInst:
@@ -496,6 +503,8 @@ def grades_input(request, department, class_number, year, semester, section, aid
 		context_instance=RequestContext(request))
 
 def getContent(c, user):
+	# actually get content for the page depending on your list of classes, etc...
+	
 	instructors = getInsts(c.cid)
 	tas = getTas(c.cid)
 

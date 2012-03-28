@@ -107,12 +107,15 @@ class Course(models.Model):
 	def __unicode__(self):
 		return self.department+self.class_number+" "+self.semester+u'%s' %self.year+" "+self.section
 	
+# generates a list of people within a class
 class ClassList(models.Model):
 	uid = models.ForeignKey(UserProfile, verbose_name='SFU ID')
 	cid = models.ForeignKey(Course, verbose_name='course')
 	is_instructor = models.BooleanField(verbose_name='is the instructor?')
 	is_ta = models.BooleanField(verbose_name='is a TA?')
 
+# allow admin to upload a userlist through admin UI
+# and automatically import it
 class UploadUserList(models.Model):
 	file_name = models.CharField(max_length=64, verbose_name='File Name')
 	upload_date = models.DateTimeField(verbose_name='Date file was uploaded')
@@ -126,7 +129,8 @@ class UploadClassList(models.Model):
 	upload_date = models.DateTimeField(verbose_name='Date class list was uploaded')
 	is_enrolled = models.BooleanField(verbose_name='Enrolled students already?')
 	file_path = models.FileField(upload_to='enrollment_lists')
-	
+
+## THIS IS for the annoucements for a course	
 class Setting(models.Model):
 	uid = models.ForeignKey(UserProfile, verbose_name="User")
 	email_announcement = models.BooleanField(default=False, verbose_name="Announcements")
