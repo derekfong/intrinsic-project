@@ -5,10 +5,7 @@ from django.contrib import auth
 from Main.models import Course, Setting
 from datetime import date
 from Instructor.forms import SettingForm
-<<<<<<< HEAD
 from django.contrib.auth import authenticate, login
-=======
->>>>>>> c5e80463c75e8e06bb8aed594e254a2196d987d0
 import datetime
 
 # Create your views here.
