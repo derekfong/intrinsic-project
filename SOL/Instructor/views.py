@@ -56,12 +56,14 @@ def syllabus(request, department, class_number, year, semester, section):
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
+	message = ''
+	
 	if request.method == 'POST':
 		content = CourseContent(cid=c, created_on=datetime.datetime.now(), was_updated=0, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=content)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect("")
+			message = 'You have successfully created a syllabus'
 	else:
 		try:
 			course = CourseContent.objects.get(cid=class_id)
@@ -69,7 +71,7 @@ def syllabus(request, department, class_number, year, semester, section):
 		except CourseContent.DoesNotExist:
 			form = CourseForm()
 	
-	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': classUrl, 'class_list': class_list }
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': classUrl, 'class_list': class_list, 'message': message }
 	return render_to_response('instructor/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
@@ -96,12 +98,12 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 		form = CourseForm(request.POST, instance=course)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect(classUrl+"instructor/syllabus/")
+			message = 'You have successfully updated the syllabus'
 	else:
 		course = CourseContent.objects.get(cid=class_id)
 		form = CourseForm(initial={'officeHrs': course.officeHrs, 'officeLocation': course.officeLocation, 'phoneNumber': course.phoneNumber, 'TaOfficeLocation': course.TaOfficeLocation, 'TaOfficeHrs': course.TaOfficeHrs, 'lectTime': course.lectTime, 'prereq': course.prereq, 'books': course.books, 'topics': course.topics, 'markingScheme': course.markingScheme, 'academicHonesty': course.academicHonesty, 'additionalInfo': course.additionalInfo, 'file_path': course.file_path,})
 	
-	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': classUrl, 'class_list': class_list}
+	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': classUrl, 'class_list': class_list, 'message': message}
 	return render_to_response('instructor/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
@@ -122,16 +124,17 @@ def slides(request, department, class_number, year, semester, section):
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
+	message = ''
 	if request.method == 'POST':
 		slide = Slide(cid=c, uploaded_on=datetime.datetime.now())
 		form = SlideForm(request.POST, request.FILES, instance=slide)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect("")
+			HttpResponseRedirect("")
 	else:
 		form = SlideForm()
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': getClassUrl(c), 'slides':slides,
-	'class_list': class_list }
+	'class_list': class_list, 'message': message }
 	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
 		
@@ -158,7 +161,8 @@ def updateSlides(request, department, class_number, year, semester, section, sli
 		form = SlideForm(request.POST, request.FILES, instance=slide)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect("")
+			url ='/course/'+c.department+'/%s' %c.class_number+'/%s' %c.year+'/'+c.semester+'/'+c.section+'/instructor/slides'
+			return HttpResponseRedirect(url)
 	else:
 		form = SlideForm(initial={'title': s.title, 'file_path': s.file_path})
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'classUrl': getClassUrl(c), 'slides': slides,
@@ -204,7 +208,7 @@ def activity(request, department, class_number, year, semester, section):
 	year = datetime.date.today().year
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	
+		
 	if request.method == 'POST':
 		activity = Activity(cid=c)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
@@ -224,8 +228,9 @@ def activity(request, department, class_number, year, semester, section):
 			return HttpResponseRedirect("")
 	else:
 		form = ActivityForm()
+		
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':0, 'classUrl': getClassUrl(c),
-	'class_list': class_list }
+	'class_list': class_list, }
 	return render_to_response('instructor/activity.html', content, 
 		context_instance=RequestContext(request))
 		
@@ -247,7 +252,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 	year = datetime.date.today().year
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-
+	
 	if request.method == 'POST':
 		activity = Activity(cid=c, aid=aid)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
@@ -271,7 +276,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
 
 	content = {'class': c, 'accessToInst': accessToInst, 'form': form, 'activities': activities, 'update':1, 'classUrl': getClassUrl(c),
-	'class_list': class_list }
+	'class_list': class_list}
 	return render_to_response('instructor/activity.html', content, 
 		context_instance=RequestContext(request))
 		
@@ -369,7 +374,7 @@ def updateAnnouncement(request, department, class_number, year, semester, sectio
 		form = AnnounceForm(initial={'title': tmp.title, 'content': tmp.content, 'send_email': tmp.send_email})
 	
 	content = {'class': c, 'form': form, 'announcements': announcements, 'accessToInst': accessToInst, 'classUrl': getClassUrl(c),
-	'class_list': class_list }
+	'class_list': class_list}
 	return render_to_response('instructor/announcement.html', content, 
 		context_instance=RequestContext(request))
 
