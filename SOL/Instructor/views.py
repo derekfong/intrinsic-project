@@ -366,7 +366,7 @@ def grades_files(request, department, class_number, year, semester, section):
 	
 	content = getContent(c, user)
 	content['form_down'] = form_download
-	content['form_upload'] = form_upload
+	content['form_up'] = form_upload
 	content['message'] = message
 	content['students'] = students
 	return render_to_response('instructor/fileGrades.html', content, 
