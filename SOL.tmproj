@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>SOL/templates/main/index.html</string>
+	<string>SOL/Instructor/views.py</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -18,7 +18,7 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>233</integer>
+	<integer>185</integer>
 	<key>metaData</key>
 	<dict>
 		<key>SOL/Calendar/models.py</key>
@@ -107,6 +107,20 @@
 				<integer>10</integer>
 			</dict>
 		</dict>
+		<key>SOL/Gradebook/models.py~</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>SOL/Gradebook/tests.py</key>
 		<dict>
 			<key>caret</key>
@@ -140,9 +154,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>19</integer>
 				<key>line</key>
-				<integer>14</integer>
+				<integer>20</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -182,14 +196,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>44</integer>
+				<integer>55</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>24</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>55</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>56</integer>
+			</dict>
 		</dict>
 		<key>SOL/Instructor/tests.py</key>
 		<dict>
@@ -240,14 +270,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>15</integer>
 				<key>line</key>
-				<integer>326</integer>
+				<integer>7</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>302</integer>
+			<integer>297</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>11</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>17</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
 		</dict>
 		<key>SOL/Instructor/views.py~</key>
 		<dict>
@@ -324,14 +370,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>105</integer>
+				<integer>129</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>93</integer>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>84</integer>
+				<key>line</key>
+				<integer>132</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>129</integer>
+			</dict>
 		</dict>
 		<key>SOL/Main/models.py~</key>
 		<dict>
@@ -366,35 +428,51 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>44</integer>
+				<integer>34</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>3</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>24</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>3</integer>
+			</dict>
 		</dict>
 		<key>SOL/Main/views.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>6</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>37</integer>
+				<integer>6</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>37</integer>
+			<integer>0</integer>
 		</dict>
 		<key>SOL/Student/__init__.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>0</integer>
 			</dict>
@@ -450,30 +528,44 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>59</integer>
+				<integer>14</integer>
 				<key>line</key>
-				<integer>203</integer>
+				<integer>21</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>175</integer>
+			<integer>104</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>203</integer>
+				<integer>21</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>59</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>203</integer>
+				<integer>22</integer>
 			</dict>
+		</dict>
+		<key>SOL/apache/django.wsgi</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>SOL/manage.py</key>
 		<dict>
@@ -494,14 +586,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>132</integer>
+				<integer>143</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>113</integer>
+			<integer>4</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>16</integer>
+				<key>line</key>
+				<integer>147</integer>
+			</dict>
 		</dict>
 		<key>SOL/settings.py~</key>
 		<dict>
@@ -522,14 +630,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>18</integer>
+				<integer>15</integer>
 				<key>line</key>
-				<integer>133</integer>
+				<integer>103</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>105</integer>
+			<integer>88</integer>
 		</dict>
 		<key>SOL/static/css/fields.css</key>
 		<dict>
@@ -615,36 +723,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>SOL/templates/OLD.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>14</integer>
-				<key>line</key>
-				<integer>61</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>29</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>61</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>62</integer>
-			</dict>
-		</dict>
 		<key>SOL/templates/base.html</key>
 		<dict>
 			<key>caret</key>
@@ -678,44 +756,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>85</integer>
 				<key>line</key>
-				<integer>174</integer>
+				<integer>95</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>86</integer>
+			<integer>33</integer>
 		</dict>
 		<key>SOL/templates/instructor/activity.html</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>66</integer>
+				<integer>82</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>50</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>86</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>66</integer>
-			</dict>
+			<integer>57</integer>
 		</dict>
 		<key>SOL/templates/instructor/announcement.html</key>
 		<dict>
@@ -729,14 +791,14 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>5</integer>
 		</dict>
 		<key>SOL/templates/instructor/emailActivityTemplate.html</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>171</integer>
+				<integer>55</integer>
 				<key>line</key>
 				<integer>8</integer>
 			</dict>
@@ -822,30 +884,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>15</integer>
+				<integer>10</integer>
 				<key>line</key>
-				<integer>30</integer>
+				<integer>14</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>31</integer>
-				<key>line</key>
-				<integer>30</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>30</integer>
-			</dict>
 		</dict>
 		<key>SOL/templates/instructor/syllabus.html</key>
 		<dict>
@@ -882,9 +928,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>34</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -924,9 +970,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>3</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>25</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -938,14 +984,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>16</integer>
+				<integer>31</integer>
 				<key>line</key>
-				<integer>44</integer>
+				<integer>40</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>11</integer>
 		</dict>
 		<key>SOL/templates/student/announcements.html</key>
 		<dict>
@@ -980,9 +1026,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>3</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -993,16 +1039,16 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>89</integer>
-				<key>line</key>
 				<integer>13</integer>
+				<key>line</key>
+				<integer>44</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>3</integer>
 			</dict>
 		</dict>
 		<key>SOL/templates/student/slides.html</key>
@@ -1073,10 +1119,12 @@
 		<string>SOL/Main/admin.py~</string>
 		<string>SOL/Instructor/views.py~</string>
 		<string>SOL/Gradebook/views.py</string>
+		<string>SOL/Gradebook/__init__.py</string>
 		<string>SOL/Main/__init__.py</string>
 		<string>SOL/templates/gradebook/index.html</string>
 		<string>SOL/Calendar/views.py</string>
 		<string>SOL/Student/views.py</string>
+		<string>SOL/apache/django.wsgi</string>
 		<string>SOL/templates/student/syllabus.html</string>
 		<string>SOL/templates/student/announcements.html</string>
 		<string>SOL/templates/student/slides.html</string>
@@ -1090,8 +1138,8 @@
 		<string>SOL/templates/instructor/syllabus.html</string>
 		<string>SOL/Gradebook/urls.py</string>
 		<string>SOL/Gradebook/tests.py</string>
+		<string>SOL/Gradebook/models.py~</string>
 		<string>SOL/templates/student/activities.html</string>
-		<string>SOL/templates/OLD.html</string>
 		<string>SOL/templates/instructor/activity.html</string>
 		<string>SOL/static/css/fields.css</string>
 		<string>SOL/static/css/timepicker.css</string>
@@ -1129,6 +1177,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{288, 0}, {987, 778}}</string>
+	<string>{{248, 0}, {1032, 778}}</string>
 </dict>
 </plist>
