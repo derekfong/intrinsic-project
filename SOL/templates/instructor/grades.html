@@ -1,24 +1,9 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
     <h2>Input Student Grades</h2>
-    <p>{{ message }}</p>
-    <h3>Manage student activity grades via Excel files</h3>
-    
-    <h4>Download grades Excel file:</h4>
-    <form action="" method="POST">
-    {% csrf_token %}
-        {{ form_down }}
-    	<p><input type="submit" name="download" value="Download Grades" /></p>
-    </form>
-    
-    <h4>Upload grades Excel file:</h4>
-    <form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-        {{ form_up.as_p }}
-        <p><input type="submit" name="upload" value="Upload Grades" /></p>
-    </form>
-    
-    <h3>Manage student activity grades via Online Form</h3>
-    <!-- FILL WITH SOME BADASS FORM -->
-    
+    <ul>
+		<li><a href="file/">Manage student activity grades via Excel Files</a></li>
+		<li><a href="form/">Manage student activity grades via Online Form</a></li>
+	</ul>
+
 {% endblock %}

@@ -1,0 +1,81 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+    <h2>Input Student Grades</h2>
+    <h3>Manage student activity grades via Online Form</h3>
+    
+    {% if form %}
+		<h3 class="title">Generate grade form:</h3>
+		<form action="" method="POST" enctype="multipart/form-data">
+			<div id="table">
+				{% csrf_token %}
+				{% for field in form %}
+				<div id="fieldWrapper">
+					<div id="fieldSylLeft">
+						{{ field.label_tag }}
+					</div>
+					<div id="fieldSylRight">
+							{{ field.errors }}
+							{{ field }}
+					</div>
+				</div>
+				{% endfor %}
+				<div id="submit">
+		    		<input type="submit" name="generate_form" value="Generate Form" />
+		    	</div>
+		    </div>
+		</form>
+    
+    {% else %}
+    	<div id="table">
+    	<p class="message"><strong>{{ message }}</strong></p>
+    	<form action="{{ classUrl }}instructor/grades/form/" method="POST">
+			{% csrf_token %}
+        	<p><input type="submit" name="back" value="Back" /></p>
+    	</form>
+    	</div>
+    {% endif %}
+    
+    {% if activity %}
+    	<div id="table">
+		<h4>Activity: {{ activity.activity_name }}</h4>
+		<table border=0>
+			<tr>
+				<td width=150>
+					<strong>Last Name</strong>
+				</td>
+				<td width=200>
+					<strong>First Name</strong>
+				</td>
+				<td width=175>
+					<strong>SFU ID</strong>
+				</td>
+				<td>
+					<strong>Mark</strong>
+				</td>
+			</tr>
+		
+			<form action="{{ activity.aid }}" method="POST">
+			{% csrf_token %}
+				{% for student in students %}
+					<tr>
+						<td>
+							{{ student.user.last_name }}
+						</td>
+						<td>
+							{{ student.user.first_name }}
+						</td>
+						<td>
+							{{ student.sfu_id }}
+						</td>
+						<td>
+							<input type="text" size="5" name="{{ student.sfu_id }}" />
+						</td>
+					</tr>
+				{% endfor %}
+				<p><input type="submit" name="update" value="Update Grades" /></p>
+			</form>
+		</table>
+		</div>
+	{% endif %}
+    
+{% endblock %}

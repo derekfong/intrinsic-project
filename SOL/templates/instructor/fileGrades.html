@@ -1,0 +1,54 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+    <h2>Input Student Grades</h2>
+    <h3>Manage student activity grades via Excel files</h3>
+    <p class="message"><strong>{{ message }}</strong></p>
+    
+    <div id="table">
+    <h3 class="title">Download grades Excel file:</h3>
+    <form action="" method="POST">
+		<div id="table">
+			{% csrf_token %}
+			{% for field in form_down %}
+			<div id="fieldWrapper">
+				<div id="fieldSylLeft">
+					{{ field.label_tag }}
+				</div>
+				<div id="fieldSylRight">
+						{{ field.errors }}
+						{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+	    		<input type="submit" name="download" value="Download Grades" />
+	    	</div>
+	    </div>
+    </form>
+    </div>
+    
+    <div id="table">
+    <h3 class="title">Upload grades Excel file:</h3>
+    <form action="" method="POST" enctype="multipart/form-data">
+		<div id="table">
+			{% csrf_token %}
+			{% for field in form_up %}
+			<div id="fieldWrapper">
+				<div id="fieldSylLeft">
+					{{ field.label_tag }}
+				</div>
+				<div id="fieldSylRight">
+						{{ field.errors }}
+						{{ field }}
+				</div>
+			</div>
+			{% endfor %}
+			<div id="submit">
+	    		<input type="submit" name="upload" value="Upload Grades" />
+	    	</div>
+	    </div>
+    </form>
+    </div>
+    
+
+{% endblock %}

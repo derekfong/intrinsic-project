@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent, Slide
-from Gradebook.models import Grade, UploadGrade, DownloadGrade
+from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
 from decimal import Decimal, getcontext
@@ -459,6 +459,7 @@ def formTable(form, students):
 		i += 1
 	return foo
 
+# View for grades input
 def grades(request, department, class_number, year, semester, section):
 	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
 	c = get_object_or_404(Course, pk=class_id)
@@ -469,10 +470,23 @@ def grades(request, department, class_number, year, semester, section):
 
 	accessToInst = instAccess(instructors, tas, user)
 	students = getStudents(class_id)
+
+	content = {'class': c, 'classUrl': getClassUrl(c), 'accessToInst': accessToInst, 'students': students}
+	return render_to_response('instructor/grades.html', content, 
+		context_instance=RequestContext(request))
+
+# View used for grades input via Excel files
+def grades_files(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	students = getStudents(class_id)
 	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	message = ""
 	
 	if request.method == 'POST':
@@ -486,22 +500,21 @@ def grades(request, department, class_number, year, semester, section):
 			form_download = DownloadGrade(request.POST, cid=class_id)
 			form_upload = UploadGrade(cid=class_id)
 			if form_download.is_valid():
-				file_and_name = download_grades(class_id, request.POST['activity_name'])
+				file_and_name = download_grades(students, request.POST['activity_name'])
 				file_to_send = file_and_name['file']
 				file_name = file_and_name['file_name']
 				response = HttpResponse(file_to_send, content_type='application/vnd.ms-excel')
 				response['Content-Disposition'] = 'attachment; filename='+file_name
 				return response
 	else:
-		#options = Activity.objects.filter(cid=class_id)
-		form_upload = UploadGrade(cid=class_id)
 		form_download = DownloadGrade(cid=class_id)
+		form_upload = UploadGrade(cid=class_id)
 	
-	content = {'class': c, 'classUrl': getClassUrl(c), 'form_up': form_upload, 'form_down': form_download, 'message': message,
-	'accessToInst': accessToInst, 'students': students, 'class_list': class_list}
-	return render_to_response('instructor/grades.html', content, 
+	content = {'class': c, 'classUrl': getClassUrl(c), 'form_down': form_download, 'form_up': form_upload, 'message': message, 'accessToInst': accessToInst, 'students': students}
+	return render_to_response('instructor/fileGrades.html', content, 
 		context_instance=RequestContext(request))
 
+# Method used in grades_files view to upload grades
 def upload_grades(input_file, aid):
 	excel_book = xlrd.open_workbook(file_contents=input_file.read())
 	sheet = excel_book.sheet_by_index(0)
@@ -535,7 +548,8 @@ def upload_grades(input_file, aid):
 			update_grade.mark = mark
 			update_grade.save()
 
-def download_grades(cid, aid):
+# Method used in grades_files view to download grades
+def download_grades(student_list, aid):
 	mark_file = xlwt.Workbook()
 	sheet = mark_file.add_sheet('Marks')
 	
@@ -548,27 +562,100 @@ def download_grades(cid, aid):
 	
 	activity = Activity.objects.get(aid=aid)
 	file_name = activity.activity_name+".xls"
-	class_list = ClassList.objects.filter(cid=cid)
 	row = 1
-	for person in class_list:
-		if not person.is_instructor and not person.is_ta:
-			username = person.uid.user.username
-			first_name = person.uid.user.first_name
-			last_name = person.uid.user.last_name
-			sfu_id = person.uid.sfu_id
-			try:
-				mark = Grade.objects.get(uid=person.uid.user.id, aid=aid).mark
-			except Grade.DoesNotExist:
-				mark = None
-			
-			sheet.write(row,0, username)
-			sheet.write(row,1, first_name)
-			sheet.write(row,2, last_name)
-			sheet.write(row,3, sfu_id)
-			sheet.write(row,4, mark)
-			row = row + 1
+	for student in student_list:
+		username = student.user.username
+		first_name = student.user.first_name
+		last_name = student.user.last_name
+		sfu_id = student.sfu_id
+		try:
+			mark = Grade.objects.get(uid=student.user.id, aid=aid).mark
+		except Grade.DoesNotExist:
+			mark = None
+		
+		sheet.write(row,0, username)
+		sheet.write(row,1, first_name)
+		sheet.write(row,2, last_name)
+		sheet.write(row,3, sfu_id)
+		sheet.write(row,4, mark)
+		row = row + 1
 	mark_file.save("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
+
+# View for rendering the grade form for mark input
+def grades_form(request, department, class_number, year, semester, section):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	students = getStudents(class_id)
+	
+	message = ""
+	activity = ""
+	
+	form = OnlineGrade(cid=class_id)
+	if request.method == 'POST':
+		if 'generate_form' in request.POST:
+			form = OnlineGrade(request.POST, cid=class_id)
+			if form.is_valid():
+				activity = Activity.objects.get(aid=request.POST['activity_name'])
+	
+	content = {'class': c, 'classUrl': getClassUrl(c), 'form': form, 'message': message, 'activity': activity, 'accessToInst': accessToInst, 'students': students}
+	return render_to_response('instructor/onlineGrades.html', content, 
+		context_instance=RequestContext(request))
+
+# View for inputting grades via an online form
+def grades_input(request, department, class_number, year, semester, section, aid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	students = getStudents(class_id)
+	
+	message = ""
+
+	#grade_list = Grade.objects.filter(aid=aid)
+	# ADD INITALLY POPULATED MARKS
+	
+	if request.method == 'POST':
+		if 'update' in request.POST:
+			for student in students:
+				# Validate mark input value
+				mark_value = request.POST.__getitem__(str(student.sfu_id))
+				if re.match("^[0-9.]+$", mark_value):
+					if mark_value == '.':
+						mark = Decimal(0)
+					else:
+						mark = Decimal(mark_value)
+				else:
+					mark = Decimal(0)
+				
+				uid = student.user.id
+				
+				try:
+					student_grade = Grade.objects.get(uid=uid, aid=aid)
+				except Grade.DoesNotExist:
+					student_grade = Grade(uid=student, aid=Activity.objects.get(aid=aid))
+				
+				
+				student_grade.mark = mark
+				student_grade.save()
+			message = "Successfully inputted student grades."
+	
+	content = {'class': c, 'classUrl': getClassUrl(c), 'message': message, 'accessToInst': accessToInst, 'students': students}
+	return render_to_response('instructor/onlineGrades.html', content, 
+		context_instance=RequestContext(request))
+
+
+
 #def getRequiredContent(department, class_number, year, semester, section):
 	
