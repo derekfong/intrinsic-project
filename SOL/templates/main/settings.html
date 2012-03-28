@@ -1,6 +1,23 @@
 {% extends "base.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateSuccess").style.display="none";
+		}
+	
+		window.setTimeout( closeMessage, 5000 );
+	</script>
+{% endblock %}
+
 {% block content %}
 	<h2 class="title">Account Settings</h2>
+	{% if message %}
+		<div id="updateSuccess">
+			<h4 class="success">Updated Successfully</h4>
+			<p class="success">{{ message }}</p>
+		</div>
+	{% endif %}
 	<div id="table">
 		<div id="fieldWrapper">
 			<div id="fieldSylLeft">

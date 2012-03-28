@@ -2,7 +2,7 @@
 {% block student %}
 	{% if isCurrent %}
 		<div id="bottomPosts">
-		<h2 class="title">Graded Activities</h2>
+		<h2 class="title">Assignments and Exams</h2>
 		{% if activities.count > 0 %}
 			{% for activity in activities %}
 				<div id="table">
@@ -29,7 +29,7 @@
 							{{ activity.description|linebreaksbr }}
 							{% if activity.description_doc %}
 								<br />
-								<a href="{{ MEDIA_URL }}{{ activity.description_doc }}">View Description</a>
+								<a href="{{ MEDIA_URL }}{{ activity.description_doc }}" title="{{ activity.activity_name }}" target="_blank">View Description</a>
 							{% endif %}
 						</div>
 					</div>

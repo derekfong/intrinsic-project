@@ -4,7 +4,8 @@ from django.template import RequestContext
 from django.contrib import auth
 from Main.models import Course, Setting
 from datetime import date
-from forms import SettingForm
+from Instructor.forms import SettingForm
+from django.contrib.auth import authenticate, login
 import datetime
 
 # Create your views here.
@@ -17,6 +18,21 @@ def index(request):
 	return render_to_response('main/index.html', {'class_list': class_list, 'old_class_list': old_class_list},
 		context_instance=RequestContext(request))
 
+def login_view(request):
+	if request.method == 'POST':
+   		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None and user.is_active:
+			login(request, user)
+			return HttpResponseRedirect( '/' )
+		else:
+			message = 'Please enter the correct username and password.'
+			return render_to_response('main/index.html', { 'message': message, },
+				context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect( '/' )
+
 def logout_view(request):
 	auth.logout(request)
 	return HttpResponseRedirect("/")
@@ -28,12 +44,13 @@ def setting(request):
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	
+	message = ''
 	if request.method == 'POST':
 		setting = Setting(uid=user.userprofile)
 		form = SettingForm(request.POST, instance=setting)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect("")
+			message = 'You have succcessfully updated your settings.'
 	else:
 		try:
 			setting = Setting.objects.get(uid=user.id)
@@ -41,7 +58,7 @@ def setting(request):
 		except Setting.DoesNotExist:
 			form = SettingForm()
 		
-	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form },
+	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form, 'message': message },
 		context_instance=RequestContext(request))
 	
 def updateSetting(request):
@@ -51,16 +68,18 @@ def updateSetting(request):
 	semester = currentSemester()
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 
+	message = ''
 	if request.method == 'POST':
 		form = SettingForm(request.POST)
 		if form.is_valid():
 			getSetting = Setting.objects.filter(uid=user.id).update(email_announcement=form.cleaned_data['email_announcement'], email_activity=form.cleaned_data['email_activity'])
-			return HttpResponseRedirect("/accounts/settings/update")
+			#return HttpResponseRedirect("/accounts/settings/update")
+			message = 'You have successfully updated your settings.'
 	else:
 		setting = Setting.objects.get(uid=user.id)
 		form = SettingForm(initial={'email_announcement': setting.email_announcement, 'email_activity': setting.email_activity})
 
-	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form },
+	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form, 'message': message },
 		context_instance=RequestContext(request))	
 
 def currentSemester():
