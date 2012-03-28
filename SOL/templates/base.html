@@ -49,6 +49,12 @@ side tabs for notices and dates tab;
 				{% endif %}
 			{% else %}
 				<h1>Welcome to Synergy Online</h1>
+				{% if message %}
+					<div id="loginFail">
+						<h4 class="error">Invalid Login</h4>
+						<p class="error">{{ message }}</p>
+					</div>
+				{% endif %}
 				{% include "registration/login.html" %}
 			{% endif %}
 		</div>

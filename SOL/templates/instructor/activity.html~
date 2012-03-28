@@ -5,7 +5,6 @@
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
-		
 {% endblock %}
 {% block instructorcontent %}
 	<script type="text/javascript">
@@ -15,13 +14,12 @@
 			});
 		});
 	</script>
-
+	{{ message }}
 	{% if update %}
 		<h2 class="title">Activity Update Form</h2>
 	{% else %}
 		<h2 class="title">Activity Creation Form</h2>
 	{% endif %}
-	
 	<form action="" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		<div id="table">
@@ -107,6 +105,7 @@
 						<span class="postLinks">
 							<a href="{{ activity.aid }}">Edit</a> 
 							<a href="{{ activity.aid }}/remove">Remove</a>
+							<a href="../grades/{{ activity.aid }}/">Input Grades</a>
 						</span>
 					</div>
 				</div>

@@ -29,7 +29,7 @@
 				<div id="actWrapper">
 					<div id="actLeft">{{ slide.title }}</div>
 					<div id="actRight">
-						<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a> | 
+						<a href="{{ STATIC_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a> | 
 						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/update">Update</a> | 
 						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/remove">Remove</a></div>
 				</div>

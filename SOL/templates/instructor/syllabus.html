@@ -1,6 +1,23 @@
 {% extends "instructor/index.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateSuccess").style.display="none";
+		}
+	
+		window.setTimeout( closeMessage, 5000 );
+	</script>
+{% endblock %}
+
 {% block instructorcontent %}
 	<h2>Create Syllabus</h2>
+	{% if message %}
+		<div id="updateSuccess">
+			<h4 class="success">Updated Successfully</h4>
+			<p class="success">{{ message }}</p>
+		</div>
+	{% endif %}
 	<form action="" method="POST">
 		<div id="table">
 		{% csrf_token %}
