@@ -2,7 +2,7 @@
 #import os
 #import sys
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 #CHARTIT_DIR = '/Users/kevin/Desktop/pgollakota-django-chartit-5554e5b'
 #JQUERY_ROOT = '/home/csmadmin/tools/jquery'
@@ -14,6 +14,8 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('Kevin Mann', 'kma50@sfu.ca'),
+    ('Derek Fong', 'drf1@sfu.ca'),
+    ('Allison Ng', 'allisonn@sfu.ca'),
 )
 
 MANAGERS = ADMINS
