@@ -7,7 +7,7 @@
 				{% if slides.count > 0 %}
 				<ul>
 				{% for slide in slides %}
-					<li><a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">{{ slide.title }}</a></li>
+					<li><a href="{{ STATIC_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">{{ slide.title }}</a></li>
 				{% endfor %}
 				</ul>
 				{% else %}
