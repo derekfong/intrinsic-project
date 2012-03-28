@@ -1,39 +1,52 @@
 {% extends "instructor/index.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateSuccess").style.display="none";
+		}
+	
+		window.setTimeout( closeMessage, 5000 );
+	</script>
+{% endblock %}
+
 {% block instructorcontent %}
     <h2>Input Student Grades</h2>
-    <p class="message"><strong>{{ message }}</strong></p>
-    
+    {% if message %}
+		<div id="updateSuccess">
+			<h4 class="success">Updated Successfully</h4>
+			<p class="success">{{ message }}</p>
+		</div>
+	{% endif %}
     <div id="table">
     <h3 class="title">Download Grades Excel File:</h3>
     <form action="" method="POST">
-		<div id="table">
-			{% csrf_token %}
-			{% for field in form_down %}
-			<div id="fieldWrapper">
-				<div id="fieldSylLeft">
-					{{ field.label_tag }}
-				</div>
-				<div id="fieldSylRight">
-						{{ field.errors }}
-						{{ field }}
-				</div>
+		{% csrf_token %}
+		{% for field in form_down %}
+		<div id="fieldWrapper">
+			<div id="fieldSylLeft">
+				{{ field.label_tag }}:
 			</div>
-			{% endfor %}
-			<div id="submit">
-	    		<input type="submit" name="download" value="Download Grades" />
-	    	</div>
-	    </div>
+			<div id="fieldSylRight">
+					{{ field.errors }}
+					{{ field }}
+			</div>
+		</div>
+		{% endfor %}
+		<div id="submit">
+    		<input type="submit" name="download" value="Download Grades" />
+    	</div>
     </form>
     </div>
     
     <div id="table">
-    <h3 class="title">Upload grades Excel file:</h3>
+    <h3 class="title">Upload Grades Excel File:</h3>
     <form action="" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		{% for field in form_up %}
 		<div id="fieldWrapper">
 			<div id="fieldSylLeft">
-				{{ field.label_tag }}
+				{{ field.label_tag }}:
 			</div>
 			<div id="fieldSylRight">
 					{{ field.errors }}

@@ -101,7 +101,7 @@ html, body {
 	padding: 10px;
 	height: 100%;
 	background: #FFFFFF;
-	min-height: 400px;
+	min-height: 450px;
 }
 
 #footer
@@ -140,6 +140,11 @@ h2.title
 	margin: 10px 5px 5px 0 ;
 }
 
+p.message
+{
+	color: #009900;
+}
+
 a 
 {
 	text-decoration: none;
@@ -156,4 +161,42 @@ a:hover
 	font-size: 12px;
 	padding: 0px;
 	margin: 10px;
+}
+
+#loginFail
+{
+	background: #edc1c1;
+	border: 1px solid red;
+	margin-bottom: 10px;
+	padding-left: 10px;
+}
+
+h4.error, p.error
+{
+	margin: 0px;
+	padding: 5px 0 5px 0;
+}
+
+p.error
+{
+	padding-bottom: 10px;
+}
+
+#updateSuccess
+{
+	background: #d0f4d0;
+	border: 1px solid green;
+	margin-bottom: 10px;
+	padding-left: 10px;
+}
+
+h4.success, p.success
+{
+	margin: 0px;
+	padding: 5px 0 5px 0;
+}
+
+p.success
+{
+	padding-bottom: 10px;
 }
