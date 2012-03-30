@@ -60,12 +60,8 @@ MEDIA_ROOT = '/Users/kevin/Dropbox/intrinsic-project/SOL/static/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-<<<<<<< HEAD
 #MEDIA_URL = '/var/www/intrinsic-project/SOL/media/'
 MEDIA_URL = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/'
-=======
-MEDIA_URL = '/media/'
->>>>>>> b13d1fe2c02b4eba17a45f4e9a82590a96465fdd
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -106,6 +102,7 @@ SECRET_KEY = 'n3y)_h3wm$dy834c&ptb*4c6&q#*#%r$-4976tu6t-%iy9=qg4'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+	'django_mobile.loader.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
@@ -117,6 +114,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+	'django_mobile.middleware.MobileDetectionMiddleware',
+	'django_mobile.middleware.SetFlavourMiddleware',
 )
 AUTH_PROFILE_MODULE = 'Main.UserProfile'
 
@@ -129,6 +128,15 @@ TEMPLATE_DIRS = (
 	"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
 	#"/var/www/intrinsic-project/SOL/templates",
 )
+TEMPLATE_CONTEXT_PROCESSORS = (
+	"django.contrib.auth.context_processors.auth",
+	"django.core.context_processors.debug",
+	"django.core.context_processors.i18n",
+	"django.core.context_processors.media",
+	"django.core.context_processors.static",
+	"django.contrib.messages.context_processors.messages",
+	"django_mobile.context_processors.flavour",
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -139,6 +147,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+	'django_mobile',
 	#'chartit', 
 	
 	'SOL.Calendar',

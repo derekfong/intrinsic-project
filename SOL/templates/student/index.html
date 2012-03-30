@@ -16,30 +16,35 @@
 			{% endif %}
 		</ul>
 		{% if isCurrent %}
-			<h2 class="announce">Announcements</h2>
-			{% if latestAnnouncements.count > 0 %}
-				{% for announcement in latestAnnouncements %}
-					<div id="announceTitle">
-						{{ announcement.title }}
-					</div>
-					<div id="announceContent">
-						{{ announcement.content }}
-					</div>
-				{% endfor %}
-				<div class="announceLink">
-					<a href="{{ classUrl }}announcements">View All</a>
-					{% if accessToInst %}
-						| <a href="{{classUrl }}instructor/announcement">Edit All</a>
-					{% endif %}
-				</div>
-			{% else %}
-				<div id="announceContent">
-					No announcements
-				</div>
-				{% if accessToInst %}
+			{% if flavour == "mobile" %}
+				<h2 class="announce">Announcements</h2>
+				
+				{% if latestAnnouncements.count > 0 %}
+					{% for announcement in latestAnnouncements %}
+						<div id="announceTitle">
+							{{ announcement.title }}
+						</div>
+						<div id="announceContent">
+							{{ announcement.content }}
+						</div>
+					{% endfor %}
+					
 					<div class="announceLink">
-						<a href="{{classUrl }}instructor/announcement">Create One</a>
+						<a href="{{ classUrl }}announcements">View All</a>
+						{% if accessToInst %}
+							| <a href="{{classUrl }}instructor/announcement">Edit All</a>
+						{% endif %}
 					</div>
+				{% else %}
+					<div id="announceContent">
+						No announcements
+					</div>
+					{% if accessToInst %}
+						<div class="announceLink">
+							<a href="{{classUrl }}instructor/announcement">Create One</a>
+						</div>
+					{% endif %}
+					
 				{% endif %}
 			{% endif %}
 		{% endif %}

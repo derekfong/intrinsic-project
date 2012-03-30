@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
 	<title>SFU Synergy Online Learning</title>
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
-	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css" />
-	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif" />
+	{% if flavour == "full" %}
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/mobile.css">
+	{% else %}
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
+	{% endif %}
+	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
 	{% block head %}{% endblock %}
 </head>
 <body >
@@ -32,12 +36,17 @@ side tabs for notices and dates tab;
 			{% endif %}
 		</ul>
 		{% if user.is_authenticated %}
-			<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+			{% if flavour == "mobile" %}
+				<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+			{% endif %}
 		{% endif %}
 		
 	</div>
 	<div id="content-container">
 		<div id="sidebar">
+			{% if flavour == "full" %}
+				<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }}),</span>
+			{% endif %}
 			{% block sidebar %}{% endblock %}
 		</div>
 		<div id="content">
