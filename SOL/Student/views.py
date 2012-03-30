@@ -11,7 +11,7 @@ import datetime
 	
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
-	
+	# gets corresponding classes to display on the website
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 	
@@ -21,7 +21,7 @@ def index(request, department, class_number, year, semester, section):
 		context_instance=RequestContext(request))
 		
 def syllabus(request, department, class_number, year, semester, section):
-	
+	# grab corresponding syllabus for that class
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -40,7 +40,8 @@ def syllabus(request, department, class_number, year, semester, section):
 		context_instance=RequestContext(request))
 
 def slides(request, department, class_number, year, semester, section):
-	
+	# slides are lecture notes 
+	# student has to find corresponding sildes for that course...
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -53,7 +54,7 @@ def slides(request, department, class_number, year, semester, section):
 		context_instance=RequestContext(request))
 	
 def activities(request, department, class_number, year, semester, section):
-	
+	# activities are assignments, exams, midterms, etc	
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 	
@@ -68,6 +69,8 @@ def activities(request, department, class_number, year, semester, section):
 		context_instance=RequestContext(request))
 
 def announcements(request, department, class_number, year, semester, section):
+	# instructors can leave annoucement messages on the home page for students to view 
+	# they log in
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 
@@ -99,6 +102,8 @@ def pastDue(activity):
 	else:
 		return 0
 
+# sees if there is permission as instructor/marker
+# Diff features depending on permission.
 def instAccess(instructors, tas, user):
 	for ta in tas:
 		if user.id == ta.user.id:
@@ -108,12 +113,16 @@ def instAccess(instructors, tas, user):
 			return 1
 	return 0
 
+# sees if there is permission as student.
+# Diff features depending on permission.
 def studentAccess(students, user):
 	for student in students:
 		if user.id == student.user.id:
 			return 1
 	return 0
 
+
+# SETTERS AND GETTERS from models
 def getInsts(class_id):
 	return UserProfile.objects.filter(classlist__cid=class_id, classlist__is_instructor=1)
 
@@ -148,10 +157,12 @@ def getClassObject(department, class_number, year, semester, section, user):
 	try:
 		class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
 	except Course.DoesNotExist:
-		raise Http404
+		raise  Http404
 
 	return get_object_or_404(Course, pk=class_id)
 
+
+# actually display content on the main page relating to the student user
 def getContent(c, user):
 	instructors = getInsts(c.cid)
 	tas = getTas(c.cid)

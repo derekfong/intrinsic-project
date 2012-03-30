@@ -32,6 +32,8 @@ def syllabus(request, department, class_number, year, semester, section):
 	
 	message = ''
 	classUrl = getClassUrl(c)
+
+	# form that has defined fields for prof to fill out to create a syllabus
 	if request.method == 'POST':
 		content = CourseContent(cid=c, created_on=datetime.datetime.now(), was_updated=0, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=content)
@@ -59,6 +61,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	
 	message = ''
 	classUrl = getClassUrl(c)
+	# note that you cannot delete a syllabus once created
 	if request.method == 'POST':
 		course = CourseContent(id=sid, cid=c, created_on=s.created_on, was_updated=1, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=course)
@@ -77,6 +80,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 		context_instance=RequestContext(request))
 
 def slides(request, department, class_number, year, semester, section):
+	# slides are just lecture notes
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -142,6 +146,8 @@ def removeSlides(request, department, class_number, year, semester, section, sli
 			
 #View to generate the page for the graded activities view of Instructor App
 def activity(request, department, class_number, year, semester, section):
+	# activity is the assn, exam, midterm, etc of a course
+	# make sure activity corresponds to correct course
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
@@ -295,6 +301,7 @@ def removeAnnouncement(request, department, class_number, year, semester, sectio
 	c = getClassObject(department, class_number, year, semester, section, user)
 	an = get_object_or_404(Announcement, pk=anid)
 
+	# check if user is allowed to
 	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
 
 	if accessToInst:
@@ -336,13 +343,19 @@ def grades_files(request, department, class_number, year, semester, section):
 	students = getStudents(c.cid)
 	
 	message = ""
+	
+	# If statement to check if instructor/ta chose to upload or download grades file
 	if request.method == 'POST':
+		# If upload is chosen and form entry is valid, called upload_grades to upload
+		# mark file for the associated activity
 		if 'upload' in request.POST:
 			form_upload = UploadGrade(request.POST, request.FILES, cid=c.cid)
 			form_download = DownloadGrade(cid=c.cid)
 			if form_upload.is_valid():
 				upload_grades(request.FILES['file_path'], request.POST['activity_name'])
 				message = "Successfully uploaded grades."
+		# If download is chosen and form entry is valid, called download_grades and serve
+		# mark file of the associated activity to the instructor/ta
 		elif 'download' in request.POST:
 			form_download = DownloadGrade(request.POST, cid=c.cid)
 			form_upload = UploadGrade(cid=c.cid)
@@ -359,7 +372,7 @@ def grades_files(request, department, class_number, year, semester, section):
 	
 	content = getContent(c, user)
 	content['form_down'] = form_download
-	content['form_upload'] = form_upload
+	content['form_up'] = form_upload
 	content['message'] = message
 	content['students'] = students
 	return render_to_response('instructor/fileGrades.html', content, 
@@ -367,10 +380,13 @@ def grades_files(request, department, class_number, year, semester, section):
 
 # Method used in grades_files view to upload grades
 def upload_grades(input_file, aid):
+	
+	# Open/Read in the uploaded excel marks file
 	excel_book = xlrd.open_workbook(file_contents=input_file.read())
 	sheet = excel_book.sheet_by_index(0)
 	num_of_rows = range(1,sheet.nrows)
 	
+	# Iterate through the marks file and input student marks for activity
 	activity = Activity.objects.get(aid=aid)
 	getcontext().prec = 2
 	for row in num_of_rows:
@@ -401,16 +417,20 @@ def upload_grades(input_file, aid):
 
 # Method used in grades_files view to download grades
 def download_grades(student_list, aid):
+	
+	# Create a new excel marks file
 	mark_file = xlwt.Workbook()
 	sheet = mark_file.add_sheet('Marks')
 	
-	# Header row
+	# Header row of marks file
 	sheet.write(0,0, 'USERNAME')
 	sheet.write(0,1, 'FIRST NAME')
 	sheet.write(0,2, 'LAST NAME')
 	sheet.write(0,3, 'SFU ID')
 	sheet.write(0,4, 'MARK')
 	
+	# Populate the rows of the marks file with each student and their mark
+	# for the associated activity
 	activity = Activity.objects.get(aid=aid)
 	file_name = activity.activity_name+".xls"
 	row = 1
@@ -442,12 +462,14 @@ def grades_form(request, department, class_number, year, semester, section):
 	
 	message = ""
 	activity = ""
+	
 	form = OnlineGrade(cid=c.cid)
 	if request.method == 'POST':
 		if 'generate_form' in request.POST:
 			form = OnlineGrade(request.POST, cid=c.cid)
 			if form.is_valid():
 				activity = Activity.objects.get(aid=request.POST['activity_name'])
+	
 	content = getContent(c, user)
 	content['form'] = form
 	content['message'] = message
@@ -464,7 +486,10 @@ def grades_input(request, department, class_number, year, semester, section, aid
 
 	# ADD INITALLY POPULATED MARKS
 	message = ""
+	
 	if request.method == 'POST':
+		# Updates mark for each student in the class based on the inputted
+		# value in the form
 		if 'update' in request.POST:
 			for student in students:
 				# Validate mark input value
@@ -479,11 +504,12 @@ def grades_input(request, department, class_number, year, semester, section, aid
 				
 				uid = student.user.id
 				
+				# If the student already has a grade, update it
+				# If the student does not have a grade, make a new one
 				try:
 					student_grade = Grade.objects.get(uid=uid, aid=aid)
 				except Grade.DoesNotExist:
 					student_grade = Grade(uid=student, aid=Activity.objects.get(aid=aid))
-				
 				
 				student_grade.mark = mark
 				student_grade.save()
@@ -496,6 +522,8 @@ def grades_input(request, department, class_number, year, semester, section, aid
 		context_instance=RequestContext(request))
 
 def getContent(c, user):
+	# actually get content for the page depending on your list of classes, etc...
+	
 	instructors = getInsts(c.cid)
 	tas = getTas(c.cid)
 

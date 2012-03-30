@@ -8,6 +8,9 @@ from Instructor.forms import SettingForm
 from django.contrib.auth import authenticate, login
 import datetime
 
+#This is just for the index page when user first reaches website
+
+
 # Create your views here.
 def index(request):
 	user = request.user
@@ -38,6 +41,7 @@ def logout_view(request):
 	return HttpResponseRedirect("/")
 	
 def setting(request):
+	# settings option for user in nav bar
 	user = request.user
 	
 	year = datetime.date.today().year
@@ -82,6 +86,7 @@ def updateSetting(request):
 		context_instance=RequestContext(request))	
 
 def currentSemester():
+	# this is just to return the time and date for the bottom right of the top banner
 	today = datetime.date.today()
 	currentYear = today.year
 	nextYear = currentYear+1

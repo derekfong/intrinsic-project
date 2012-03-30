@@ -11,9 +11,8 @@ from django.db.models import Avg, Max, Min, Count, StdDev
 import datetime
 #from chartit import DataPool, Chart
 
-# Create your views here.
-
 def index(request, department, class_number, year, semester, section):
+	# webpage for Gradebook
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 
@@ -22,6 +21,7 @@ def index(request, department, class_number, year, semester, section):
 	
 	activities = Activity.objects.filter(cid = c.cid)
 	
+	# content is helper function below
 	content = getContent(c, user)
 	content['activities'] = activities
 	content['grades'] = grades
@@ -34,6 +34,7 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 	c = getClassObject(department, class_number, year, semester, section, user)
 	a = get_object_or_404(Activity, pk=aid)
 	
+	## generates the bar graph of all grades for that activity
 	activity = []
 	comments = []
 	stats = []
@@ -95,6 +96,8 @@ def viewGrade(request, department, class_number, year, semester, section, aid):
 		context_instance=RequestContext(request))
 		
 #Non-view Functions
+
+# grades contains all grades for particular assignment
 def percentAll(grades):
 	for grade in grades:
 		grade.percent = ((grade.mark / grade.aid.out_of) * 100)
@@ -104,6 +107,7 @@ def percentOne(grades):
 	grades.percent = ((grades.mark / grades.aid.out_of) * 100)
 	return grades
 
+# helper function to grab the correct content
 def getContent(c, user):
 	content = {'class': c , 'accessToInst': instAccess(getInsts(c.cid), getTas(c.cid), user), 
 		'accessToStudent': studentAccess(getEnrolled(c.cid), user), 'latestAnnouncements': getAnnouncements(c.cid), 
