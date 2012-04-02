@@ -1,21 +1,12 @@
 # Django settings for SOL project.
-#import os
-#import sys
-
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-#CHARTIT_DIR = '/Users/kevin/Desktop/pgollakota-django-chartit-5554e5b'
-#JQUERY_ROOT = '/home/csmadmin/tools/jquery'
-#sys.path = [CHARTIT_DIR] + sys.path
-#PROJECT_ROOT = os.path.dirname(__file__)
 
 #import djcelery
 #djcelery.setup_loader()
 
 ADMINS = (
     ('Kevin Mann', 'kma50@sfu.ca'),
-    ('Derek Fong', 'drf1@sfu.ca'),
-    ('Allison Ng', 'allisonn@sfu.ca'),
 )
 
 MANAGERS = ADMINS
@@ -56,20 +47,14 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-#MEDIA_ROOT = '/Users/kevin/Dropbox/intrinsic-project/SOL/static/'
-MEDIA_ROOT = '/var/www/intrinsic-project/SOL/media/'
+MEDIA_ROOT = '/Users/kevin/Dropbox/intrinsic-project/SOL/static/'
+#MEDIA_ROOT = '/var/www/intrinsic-project/SOL/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-<<<<<<< HEAD
 #MEDIA_URL = '/var/www/intrinsic-project/SOL/media/'
 MEDIA_URL = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/'
-=======
-#MEDIA_URL = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/'
-
-MEDIA_URL = '/media/'
->>>>>>> 5bc4af039a092695a7354364a054b022bc55ee57
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -133,8 +118,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	#"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
-	"/var/www/intrinsic-project/SOL/templates",
+	"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
+	#"/var/www/intrinsic-project/SOL/templates",
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.contrib.auth.context_processors.auth",
@@ -156,7 +141,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 	'django_mobile',
-	#'chartit', 
 	
 	'SOL.Calendar',
 	'SOL.Gradebook',

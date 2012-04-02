@@ -19,7 +19,7 @@ def index(request):
 	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
 	old_class_list = Course.objects.filter(classlist__uid=user.id, year__lt=year)
 	return render_to_response('main/index.html', {'class_list': class_list, 'old_class_list': old_class_list},
-		context_instance=RequestContext(request))
+			context_instance=RequestContext(request))
 
 def login_view(request):
 	if request.method == 'POST':

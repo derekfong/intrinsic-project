@@ -1,76 +1,73 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-	<title>SFU Synergy Online Learning</title>
-	{% if flavour == "full" %}
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/mobile.css">
-	{% else %}
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
-	{% endif %}
-	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
-	{% block head %}{% endblock %}
-</head>
-<body >
+{% if flavour == "full" %}
+	<!DOCTYPE HTML>
+	<html lang="en">
+	<head>
+		<title>SFU Synergy Online Learning</title>
+			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
+			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
+		<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
+		{% block head %}{% endblock %}
+	</head>
+	<body >
 
-<!-- divided into 3 parts:
-header with logo, signout, settings;
-content that will change;
-side tabs for notices and dates tab;
--->
-<div id="container">
-	<div id="header">
+	<!-- divided into 3 parts:
+	header with logo, signout, settings;
+	content that will change;
+	side tabs for notices and dates tab;
+	-->
+	<div id="container">
+		<div id="header">
 		
-	</div>
-	<div id="navigation">
-		<ul>
-			<li><a href="/">Home</a></li>
-			{% if user.is_authenticated %}
-				{% for course in class_list %}
-					<li>
-						<a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">{{ course.department }} {{ course.class_number }}</a>
-					</li>
-				{% endfor %}
-				<li><a href="/accounts/settings">Settings</a></li>
-				<li><a href="/accounts/logout">Logout</a></li>
-			{% endif %}
-		</ul>
-		{% if user.is_authenticated %}
-			{% if flavour == "mobile" %}
-				<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
-			{% endif %}
-		{% endif %}
-		
-	</div>
-	<div id="content-container">
-		<div id="sidebar">
-			{% if flavour == "full" %}
-				<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }}),</span>
-			{% endif %}
-			{% block sidebar %}{% endblock %}
 		</div>
-		<div id="content">
+		<div id="navigation">
+			<ul>
+				<li><a href="/">Home</a></li>
+				{% if user.is_authenticated %}
+					{% for course in class_list %}
+						<li>
+							<a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">{{ course.department }} {{ course.class_number }}</a>
+						</li>
+					{% endfor %}
+					<li><a href="/accounts/settings">Settings</a></li>
+					<li><a href="/accounts/logout">Logout</a></li>
+				{% endif %}
+			</ul>
 			{% if user.is_authenticated %}
-				{% if user.is_active %}
-					{% block content %}{% endblock %}
+					<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+			{% endif %}
+		
+		</div>
+		<div id="content-container">
+			<div id="sidebar">
+				{% if user.is_authenticated %}
+					{% block sidebar %}{% endblock %}
+				{% endif %}
+			</div>
+			<div id="content">
+				{% if user.is_authenticated %}
+					{% if user.is_active %}
+						{% block content %}{% endblock %}
+					{% else %}
+						<p>Your account is not active!</p>
+					{% endif %}
 				{% else %}
-					<p>Your account is not active!</p>
+					<h1>Welcome to Synergy Online</h1>
+					{% if message %}
+						<div id="loginFail">
+							<h4 class="error">Invalid Login</h4>
+							<p class="error">{{ message }}</p>
+						</div>
+					{% endif %}
+					{% include "registration/login.html" %}
 				{% endif %}
-			{% else %}
-				<h1>Welcome to Synergy Online</h1>
-				{% if message %}
-					<div id="loginFail">
-						<h4 class="error">Invalid Login</h4>
-						<p class="error">{{ message }}</p>
-					</div>
-				{% endif %}
-				{% include "registration/login.html" %}
-			{% endif %}
-		</div>
-		<div id="footer">
-			Made by Intrinsic Team [Group 12] | Created by: Kevin Mann, Derek Fong, Allison Ng
+			</div>
+			<div id="footer">
+					Made by Intrinsic Team [Group 12] | Created by: Kevin Mann, Derek Fong, Allison Ng
+			</div>
 		</div>
 	</div>
-</div>
-</body>
-</html>
+	</body>
+	</html>
+{% else %}
+	{% include "mobile.html" %}
+{% endif %}

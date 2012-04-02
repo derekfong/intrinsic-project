@@ -44,131 +44,153 @@
 {% endblock %}
 
 {% block student %}
+	
 	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }} Grades</h2>
+	<p><a href=".">Back to Assignments</a></p>
 	{% if isMarked == 2 %}
-		<h3>Grade Information</h3>
-		<div id="table">
-			<div id="actWrapper">
-				<div id="actLeft">
-					Activity Name:
-				</div>
-				<div id="actRight">
-					{{ activity.aid.activity_name }}
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Status: 
-				</div>
-				<div id="actRight">
-					{% if activity.aid.status == 0 %}
-						Due date not passed
-					{% else %}
-						{% if activity.aid.status == 1 %}
-							Due but not marked
-						{% else %}
-							Marks released
-						{% endif %}
-					{% endif %}
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Worth: 
-				</div>
-				<div id="actRight">
-					{{ activity.aid.worth }}%
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Due Date:
-				</div>
-				<div id="actRight">
-					{{ activity.aid.due_date }}
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Grade: 
-				</div>
-				<div id="actRight">
-					{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent|floatformat:2 }}%)
-				</div>
-			</div>
-			<div id="endAct"></div>
-		</div>
-		<h3>Comments</h3>
-		<div id="table">
-			{% if comments.count > 0 %}
-				{% for comment in comments %}
-					<div id="postWrapper">
-						<div id="postTop">
-							<strong>{{ comment.description }}:</strong>
-						</div>
-						<div id="postBottom">
-							{{ comment.comment }}
-						</div>
+		{% if stats.mark__count > 0 %}
+			<h3>Grade Information</h3>
+			<div id="table">
+				<div id="actWrapper">
+					<div id="actLeft">
+						Activity Name:
 					</div>
-				{% endfor %}
-			{% else %}
-				<p>There are no comments for this assignment</p>
-			{% endif %}
-		</div>
-		<h3>Statistics</h3>
-		<div id="table">
-			<div id="actWrapper">
-				<div id="actLeft">
-					Count:
+					<div id="actRight">
+						{{ activity.aid.activity_name }}
+					</div>
 				</div>
-				<div id="actRight">
-					{{ stats.mark__count }}
+				<div id="actWrapper">
+					<div id="actLeft">
+						Status: 
+					</div>
+					<div id="actRight">
+						{% if activity.aid.status == 0 %}
+							Due date not passed
+						{% else %}
+							{% if activity.aid.status == 1 %}
+								Due but not marked
+							{% else %}
+								Marks released
+							{% endif %}
+						{% endif %}
+					</div>
 				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Worth: 
+					</div>
+					<div id="actRight">
+						{{ activity.aid.worth }}%
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Due Date:
+					</div>
+					<div id="actRight">
+						{{ activity.aid.due_date }}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Grade: 
+					</div>
+					<div id="actRight">
+						{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent|floatformat:2 }}%)
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Position: 
+					</div>
+					<div id="actRight">
+						{{ activity.position }}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Submission: 
+					</div>
+					<div id="actRight">
+						<a href="#submission">View Submission</a>
+					</div>
+				</div>
+				<div id="endAct"></div>
 			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Mean: 
-				</div>
-				<div id="actRight">
-					{{ stats.mark__avg|floatformat:2 }}/{{ activity.aid.out_of }}
-				</div>
+			<h3>Comments</h3>
+			<div id="table">
+				{% if comments.count > 0 %}
+					{% for comment in comments %}
+						<div id="postWrapper">
+							<div id="postTop">
+								<strong>{{ comment.description }}:</strong>
+							</div>
+							<div id="postBottom">
+								{{ comment.comment }}
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<p>There are no comments for this assignment</p>
+				{% endif %}
 			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Median: 
+			<h3>Statistics</h3>
+			<div id="table">
+				<div id="actWrapper">
+					<div id="actLeft">
+						Count:
+					</div>
+					<div id="actRight">
+						{{ stats.mark__count }}
+					</div>
 				</div>
-				<div id="actRight">
-					{{ median }}/{{ activity.aid.out_of }}
+				<div id="actWrapper">
+					<div id="actLeft">
+						Mean: 
+					</div>
+					<div id="actRight">
+						{{ stats.mark__avg|floatformat:2 }}/{{ activity.aid.out_of }}
+					</div>
 				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Median: 
+					</div>
+					<div id="actRight">
+						{{ median }}/{{ activity.aid.out_of }}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Standard Dev:
+					</div>
+					<div id="actRight">
+						{{ stats.mark__stddev|floatformat:2 }}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Maximum: 
+					</div>
+					<div id="actRight">
+						{{ stats.mark__max }}/{{ activity.aid.out_of }}
+					</div>
+				</div>
+				<div id="actWrapper">
+					<div id="actLeft">
+						Minimum: 
+					</div>
+					<div id="actRight">
+						{{ stats.mark__min }}/{{ activity.aid.out_of }}
+					</div>
+				</div>
+				<div id="endAct"></div>
 			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Standard Dev:
-				</div>
-				<div id="actRight">
-					{{ stats.mark__stddev|floatformat:2 }}
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Maximum: 
-				</div>
-				<div id="actRight">
-					{{ stats.mark__max }}/{{ activity.aid.out_of }}
-				</div>
-			</div>
-			<div id="actWrapper">
-				<div id="actLeft">
-					Minimum: 
-				</div>
-				<div id="actRight">
-					{{ stats.mark__min }}/{{ activity.aid.out_of }}
-				</div>
-			</div>
-			<div id="endAct"></div>
-		</div>
-		<h3>Histogram</h3>
-		<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
+			<h3>Histogram</h3>
+			<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
+		{% else %}
+			<p>There have been no marks entered for this assignment</p>
+		{% endif %}
 	{% else %}
 		<p>This assignment has not been marked yet.
 	{% endif %}
