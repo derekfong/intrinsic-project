@@ -154,4 +154,7 @@ h2.announce
 	padding-left: 10px;
 }
 
-
+input.grade
+{
+	border: 1px solid #323232;
+}

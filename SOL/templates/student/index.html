@@ -1,55 +1,109 @@
 {% extends "base.html" %}
-{% block sidebar %}
-	{% if accessToStudent %}
-		<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
-		<ul>
-			<li><a href="{{ classUrl }}">Course Home</a></li>
-			<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
+{% if flavour == "full" %}
+	{% block mobileNav %}
+		{% if accessToStudent %}
+			<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
+			<ul class="studentNav">
+				<li><a href="{{ classUrl }}">Course Home</a></li>
+				<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
+				{% if isCurrent %}
+					<li><a href="{{ classUrl }}announcements">Announcements</a></li>
+					<li><a href="{{ classUrl }}slides/">Lecture Slides</a></li>
+					<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
+				{% endif %}
+				<li><a href="{{ classUrl }}grades">View Grades</a></li>
+				{% if accessToInst %}
+					<li><a href="{{ classUrl }}instructor"><strong>Go to Instructor View</strong></a></li>
+				{% endif %}
+			</ul>
 			{% if isCurrent %}
-				<li><a href="{{ classUrl }}announcements">Announcements</a></li>
-				<li><a href="{{ classUrl }}slides/">Lecture Slides</a></li>
-				<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
-			{% endif %}
-			<li><a href="{{ classUrl }}grades">View Grades</a></li>
-			{% if accessToInst %}
-				<li><a href="{{ classUrl }}instructor"><strong>Go to Instructor View</strong></a></li>
-			{% endif %}
-		</ul>
-		{% if isCurrent %}
-			{% if flavour == "mobile" %}
-				<h2 class="announce">Announcements</h2>
+				{% if flavour == "full" %}
+					<h2 class="announce">Announcements</h2>
 				
-				{% if latestAnnouncements.count > 0 %}
-					{% for announcement in latestAnnouncements %}
-						<div id="announceTitle">
-							{{ announcement.title }}
-						</div>
-						<div id="announceContent">
-							{{ announcement.content }}
-						</div>
-					{% endfor %}
+					{% if latestAnnouncements.count > 0 %}
+						{% for announcement in latestAnnouncements %}
+							<div id="announceTitle">
+								{{ announcement.title }}
+							</div>
+							<div id="announceContent">
+								{{ announcement.content }}
+							</div>
+						{% endfor %}
 					
-					<div class="announceLink">
-						<a href="{{ classUrl }}announcements">View All</a>
-						{% if accessToInst %}
-							| <a href="{{classUrl }}instructor/announcement">Edit All</a>
-						{% endif %}
-					</div>
-				{% else %}
-					<div id="announceContent">
-						No announcements
-					</div>
-					{% if accessToInst %}
 						<div class="announceLink">
-							<a href="{{classUrl }}instructor/announcement">Create One</a>
+							<a href="{{ classUrl }}announcements">View All</a>
+							{% if accessToInst %}
+								| <a href="{{classUrl }}instructor/announcement">Edit All</a>
+							{% endif %}
 						</div>
-					{% endif %}
+					{% else %}
+						<div id="announceContent">
+							No announcements
+						</div>
+						{% if accessToInst %}
+							<div class="announceLink">
+								<a href="{{classUrl }}instructor/announcement">Create One</a>
+							</div>
+						{% endif %}
 					
+					{% endif %}
 				{% endif %}
 			{% endif %}
 		{% endif %}
-	{% endif %}
-{% endblock %}
+	{% endblock %}
+{% else %}
+	{% block sidebar %}
+		{% if accessToStudent %}
+			<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
+			<ul class="studentNav">
+				<li><a href="{{ classUrl }}">Course Home</a></li>
+				<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
+				{% if isCurrent %}
+					<li><a href="{{ classUrl }}announcements">Announcements</a></li>
+					<li><a href="{{ classUrl }}slides/">Lecture Slides</a></li>
+					<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
+				{% endif %}
+				<li><a href="{{ classUrl }}grades">View Grades</a></li>
+				{% if accessToInst %}
+					<li><a href="{{ classUrl }}instructor"><strong>Go to Instructor View</strong></a></li>
+				{% endif %}
+			</ul>
+			{% if isCurrent %}
+				{% if flavour == "full" %}
+					<h2 class="announce">Announcements</h2>
+				
+					{% if latestAnnouncements.count > 0 %}
+						{% for announcement in latestAnnouncements %}
+							<div id="announceTitle">
+								{{ announcement.title }}
+							</div>
+							<div id="announceContent">
+								{{ announcement.content }}
+							</div>
+						{% endfor %}
+					
+						<div class="announceLink">
+							<a href="{{ classUrl }}announcements">View All</a>
+							{% if accessToInst %}
+								| <a href="{{classUrl }}instructor/announcement">Edit All</a>
+							{% endif %}
+						</div>
+					{% else %}
+						<div id="announceContent">
+							No announcements
+						</div>
+						{% if accessToInst %}
+							<div class="announceLink">
+								<a href="{{classUrl }}instructor/announcement">Create One</a>
+							</div>
+						{% endif %}
+					
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+{% endif %}
 
 {% block content %}
 	{% if accessToStudent %}

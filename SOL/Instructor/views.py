@@ -158,8 +158,11 @@ def activity(request, department, class_number, year, semester, section):
 		activity = Activity(cid=c)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
+			#commit to database
 			form.save()
+			#if grade has been released
 			if form.cleaned_data['status'] == 2:
+				#generate+send email announcement
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
@@ -170,6 +173,11 @@ def activity(request, department, class_number, year, semester, section):
 				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 				msg.attach_alternative(html_content, "text/html")
 				msg.send()
+				#created announcement for it
+				title = 'Grade released for '+form.cleaned_data['activity_name']
+				content = "A new grade was released for "+form.cleaned_data['activity_name']
+				act = Announcement(uid=user.userprofile, title=title, content=text_content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
+				act.save()
 			return HttpResponseRedirect("")
 	else:
 		form = ActivityForm()
@@ -194,8 +202,10 @@ def updateActivity(request, department, class_number, year, semester, section, a
 		activity = Activity(cid=c, aid=aid)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
+			#commit to database
 			form.save()
 			if form.cleaned_data['status'] == 2:
+				#generate+send email announcement
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
@@ -206,6 +216,11 @@ def updateActivity(request, department, class_number, year, semester, section, a
 				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 				msg.attach_alternative(html_content, "text/html")
 				msg.send()
+				#created announcement for it
+				title = 'Grade released for '+form.cleaned_data['activity_name']
+				content = "A new grade was released for "+form.cleaned_data['activity_name']
+				act = Announcement(uid=user.userprofile, title=title, content=content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
+				act.save()
 			url = getClassUrl(c) + 'instructor/activity'
 			return HttpResponseRedirect(url)
 	else:
@@ -251,6 +266,7 @@ def announcement(request, department, class_number, year, semester, section):
 		if form.is_valid():
 			form.save()
 			if form.cleaned_data['send_email']:
+				#generate+send email notification
 				subject = 'New Announcement in '+c.department+' %s' %c.class_number
 				from_email = 'itsatme@gmail.com'
 				to = []
@@ -301,10 +317,11 @@ def removeAnnouncement(request, department, class_number, year, semester, sectio
 	c = getClassObject(department, class_number, year, semester, section, user)
 	an = get_object_or_404(Announcement, pk=anid)
 
-	# check if user is allowed to
+	# check if user has access
 	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
 
 	if accessToInst:
+		#delete announcement from database
 		announcement = Announcement.objects.get(anid=anid)
 		announcement.delete()
 		url = getClassUrl(c) + 'instructor/announcement'
@@ -318,6 +335,7 @@ def roster(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)	
 
+	#get all students in the class
 	students = getStudents(c.cid)
 	
 	content = getContent(c, user)
