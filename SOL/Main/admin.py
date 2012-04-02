@@ -68,7 +68,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 class SubmissionAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['aid', 'uid', 'submit_date', 'submit_number', 'file_path']})
+		(None, {'fields': ['aid', 'uid', 'submit_number', 'file_path']})
 	]
 	list_filter=['aid', 'uid']
 	search_fields=['aid', 'uid']
