@@ -1,0 +1,51 @@
+{% extends "student/index.html" %}
+{% block student %}
+	<h2 class="title">Grade Calculator</h2>
+	<p><a href="..">Back to Assignments</a></p>
+	<div id="table">
+		<table border=0>
+			<tr>
+				<td width=200>
+					<strong>Assignment Name</strong>
+				</td>
+				<td width=200>
+					<strong>Worth</strong>
+				</td>
+				<td width=200>
+					<strong>Mark</strong>
+				</td>
+			</tr>
+		
+			<form action="" method="POST">
+			{% csrf_token %}
+				{% for activity in activities %}
+					<tr>
+						<td>
+							{{ activity.activity_name }}
+						</td>
+						<td>
+							{{ activity.worth }}%
+						</td>
+						<td>
+							{% if activity.mark %}
+								<input type="text" size="3" name="{{ activity.aid }}" value="{{ activity.mark }}" class="grade"> / {{ activity.out_of }}
+							{% else %}
+								<input type="text" size="3" name="{{ activity.aid }}" value="0" class="grade"> / {{ activity.out_of }}
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td></td><td></td>
+					<td>
+						<input type="submit" value="Update Grades" />
+					</td>
+				</tr>
+			</form>
+		</table>
+		<h2 class="title">Calculated Progress:</h2>
+			<p>
+				{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)
+			</p>
+	</div>
+{% endblock %}
