@@ -14,7 +14,7 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-import datetime, xlrd, xlwt, re
+import datetime, xlrd, xlwt, re, zipfile, os, time
 
 #View to generate the page for the main view of Instructor App
 def index(request, department, class_number, year, semester, section):
@@ -251,6 +251,49 @@ def removeActivity(request, department, class_number, year, semester, section, a
 		content = {'accessToInst': accessToInst, 'classUrl': getClassUrl(c)}
 		return render_to_response('instructor/announcement.html', content, 
 			context_instance=RequestContext(request))
+
+# View that retrieves all the most recent submissions from each student. Returns as a zip.
+def getSubmissions(request, department, class_number, year, semester, section, aid):
+	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester).cid
+	c = get_object_or_404(Course, pk=class_id)
+	a = get_object_or_404(Activity, pk=aid)
+
+	user = request.user
+	instructors = getInsts(class_id)
+	tas = getTas(class_id)
+
+	accessToInst = instAccess(instructors, tas, user)
+	
+	activity_name = a.activity_name
+	
+	# Establish a zip file of all submission for the activity
+	class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	zip_name = activity_name + '.zip'
+	activity_zip = zipfile.ZipFile(class_folder + zip_name, 'w')
+
+	activity_folder = class_folder +'/'+ activity_name +'/'
+	
+	class_list = getStudents(class_id)
+	activity_submissions = Submission.objects.filter(aid=aid)
+	
+	# Go through all the students in the class and retrieve the latest submission
+	for student in class_list:
+		student_folder = User.objects.get(id=student.id).username
+		last_submit = activity_submissions.filter(uid=student.id).count()
+		if last_submit > 0:
+			latest_submission = activity_submissions.filter(uid=student.id, submit_number=last_submit).get()
+			submission_file = latest_submission.file_path.path
+			file_extension = os.path.splitext(os.path.basename(submission_file))
+			activity_zip.write(submission_file, student_folder +'/'+ activity_name + file_extension[1])
+	
+	# Close and create the zip file of submissions for the activity
+	activity_zip.close()
+	
+	file_to_send = file(class_folder + zip_name)
+	
+	response = HttpResponse(file_to_send, content_type='application/zip')
+	response['Content-Disposition'] = 'attachment; filename='+zip_name
+	return response
 
 #View to generate the page for the announcements view of Instructor App	
 def announcement(request, department, class_number, year, semester, section):

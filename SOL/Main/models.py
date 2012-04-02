@@ -104,8 +104,24 @@ class Course(models.Model):
 	semester = models.CharField(max_length=16, choices=SEMESTER_CHOICES)
 	year = models.IntegerField(choices=YEAR_CHOICES)
 	section = models.CharField(max_length=4)
+	
 	def __unicode__(self):
 		return self.department+self.class_number+" "+self.semester+u'%s' %self.year+" "+self.section
+	
+	# Create a folder in submissions for the course when the course is created
+	def save(self, *args, **kwargs):
+		base_path = '/var/www/intrinsic-project/SOL/media/submissions'
+		year = str(self.year)
+		semester = self.semester
+		dept = self.department
+		class_number = self.class_number
+		section = self.section
+		
+		try:
+			os.makedirs(base_path +'/'+ year +'/'+ semester +'/'+ dept +'/'+ class_number +'/'+ section)
+		except:
+			return 'Course already exists'
+		super(Course, self).save(*args, **kwargs)
 	
 # generates a list of people within a class
 class ClassList(models.Model):

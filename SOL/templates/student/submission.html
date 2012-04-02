@@ -1,0 +1,59 @@
+{% extends "student/index.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateSuccess").style.display="none";
+		}
+	
+		window.setTimeout( closeMessage, 5000 );
+	</script>
+{% endblock %}
+
+{% block student %}
+	{% if isCurrent %}
+	
+		{% if message %}
+			<div id="updateSuccess">
+				<h4 class="success">Submission Successfully</h4>
+				<p class="success">{{ message }}</p>
+			</div>
+		{% endif %}
+		<div id="bottomPosts">
+			<h2 class="title">{{ activity.activity_name }} - Submission</h2>
+				<form action="" method="POST" enctype="multipart/form-data">
+					<div id="table">
+					{% csrf_token %}
+					{% for field in form %}
+					<div id="fieldWrapper">
+						<div id="fieldSylLeft">
+							{{ field.label_tag }}:
+						</div>
+						<div id="fieldSylRight">
+								{{ field.errors }}
+								{{ field }}
+						</div>
+					</div>
+					{% endfor %}
+					<div id="submit">
+						<input type="submit" name="submit" value="Submit" />
+					</div>
+				</form>
+			</div> 
+		</div>
+			
+		<div id="bottomPosts">
+		<h2 class="title">Past Submissions</h2>
+		{% for submission in submissions %}
+			<div id="table">
+				<p><a href="{{ MEDIA_URL }}{{ submission.file_path }}">Download File</a></p>
+				<p>Date submitted: <strong>{{ submission.submit_date|date:"F j, Y @ g:i:s A"}}</strong></p>
+				<p>File size: {{ submission.file_path.size|filesizeformat }}</p>
+			</div>
+		{% endfor %}
+		</div>
+		
+	{% else %}
+		<p>You are not currently enrolled in this class.</p>
+	{% endif %}
+{% endblock %}
