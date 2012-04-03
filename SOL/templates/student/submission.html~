@@ -47,7 +47,7 @@
 		{% for submission in submissions %}
 			<div id="table">
 				<p><a href="{{ MEDIA_URL }}{{ submission.file_path }}">Download File</a></p>
-				<p>Date submitted: <strong>{{ submission.submit_date }}</strong></p>
+				<p>Date submitted: <strong>{{ submission.submit_date|date:"F j, Y @ g:i:s A"}}</strong></p>
 				<p>File size: {{ submission.file_path.size|filesizeformat }}</p>
 			</div>
 		{% endfor %}

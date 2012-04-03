@@ -285,7 +285,7 @@ def getSubmissions(request, department, class_number, year, semester, section, a
 			latest_submission = activity_submissions.filter(uid=student.id, submit_number=last_submit).get()
 			submission_file = latest_submission.file_path.path
 			file_extension = os.path.splitext(os.path.basename(submission_file))
-			activity_zip.write(submission_file, student_folder +'/'+ activity_name + file_extension[1])
+			activity_zip.write(submission_file, activity_name +'/'+ student_folder +'/'+ activity_name + file_extension[1])
 	
 	# Close and create the zip file of submissions for the activity
 	activity_zip.close()
