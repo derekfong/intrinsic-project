@@ -4,6 +4,7 @@ from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent, Slide
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
+from Student.models import Submission
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
 from decimal import Decimal, getcontext
