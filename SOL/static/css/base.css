@@ -25,22 +25,6 @@ html, body {
 	height: 150px;
 }
 
-#logoPlacer1 {
-	float: left;
-}
-
-
-#logoPlacer2 {
-	float: right;
-}
-
-#logoPlacerBottom {
-	position: absolute;
-	display: block;
-	bottom: 3px;
-	right: 10px;
-}
-
 #navigation
 {
 	float: left;

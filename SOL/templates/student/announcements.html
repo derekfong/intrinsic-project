@@ -1,33 +1,31 @@
 {% extends "student/index.html" %}
 {% block student %}
 	{% if isCurrent %}
-		<div id="bottomPosts">
-			<h2 class="title">All Announcements </h2>
-			{% if announcements.count > 0 %}
-				{% for announcement in announcements %}
-					<div id="table">
-						<div id="postTop">
-							<strong>{{ announcement.title }}</strong> 
-							<span class="postDate">({{ announcement.date_posted }} 
-							{% if announcement.was_updated == 1 %}
-								Updated on: {{ announcement.updated_on }} 
-								By: {{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
-							{% endif %}
-							)
-							</span>
-						</div>
-						<div id="postBottom">
-							{{ announcement.content }}
-						</div>
+		<h2 class="title">All Announcements </h2>
+		{% if announcements.count > 0 %}
+			{% for announcement in announcements %}
+				<div class="table">
+					<div class="postTop">
+						<strong>{{ announcement.title }}</strong> 
+						<span class="postDate">({{ announcement.date_posted }} 
+						{% if announcement.was_updated == 1 %}
+							Updated on: {{ announcement.updated_on }} 
+							By: {{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
+						{% endif %}
+						)
+						</span>
 					</div>
-				{% endfor %}
-				</div> 
-			{% else %}
-				<div id="table">
-					<p>There are no posted announcements.</p>
+					<div class="postBottom">
+						{{ announcement.content }}
+					</div>
 				</div>
-			{% endif %}
-		</div>
+			{% endfor %}
+			</div> 
+		{% else %}
+			<div class="table">
+				<p>There are no posted announcements.</p>
+			</div>
+		{% endif %}
 	{% else %}
 		<p>You are not currently enrolled in this class.</p>
 	{% endif %}

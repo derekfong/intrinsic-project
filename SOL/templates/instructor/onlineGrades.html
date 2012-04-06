@@ -2,29 +2,29 @@
 {% block instructorcontent %}
     <h2 class="title">Input Student Grades</h2>
     {% if form %}
-    	<div id="table">
+    	<div class="table">
 		<h3 class="title">Generate Grade Form:</h3>
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			{% for field in form %}
-			<div id="fieldWrapper">
-				<span id="fieldSylLeft">
+			<div class="fieldWrapper">
+				<span class="fieldSylLeft">
 					{{ field.label_tag }}:
 				</span>
-				<span id="fieldSylRight">
+				<span class="fieldSylRight">
 						{{ field.errors }}
 						{{ field }}
 				</span>
 			</div>
 			{% endfor %}
-			<div id="submit">
+			<div class="submit">
 	    		<input type="submit" name="generate_form" value="Generate Grade Form" />
 	    	</div>
 		</form>
 		</div>
     
     {% else %}
-    	<div id="table">
+    	<div class="table">
     	<p class="message"><strong>{{ message }}</strong></p>
     	<form action="{{ classUrl }}instructor/grades/form/" method="POST">
 			{% csrf_token %}
@@ -35,7 +35,7 @@
     
     {% if activity %}
 		<h2 class="title">Activity: {{ activity.activity_name }}</h2>
-    	<div id="table">
+    	<div class="table">
 		<table border=0 class="addGrades">
 			<tr>
 				{% if flavour == "full" %}
@@ -56,17 +56,16 @@
 						<strong>Comments</strong>
 					</td>
 				{% else %}
-					<td>
+					<td width=225>
 						<strong>L Name</strong>
 					</td>
-					<td>
+					<td width=225>
 						<strong>F Name</strong>
 					</td>
-					<td>
+					<td width=225>
 						<strong>SFU ID</strong>
 					</td>
-
-					<td>
+					<td width=150>
 						<strong>Mark</strong>
 					</td>
 				{% endif %}
@@ -105,7 +104,7 @@
 				{% endfor %}
 				<tr>
 					{% if flavour == "full" %}
-						<td></td><td></td><td></td><td></td>
+						<td></td><td></td><td></td>
 					{% else %}
 						<td></td><td></td><td></td>
 					{% endif %}

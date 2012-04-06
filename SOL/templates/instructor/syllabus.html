@@ -13,26 +13,26 @@
 {% block instructorcontent %}
 	<h2 class="title">Create Syllabus</h2>
 	{% if message %}
-		<div id="updateSuccess">
+		<div class="updateSuccess">
 			<h4 class="success">Updated Successfully</h4>
 			<p class="success">{{ message }}</p>
 		</div>
 	{% endif %}
 	<form action="" method="POST">
-		<div id="table">
+		<div class="table">
 		{% csrf_token %}
 			{% for field in form %}
-			<div id="fieldWrapper">
-				<div id="fieldSylLeft">
+			<div class="fieldWrapper">
+				<div class="fieldSylLeft">
 					{{ field.label_tag }}: 
 				</div>
-					<div id="fieldSylRight">
+					<div class="fieldSylRight">
 						{{ field.errors }}
 						{{ field }}
 					</div>
 			</div>
 			{% endfor %}
-			<div id="submit">
+			<div class="submit">
 				<input type="submit" value="Submit">
 			</div>
 		</div>

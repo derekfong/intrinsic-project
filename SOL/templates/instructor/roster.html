@@ -1,7 +1,7 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
 	<h2 class="title">Class Roster</h2>
-	<div id="table">
+	<div class="table">
 		{% if instructor.count > 1 %}
 			<h3 class="title">Instructors</h3>
 		{% else %}
@@ -9,77 +9,77 @@
 		{% endif %}
 
 		{% for instructor in instructors %}
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Name:
 				</span>
-				<span id="rosterRight">
+				<span class="rosterRight">
 					 {{ instructor.user.first_name }} {{ instructor.user.last_name}}
 				</span>
 			</div>
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
-				<span id="rosteRight">
+				<span class="rosteRight">
 					 {{ instructor.user.email }}
 				</span>
 			</div>
-			<div id="endAct"></div>
+			<div class="endAct"></div>
 			{% if not forloop.last %}
 				<br />
 			{% endif %}
 		{% endfor %}
 	</div>
-	<div id="table">
+	<div class="table">
 		{% if tas.count > 1 %}
 			<h3 class="title">Teaching Assistants</h3>
 		{% else %}
 			<h3 class="title">Teaching Assistant</h3>
 		{% endif %}
 		{% for ta in tas %}
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Name:
 				</span>
-				<span id="rosterRight">
+				<span class="rosterRight">
 					 {{ ta.user.first_name }} {{ ta.user.last_name}}
 				</span>
 			</div>
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
-				<span id="rosteRight">
+				<span class="rosteRight">
 					 {{ ta.user.email }}
 				</span>
 			</div>
-			<div id="endAct"></div>
+			<div class="endAct"></div>
 			{% if not forloop.last %}
 				<br />
 			{% endif %}
 		{% endfor %}
 	</div>
-	<div id="table">
+	<div class="table">
 		<h3 class="title">Students</h3>
 		{% for student in students %}
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Name:
 				</span>
-				<span id="rosterRight">
+				<span class="rosterRight">
 					 {{ student.user.first_name }} {{ student.user.last_name}}
 				</span>
 			</div>
-			<div id="rosterWrapper">
-				<span id="rosterLeft">
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
-				<span id="rosteRight">
+				<span class="rosteRight">
 					 {{ student.user.email }}
 				</span>
 			</div>
-			<div id="endAct"></div>
+			<div class="endAct"></div>
 			{% if not forloop.last %}
 				<br />
 			{% endif %}

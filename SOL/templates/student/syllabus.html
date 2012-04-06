@@ -1,102 +1,100 @@
 {% extends "student/index.html" %}
 {% block student %}
-	<div id="bottomPosts">
-		<h2 class="title">Course Syllabus</h2>
-		{% if syllabus %}
-			<p class="time"><strong>Created:</strong> {{ syllabus.created_on }}</p>
-			{% if syllabus.was_updated %}
-				<p class="time"><strong>Last Updated:</strong> {{ syllabus.updated_on }}</p>
-			{% endif %}
-			{% if instructors.count > 0 %}
-				<h3 class="title">Instructors</h3>
-				<div id="table">
-					{% for instructor in instructors %}	
-						<div id="sylWrapper">
-							<span id="sylLeft">Name: </span>
-							<span id="sylRight">{{ instructor.user.first_name }} {{ instructor.user.last_name }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Email: </span>
-							<span id="sylRight">{{ instructor.user.email }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Office Hours: </span>
-							<span id="sylRight">{{ syllabus.officeHrs }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Office Location: </span>
-							<span id="sylRight">{{ syllabus.officeLocation }}</span>
-						</div>
-						<div id="endAct"></div>
-						{% if not forloop.last %}
-							<br />
-						{% endif %}
-					{% endfor %}		
-				</div>
-			{% endif %}
-			{% if tas.count > 0 %}
-				<h3 class="title">Teaching Assistants</h3>	
-				<div id="table">
-					{% for ta in tas %}	
-						<div id="sylWrapper">
-							<span id="sylLeft">Name: </span>
-							<span id="sylRight">{{ ta.user.first_name }} {{ ta.user.last_name }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Email: </span>
-							<span id="sylRight">{{ ta.user.email }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Office Hours: </span>
-							<span id="sylRight">{{ syllabus.TaOfficeHrs }}</span>
-						</div>
-						<div id="sylWrapper">
-							<span id="sylLeft">Office Location: </span>
-							<span id="sylRight">{{ syllabus.TaOfficeLocation }}</span>
-						</div>
-						<div id="endAct"></div>
-						{% if not forloop.last %}
-							<br />
-						{% endif %}
-					{% endfor %}		
-				</div>
-			{% endif %}
-			<h3 class="title">Class Information</h3>	
-			<div id="table">
-				<div id="sylWrapper">
-					<div id="sylLeft">Lecture Time: </div>
-					<div id="sylRight">{{ syllabus.lectTime|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Prerequisites: </div>
-					<div id="sylRight">{{ syllabus.prereq|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Books: </div>
-					<div id="sylRight">{{ syllabus.books|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Topics: </div>
-					<div id="sylRight">{{ syllabus.topics|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Marking Scheme: </div>
-					<div id="sylRight">{{ syllabus.markingScheme|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Academic Honesty: </div>
-					<div id="sylRight">{{ syllabus.academicHonesty|linebreaksbr }}</div>
-				</div>
-				<div id="sylWrapper">
-					<div id="sylLeft">Additional Information: </div>
-					<div id="sylRight">{{ syllabus.additionalInfo|linebreaksbr }}</div>
-				</div>
-				<div id="endAct"></div>
-			</div>
-		{% else %}
-			<div id="table">
-				<p>{{ message }}</p>
+	<h2 class="title">Course Syllabus</h2>
+	{% if syllabus %}
+		<p class="time"><strong>Created:</strong> {{ syllabus.created_on }}</p>
+		{% if syllabus.was_updated %}
+			<p class="time"><strong>Last Updated:</strong> {{ syllabus.updated_on }}</p>
+		{% endif %}
+		{% if instructors.count > 0 %}
+			<h3 class="title">Instructors</h3>
+			<div class="table">
+				{% for instructor in instructors %}	
+					<div class="sylWrapper">
+						<span class="sylLeft">Name: </span>
+						<span class="sylRight">{{ instructor.user.first_name }} {{ instructor.user.last_name }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Email: </span>
+						<span class="sylRight">{{ instructor.user.email }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Office Hours: </span>
+						<span class="sylRight">{{ syllabus.officeHrs }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Office Location: </span>
+						<span class="sylRight">{{ syllabus.officeLocation }}</span>
+					</div>
+					<div class="endAct"></div>
+					{% if not forloop.last %}
+						<br />
+					{% endif %}
+				{% endfor %}		
 			</div>
 		{% endif %}
-	</div>
+		{% if tas.count > 0 %}
+			<h3 class="title">Teaching Assistants</h3>	
+			<div class="table">
+				{% for ta in tas %}	
+					<div class="sylWrapper">
+						<span class="sylLeft">Name: </span>
+						<span class="sylRight">{{ ta.user.first_name }} {{ ta.user.last_name }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Email: </span>
+						<span class="sylRight">{{ ta.user.email }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Office Hours: </span>
+						<span class="sylRight">{{ syllabus.TaOfficeHrs }}</span>
+					</div>
+					<div class="sylWrapper">
+						<span class="sylLeft">Office Location: </span>
+						<span class="sylRight">{{ syllabus.TaOfficeLocation }}</span>
+					</div>
+					<div class="endAct"></div>
+					{% if not forloop.last %}
+						<br />
+					{% endif %}
+				{% endfor %}		
+			</div>
+		{% endif %}
+		<h3 class="title">Class Information</h3>	
+		<div class="table">
+			<div class="sylWrapper">
+				<div class="sylLeft">Lecture Time: </div>
+				<div class="sylRight">{{ syllabus.lectTime|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Prerequisites: </div>
+				<div class="sylRight">{{ syllabus.prereq|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Books: </div>
+				<div class="sylRight">{{ syllabus.books|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Topics: </div>
+				<div class="sylRight">{{ syllabus.topics|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Marking Scheme: </div>
+				<div class="sylRight">{{ syllabus.markingScheme|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Academic Honesty: </div>
+				<div class="sylRight">{{ syllabus.academicHonesty|linebreaksbr }}</div>
+			</div>
+			<div class="sylWrapper">
+				<div class="sylLeft">Additional Information: </div>
+				<div class="sylRight">{{ syllabus.additionalInfo|linebreaksbr }}</div>
+			</div>
+			<div class="endAct"></div>
+		</div>
+	{% else %}
+		<div class="table">
+			<p>{{ message }}</p>
+		</div>
+	{% endif %}
 {% endblock %}

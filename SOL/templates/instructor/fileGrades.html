@@ -18,43 +18,43 @@
 			<p class="success">{{ message }}</p>
 		</div>
 	{% endif %}
-    <div id="table">
+    <div class="table">
     <h3 class="title">Download Grades Excel File:</h3>
     <form action="" method="POST">
 		{% csrf_token %}
 		{% for field in form_down %}
-		<div id="fieldWrapper">
-			<span id="fieldSylLeft">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
 				{{ field.label_tag }}:
 			</span>
-			<span id="fieldSylRight">
+			<span class="fieldSylRight">
 					{{ field.errors }}
 					{{ field }}
 			</span>
 		</div>
 		{% endfor %}
-		<div id="submit">
+		<div class="submit">
     		<input type="submit" name="download" value="Download Grades" />
     	</div>
     </form>
     </div>
     
-    <div id="table">
+    <div class="table">
     <h3 class="title">Upload Grades Excel File:</h3>
     <form action="" method="POST" enctype="multipart/form-data">
 		{% csrf_token %}
 		{% for field in form_up %}
-		<div id="fieldWrapper">
-			<span id="fieldSylLeft">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
 				{{ field.label_tag }}:
 			</span>
-			<span id="fieldSylRight">
+			<span class="fieldSylRight">
 					{{ field.errors }}
 					{{ field }}
 			</span>
 		</div>
 		{% endfor %}
-		<div id="submit">
+		<div class="submit">
     		<input type="submit" name="upload" value="Upload Grades" />
     	</div>
     </form>

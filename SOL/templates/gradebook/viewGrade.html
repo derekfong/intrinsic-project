@@ -50,20 +50,20 @@
 	{% if isMarked == 2 %}
 		{% if stats.mark__count > 0 %}
 			<h3 class="viewGrades">Grade Information</h3>
-			<div id="table">
-				<div id="actWrapper">
-					<div id="actLeft">
+			<div class="table">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Activity Name:
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ activity.aid.activity_name }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Status: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{% if activity.aid.status == 0 %}
 							Due date not passed
 						{% else %}
@@ -73,59 +73,59 @@
 								Marks released
 							{% endif %}
 						{% endif %}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Worth: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ activity.aid.worth }}%
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Due Date:
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ activity.aid.due_date }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Grade: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ activity.mark }}/{{ activity.aid.out_of }} ({{ activity.percent|floatformat:2 }}%)
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Position: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ activity.position }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Submission: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						<a href="#submission">View Submission</a>
-					</div>
+					</span>
 				</div>
-				<div id="endAct"></div>
+				<div class="endAct"></div>
 			</div>
 			<h3 class="viewGrades">Comments</h3>
-			<div id="table">
+			<div class="table">
 				{% if comments.count > 0 %}
 					{% for comment in comments %}
-						<div id="postWrapper">
-							<div id="postTop">
+						<div class="postWrapper">
+							<div class="postTop">
 								<strong>{{ comment.description }}:</strong>
 							</div>
-							<div id="postBottom">
+							<div class="postBottom">
 								{{ comment.comment }}
 							</div>
 						</div>
@@ -135,56 +135,56 @@
 				{% endif %}
 			</div>
 			<h3 class="viewGrades">Statistics</h3>
-			<div id="table">
-				<div id="actWrapper">
-					<div id="actLeft">
+			<div class="table">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Count:
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ stats.mark__count }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Mean: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ stats.mark__avg|floatformat:2 }}/{{ activity.aid.out_of }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Median: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ median }}/{{ activity.aid.out_of }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Standard Dev:
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ stats.mark__stddev|floatformat:2 }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Maximum: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ stats.mark__max }}/{{ activity.aid.out_of }}
-					</div>
+					</span>
 				</div>
-				<div id="actWrapper">
-					<div id="actLeft">
+				<div class="actWrapper">
+					<span class="actLeft">
 						Minimum: 
-					</div>
-					<div id="actRight">
+					</span>
+					<span class="actRight">
 						{{ stats.mark__min }}/{{ activity.aid.out_of }}
-					</div>
+					</span>
 				</div>
-				<div id="endAct"></div>
+				<div class="endAct"></div>
 			</div>
 			{% if flavour == "full" %}
 				<h3>Histogram</h3>

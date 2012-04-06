@@ -1,23 +1,23 @@
 	{% if form.errors %}
 		<p class="error">Oops, invalid username or password</p>
 	{% endif %}
-	<div id="login">
-		<div id="table">
+	<div clas="login">
+		<div class="table">
 			<form action="/accounts/login/" method="POST">
 				{% csrf_token %}
-				<div id="fieldWrapper">
-					<div id="fieldLeft">
+				<div class="fieldWrapper">
+					<div class="fieldLeft">
 						<label for="username">Username:</label>
 					</div>
-					<div id="fieldRight">
+					<div class="fieldRight">
 						<input type="text" name="username" value="" id="username" class="loginInput">
 					</div>
 				</div>
-				<div id="fieldWrapper">
-					<div id="fieldLeft">
+				<div class="fieldWrapper">
+					<div class="fieldLeft">
 						<label for="password">Password:</label>
 					</div>
-					<div id="fieldRight">
+					<div class="fieldRight">
 						<input type="password" name="password" value="" id="password" class="loginInput">
 					</div>
 				</div>

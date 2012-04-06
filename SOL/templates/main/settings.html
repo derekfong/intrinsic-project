@@ -18,42 +18,42 @@
 			<p class="success">{{ message }}</p>
 		</div>
 	{% endif %}
-	<div id="table">
-		<div id="fieldWrapper">
-			<span id="fieldSylLeft">
+	<div class="table">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
 				User: 
 			</span>
-			<span id="fieldSylRight">
+			<span class="fieldSylRight">
 				{{ user.username }}
 			</span>
 		</div>
-		<div id="fieldWrapper">
-			<span id="fieldSylLeft">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
 				SFU ID: 
 			</span>
-			<span id="fieldSylRight">
+			<span class="fieldSylRight">
 				{{ user.userprofile.sfu_id}}
 			</span>
 		</div>
-		<div id="fieldWrapper">
-			<span id="fieldSylLeft">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
 				Email: 
 			</span>
-			<span id="fieldSylRight">
+			<span class="fieldSylRight">
 				{{ user.email }}
 			</span>
 		</div>
 		
-		<div id="bottomPosts">
+		<div class="bottomPosts">
 			<h3 class="setting">Email Notifications</h3>
 			<form action="" method="POST">
 				{% csrf_token %}
 				{% for field in form %}
-					<div id="fieldWrapper">
-						<span id="fieldSylLeft">
+					<div class="fieldWrapper">
+						<span class="fieldSylLeft">
 							{{ field.label_tag }}: 
 						</span>
-						<span id="fieldSylRight">
+						<span class="fieldSylRight">
 							{{ field.errors }}
 							{{ field }}
 						</span>

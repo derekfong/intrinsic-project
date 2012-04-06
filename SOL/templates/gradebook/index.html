@@ -1,87 +1,85 @@
 {% extends "student/index.html" %}
 {% block student %}
-	<div id="bottomPosts">
-		<h2 class="title">View Grades</h2>
-		{% if activities.count > 0 %}
-			<div id="table">
-				<table border=0 class="grades">
+	<h2 class="title">View Grades</h2>
+	{% if activities.count > 0 %}
+		<div class="table">
+			<table border=0 class="grades" align="center">
+				<tr>
+					{% if flavour == "full" %}
+						<td width=200>
+							<strong>Activity Name </strong>
+						</td>
+						<td width=225>
+							<strong>Due Date</strong>
+						</td>
+						<td width=225>
+							<strong>Status</strong>
+						</td>
+						<td>
+							<strong>Grade</strong>
+						</td>
+					{% else %}
+						<td width=275>
+							<strong>Name</strong>
+						</td>
+						<td width=250>
+							<strong>Due Date</strong>
+						</td>
+						<td width=250>
+							<strong>Status</strong>
+						</td>
+					{% endif %}
+				</tr>
+			{% for activity in activities %}
 					<tr>
+						<td>
+							<a href="{{ activity.aid }}">{{ activity.activity_name }}</a>
+						</td>
+						<td>
+							{% if flavour == "mobile" %}
+								{{ activity.due_date|date:'Y-m-d' }}
+							{% else %}
+								{{ activity.due_date }}
+							{% endif %}
+						</td>
+						<td>
+							{% if flavour == "mobile" %}
+								{% if activity.status == 2 %}
+									Released
+								{% else %}
+									Not Released
+								{% endif %}
+							{% else %}
+								{% if activity.status == 2 %}
+									Grades Released
+								{% else %}
+									Grades not yet released
+								{% endif %}
+							{% endif %}
+						</td>
 						{% if flavour == "full" %}
-							<td width=200>
-								<strong>Activity Name </strong>
-							</td>
-							<td width=225>
-								<strong>Due Date</strong>
-							</td>
-							<td width=225>
-								<strong>Status</strong>
-							</td>
 							<td>
-								<strong>Grade</strong>
-							</td>
-						{% else %}
-							<td width=275>
-								<strong>Name</strong>
-							</td>
-							<td width=250>
-								<strong>Due Date</strong>
-							</td>
-							<td width=250>
-								<strong>Status</strong>
+								{% if activity.status == 2 %}
+									{{ activity.mark }}/{{ activity.out_of }}
+								{% else %}
+									N/A
+								{% endif %}
 							</td>
 						{% endif %}
 					</tr>
-				{% for activity in activities %}
-						<tr>
-							<td>
-								<a href="{{ activity.aid }}">{{ activity.activity_name }}</a>
-							</td>
-							<td>
-								{% if flavour == "mobile" %}
-									{{ activity.due_date|date:'Y-m-d' }}
-								{% else %}
-									{{ activity.due_date }}
-								{% endif %}
-							</td>
-							<td>
-								{% if flavour == "mobile" %}
-									{% if activity.status == 2 %}
-										Released
-									{% else %}
-										Not Released
-									{% endif %}
-								{% else %}
-									{% if activity.status == 2 %}
-										Grades Released
-									{% else %}
-										Grades not yet released
-									{% endif %}
-								{% endif %}
-							</td>
-							{% if flavour == "full" %}
-								<td>
-									{% if activity.status == 2 %}
-										{{ activity.mark }}/{{ activity.out_of }}
-									{% else %}
-										N/A
-									{% endif %}
-								</td>
-							{% endif %}
-						</tr>
-				{% endfor %}
-				</table>
-			</div>
-			<h2 class="title">Current Progress</h2>
-			<div id="table">
-					<p class="calculator">
-						{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)</p><p>
-						<a href="calculator">Grade Calculator</a>
-					</p>
-			</div>
-		{% else %}
-			<div id="table">
-				<p>There are no assignments posted.</p>
-			</div>
-		{% endif %}
-	</div>
+			{% endfor %}
+			</table>
+		</div>
+		<h2 class="title">Current Progress</h2>
+		<div class="table">
+				<p class="calculator">
+					{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)</p><p>
+					<a href="calculator">Grade Calculator</a>
+				</p>
+		</div>
+	{% else %}
+		<div class="table">
+			<p>There are no assignments posted.</p>
+		</div>
+	{% endif %}
 {% endblock %}

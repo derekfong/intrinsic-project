@@ -3,37 +3,37 @@
 {% block instructorcontent %}
 	<h2 class="title">Upload Lecture Slides</h2>
 	<form action="" method="POST" enctype="multipart/form-data">
-		<div id="table">
+		<div class="table">
 			{% csrf_token %}
 			{% for field in form %}
-			<div id="fieldWrapper">
-				<div id="fieldSylLeft">
+			<div class="fieldWrapper">
+				<div class="fieldSylLeft">
 					{{ field.label_tag }}: 
 				</div>
-					<div id="fieldSylRight">
+					<div class="fieldSylRight">
 						{{ field.errors }}
 						{{ field }}
 					</div>
 			</div>
 			{% endfor %}
-			<div id="submit">
+			<div class="submit">
 				<input type="submit" value="Submit">
 			</div>
 		</div>
 	</form>
 	
-	<div id="bottomPosts">
+	<div class="bottomPosts">
 		<h2 class="title">Lecture Slides</h2>
 		{% for slide in slides %}
-			<div id="table">
-				<div id="actWrapper">
-					<div id="actLeft">{{ slide.title }}</div>
-					<div id="actRight">
+			<div class="table">
+				<div class="actWrapper">
+					<div class="actLeft">{{ slide.title }}</div>
+					<div class="actRight">
 						<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a> | 
 						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/update">Update</a> | 
 						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/remove">Remove</a></div>
 				</div>
-				<div id="endAct"></div>
+				<div class="endAct"></div>
 			</div>
 		{% endfor %}
 	</div>

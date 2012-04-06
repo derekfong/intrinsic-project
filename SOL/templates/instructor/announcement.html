@@ -3,29 +3,29 @@
 {% block instructorcontent %}
 	<h2 class="title">Post An Announcement</h2>
 	<form action="" method="POST">
-		<div id="table">
+		<div class="table">
 		{% csrf_token %}
 			{% for field in form %}
-			<div id="fieldWrapper">
-				<div id="fieldLeft">
+			<div class="fieldWrapper">
+				<div class="fieldLeft">
 					{{ field.label_tag }} 
 				</div>
-					<div id="fieldRight">
+					<div class="fieldRight">
 						{{ field.errors }}
 						{{ field }}
 					</div>
 			</div>
 			{% endfor %}
-			<div id="submit">
+			<div class="submit">
 				<input type="submit" value="Submit">
 			</div>
 		</div>
 	</form>
-	<div id="bottomPosts">
+	<div class="bottomPosts">
 		<h2 class="title">Past Announcements</h2>
 		{% for announcement in announcements %}
-			<div id="table">
-				<div id="postTop">
+			<div class="table">
+				<div class="postTop">
 					<strong>{{ announcement.title }}</strong> 
 					<span class="postDate">(
 					{% if flavour == "full" %}
@@ -48,7 +48,7 @@
 						<a href="{{ announcement.anid }}">Edit</a> <a href="{{ announcement.anid }}/remove">Remove</a>
 					</span>
 				</div>
-				<div id="postBottom">
+				<div class="postBottom">
 					{{ announcement.content }}
 				</div>
 			</div>

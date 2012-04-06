@@ -1,59 +1,59 @@
-#table 
+.table 
 {
 	border: 1px solid #A7A8A0;
 	padding: 10px;
 	margin-bottom: 20px;
 }
 
-#fieldWrapper, #actWrapper, #rosterWrapper, #sylWrapper
+.fieldWrapper, .actWrapper, .rosterWrapper, .sylWrapper
 {
 	float: left;
 	padding-bottom: 10px;
 }
 
-#fieldWrapper, #actWrapper
+.fieldWrapper, .actWrapper
 {
 	width: 700px;
 }
 
-#rosterWrapper
+.rosterWrapper
 {
 	width: 650px;
 }
 
-#fieldLeft, #actLeft, #rosterLeft, #sylLeft, #fieldSylLeft
+.fieldLeft, .actLeft, .rosterLeft, .sylLeft, .fieldSylLeft
 {
 	clear: left;
 	float: left;
 	font-weight: bold;
 }
 
-#sylLeft
+.sylLeft
 {
 	width: 175px;
 }
-#rosterLeft
+.rosterLeft
 {
 	width: 75px;
 }
 
-#fieldLeft, #actLeft, #fieldSylLeft
+.fieldLeft, .actLeft, .fieldSylLeft
 {
 	width: 125px;
 }
 
-#fieldLeft
+.fieldLeft
 {
 	padding-top: 5px;
 }
 
-#fieldRight, #actRight, #fieldSylRight
+.fieldRight, .actRight, .fieldSylRight
 {
 	float: right;
 	width: 575px;
 }
 
-#sylRight
+.sylRight
 {
 	float: right;
 	width: 525px;
@@ -66,7 +66,7 @@ ul.errorlist {
 	margin: 0;
 }
 
-#fieldRight input, #fieldRight textarea
+.fieldRight input, .fieldRight textarea
 {
 	border: 1px solid #323232;
 	font-size: 12px;
@@ -74,7 +74,7 @@ ul.errorlist {
 	width: 300px;
 }
 
-#fieldSylRight input, #fieldSylRight textArea
+.fieldSylRight input, .fieldSylRight textArea
 {
 	border: 1px solid #323232;
 	font-size: 12px;
@@ -82,24 +82,24 @@ ul.errorlist {
 	width: 500px;
 } 
 
-#submit, #endAct
+.submit, .endAct
 {
 	clear: both;
 }
 
-#submit
+.submit
 {
 	padding-top: 10px;
 	padding-left: 125px;
 }
 
-#bottomPosts
+.bottomPosts
 {
 	padding-top: 10px;
 	clear: both;
 }
 
-#postWrapper
+.postWrapper
 {
 	padding: 10px 0 5px 0;
 }
@@ -111,29 +111,29 @@ ul.errorlist {
 	padding: 0px;
 }
 
-#postTop
+.postTop
 {
 	font-size: 15px;
 }
 
-#postBottom
+.postBottom
 {
 	padding: 5px 0 10px 25px;
 }
 
-#edit
+.edit
 {
 	font-size: 10px;
 }
 
-#announceTitle
+.announceTitle
 {
 	font-weight: bold;
 	font-size: 14px;
 	padding-left: 10px;
 }
 
-#announceContent
+.announceContent
 {
 	padding-bottom: 10px;
 	padding-left: 10px;

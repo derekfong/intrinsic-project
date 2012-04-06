@@ -1,31 +1,30 @@
 {% extends "student/index.html" %}
 {% block student %}
 	{% if isCurrent %}
-		<div id="bottomPosts">
 		<h2 class="title">Assignments and Exams</h2>
 		{% if activities.count > 0 %}
 			{% for activity in activities %}
-				<div id="table">
-					<div id="actWrapper">
-						<span id="actLeft">Activity Name: </span>
-						<span id="actRight">{{ activity.activity_name }}</span>
+				<div class="table">
+					<div class="actWrapper">
+						<span class="actLeft">Activity Name: </span>
+						<span class="actRight">{{ activity.activity_name }}</span>
 					</div>
-					<div id="actWrapper">
-						<span id="actLeft">Out Of: </span>
-						<span id="actRight">{{ activity.out_of }}</span>
+					<div class="actWrapper">
+						<span class="actLeft">Out Of: </span>
+						<span class="actRight">{{ activity.out_of }}</span>
 					</div>
-					<div id="actWrapper">
-						<span id="actLeft">Worth: </span>
-						<span id="actRight">{{ activity.worth }}%</span>
+					<div class="actWrapper">
+						<span class="actLeft">Worth: </span>
+						<span class="actRight">{{ activity.worth }}%</span>
 					</div>
-					<div id="actWrapper">
-						<span id="actLeft">Due Date: </span>
-						<span id="actRight">{{ activity.due_date }}</span>
+					<div class="actWrapper">
+						<span class="actLeft">Due Date: </span>
+						<span class="actRight">{{ activity.due_date }}</span>
 					</div>
 					{% if activity.description %}
-					<div id="actWrapper">
-						<span id="actLeft">Description: </span>
-						<span id="actRight">
+					<div class="actWrapper">
+						<span class="actLeft">Description: </span>
+						<span class="actRight">
 							{{ activity.description|linebreaksbr }}
 							{% if activity.description_doc %}
 								<br />
@@ -35,17 +34,17 @@
 					</div>
 					{% else %}
 						{% if activity.description_doc %}
-							<div id="actWrapper">
-								<span id="actLeft">Description: </span>
-								<span id="actRight">
+							<div class="actWrapper">
+								<span class="actLeft">Description: </span>
+								<span class="actRight">
 										<a href="{{ MEDIA_URL }}{{ activity.description_doc }}">View Description</a>
 								</span>
 							</div>
 						{% endif %}
 					{% endif %}
-					<div id="actWrapper">
-						<span id="actLeft">Status: </span>
-						<span id="actRight">
+					<div class="actWrapper">
+						<span class="actLeft">Status: </span>
+						<span class="actRight">
 							{% if activity.status == 0 %}
 								Not Marked
 							{% else %}
@@ -57,9 +56,9 @@
 							{% endif %}
 						</span>
 					</div>
-					<div id="actWrapper">
-						<span id="actLeft">Actions: </span>
-						<span id="actRight">
+					<div class="actWrapper">
+						<span class="actLeft">Actions: </span>
+						<span class="actRight">
 							{% if activity.pastDue %}
 								None
 							{% else %}
@@ -69,15 +68,14 @@
 							{% endif %}
 						</span>
 					</div>
-					<div id="endAct"></div>
+					<div class="endAct"></div>
 				</div>
 			{% endfor %}
 		{% else %}
-			<div id="table">
+			<div class="table">
 				<p>There are no activities posted.</p>
 			</div>
 		{% endif %}
-		</div>
 	{% else %}
 	 	<p>You are not currently enrolled in this class.</p>
 	{% endif %}

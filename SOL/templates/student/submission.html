@@ -14,38 +14,38 @@
 	{% if isCurrent %}
 	
 		{% if message %}
-			<div id="updateSuccess">
+			<div class="updateSuccess">
 				<h4 class="success">Submission Successfully</h4>
 				<p class="success">{{ message }}</p>
 			</div>
 		{% endif %}
-		<div id="bottomPosts">
+		<div class="bottomPosts">
 			<h2 class="title">{{ activity.activity_name }} - Submission</h2>
 				<form action="" method="POST" enctype="multipart/form-data">
-					<div id="table">
+					<div class="table">
 					{% csrf_token %}
 					{% for field in form %}
-					<div id="fieldWrapper">
-						<div id="fieldSylLeft">
+					<div class="fieldWrapper">
+						<div class="fieldSylLeft">
 							{{ field.label_tag }}:
 						</div>
-						<div id="fieldSylRight">
+						<div class="fieldSylRight">
 								{{ field.errors }}
 								{{ field }}
 						</div>
 					</div>
 					{% endfor %}
-					<div id="submit">
+					<div class="submit">
 						<input type="submit" name="submit" value="Submit" />
 					</div>
 				</form>
 			</div> 
 		</div>
 			
-		<div id="bottomPosts">
+		<div class="bottomPosts">
 		<h2 class="title">Past Submissions</h2>
 		{% for submission in submissions %}
-			<div id="table">
+			<div class="table">
 				<p><a href="{{ MEDIA_URL }}{{ submission.file_path }}">Download File</a></p>
 				<p>Date submitted: <strong>{{ submission.submit_date }}</strong></p>
 				<p>File size: {{ submission.file_path.size|filesizeformat }}</p>
