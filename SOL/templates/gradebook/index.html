@@ -6,13 +6,17 @@
 			<div id="table">
 				<table border=0>
 					<tr>
-						<td width=175>
-							<strong>Activity Name </strong>
+						<td width=250>
+							{% if flavour == "mobile" %}
+								<strong>Name </strong>
+							{% else %}
+								<strong>Activity Name </strong>
+							{% endif %}
 						</td>
-						<td width=225>
+						<td width=250>
 							<strong>Due Date</strong>
 						</td>
-						<td width=175>
+						<td width=200>
 							<strong>Status</strong>
 						</td>
 						<td>
@@ -25,11 +29,19 @@
 								<a href="{{ activity.aid }}">{{ activity.activity_name }}</a>
 							</td>
 							<td>
-								{{ activity.due_date }}
+								{% if flavour == "mobile" %}
+									{{ activity.due_date|date:'Y-m-d' }}
+								{% else %}
+									{{ activity.due_date }}
+								{% endif %}
 							</td>
 							<td>
 								{% if activity.status == 2 %}
-									Grades are released
+									{% if flavour == "mobile" %}
+										Released
+									{% else %}
+										Not Released
+									{% endif %}
 								{% else %}
 									Grades not yet released
 								{% endif %}

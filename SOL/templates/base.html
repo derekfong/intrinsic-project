@@ -1,73 +1,80 @@
-{% if flavour == "full" %}
-	<!DOCTYPE HTML>
-	<html lang="en">
-	<head>
-		<title>SFU Synergy Online Learning</title>
-			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
-			<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
-		<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
-		{% block head %}{% endblock %}
-	</head>
-	<body >
-
-	<!-- divided into 3 parts:
-	header with logo, signout, settings;
-	content that will change;
-	side tabs for notices and dates tab;
-	-->
-	<div id="container">
-		<div id="header">
-		
-		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="/">Home</a></li>
-				{% if user.is_authenticated %}
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>SFU Synergy Online Learning</title>
+	{% if flavour == "full" %}
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
+	{% else %}
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/mobile.css">
+	{% endif %}
+	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
+	{% block head %}{% endblock %}
+</head>
+<body>
+<div id="container">
+	<div id="header">
+	
+	</div>
+	<div id="navigation">
+		<ul>
+			<li><a href="/">Home</a></li>
+			{% if user.is_authenticated %}
+				{% if flavour == "full" %}
 					{% for course in class_list %}
 						<li>
 							<a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">{{ course.department }} {{ course.class_number }}</a>
 						</li>
 					{% endfor %}
-					<li><a href="/accounts/settings">Settings</a></li>
-					<li><a href="/accounts/logout">Logout</a></li>
 				{% endif %}
-			</ul>
-			{% if user.is_authenticated %}
-					<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+				<li><a href="/accounts/settings">Settings</a></li>
+				<li><a href="/accounts/logout">Logout</a></li>
 			{% endif %}
-		
-		</div>
-		<div id="content-container">
+		</ul>
+		{% if user.is_authenticated  and flavour == "full" %}
+				<span class="greeting">Welcome {{ user.first_name }} {{ user.last_name }} ({{ user.userprofile.sfu_id }})</span>
+		{% endif %}
+	</div>
+	<div id="content-container">
+		{% if flavour == "full" %}
 			<div id="sidebar">
 				{% if user.is_authenticated %}
 					{% block sidebar %}{% endblock %}
 				{% endif %}
 			</div>
-			<div id="content">
+		{% else %}
+			<div id="innerNav">
 				{% if user.is_authenticated %}
-					{% if user.is_active %}
-						{% block content %}{% endblock %}
-					{% else %}
-						<p>Your account is not active!</p>
-					{% endif %}
-				{% else %}
-					<h1>Welcome to Synergy Online</h1>
-					{% if message %}
-						<div id="loginFail">
-							<h4 class="error">Invalid Login</h4>
-							<p class="error">{{ message }}</p>
-						</div>
-					{% endif %}
-					{% include "registration/login.html" %}
+					{% block mobileNav %}{% endblock %}
 				{% endif %}
-			</div>
-			<div id="footer">
-					Made by Intrinsic Team [Group 12] | Created by: Kevin Mann, Derek Fong, Allison Ng
-			</div>
+		{% endif %}
+		
+		<div id="content">
+			{% if user.is_authenticated %}
+				{% if user.is_active %}
+					{% block content %}{% endblock %}
+				{% else %}
+					<p>Your account is not active!</p>
+				{% endif %}
+			{% else %}
+				<h1>Welcome to Synergy Online</h1>
+				{% if message %}
+					<div id="loginFail">
+						<h4 class="error">Invalid Login</h4>
+						<p class="error">{{ message }}</p>
+					</div>
+				{% endif %}
+				{% include "registration/login.html" %}
+			{% endif %}
+		</div>
+		<div id="footer">
+			{% if flavour == "full" %}
+				Made by Intrinsic Team [Group 12] | Created by: Kevin Mann, Derek Fong, Allison Ng
+			{% else %}
+				Made by Intrinsic Team - Group 12 - 2012
+			{% endif %}
 		</div>
 	</div>
-	</body>
-	</html>
-{% else %}
-	{% include "mobile.html" %}
-{% endif %}
+</div>
+</body>
+</html>

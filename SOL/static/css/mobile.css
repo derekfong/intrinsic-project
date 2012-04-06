@@ -2,13 +2,27 @@ html, body {
 	margin: 0px;
 	padding: 0px;
 	font-family: Helvetica, Arial, sans-serif;
-	font-size: 40px;
+	font-size: 35px;
+	color: #323232;
+	height: 100%;
+}
+
+a 
+{
+	text-decoration: none;
+	color: #0a7ed7;
+}
+
+#container
+{
+	min-height: 100%;
+	position: relative;
 }
 
 #header {
 	display: block;
 	background-color: #B5111A; 
-	height: 300px;
+	height: 100px;
 	top: 0px;
 }
 
@@ -35,26 +49,45 @@ html, body {
 {
 	display: block;
 	float: left;
-	padding: 15px;
+	padding: 20px;
 	color: #fff;
 	text-decoration: none;
 	border-right: 1px solid #fff;
 }
 
+#innerNav
+{
+	padding-top: 95px;
+}
+
+#login
+{
+	width: 100%;
+	margin: 0 auto;
+}
+
 #content 
 {
-	padding: 15px;
+	padding: 25px 0 50px 0 ;
 }
 
 #footer 
 {
-	padding-left: 15px;
+	background: #333;
+	color: #FFF;
+	width: 100%;
+	font-size: 30px;
+	position: absolute;
+	bottom: 0px;
+	left: 0;
+	padding: 15px;
 }
 
 #table 
 {
 	border: 1px solid gray;
 	padding: 20px;
+	margin: 20px;
 }
 
 label 
@@ -65,4 +98,41 @@ label
 input
 {
 	font-size: 36px;
+}
+
+#loginFail
+{
+	background: #edc1c1;
+	border: 1px solid red;
+	margin-bottom: 10px;
+	padding-left: 10px;
+}
+
+ul.studentNav {
+	list-style-type:none;
+	margin: 0px;
+	padding: 0px;
+}
+
+ul.studentNav li {
+	height: 50px;
+	padding: 10px 0 10px 20px ;
+	border-bottom: 1px solid #c2c2c2;
+}
+
+ul.studentNav a {
+	color: #0a7ed7;
+	text-decoration: none;
+}
+
+.greeting
+{
+	clear: left;
+}
+
+h2.title
+{
+	margin: 0px;
+	padding: 0px;
+	padding-left: 20px;
 }

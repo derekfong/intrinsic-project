@@ -268,7 +268,8 @@ def getSubmissions(request, department, class_number, year, semester, section, a
 	activity_name = a.activity_name
 	
 	# Establish a zip file of all submission for the activity
-	class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	#class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
 	zip_name = activity_name + '.zip'
 	activity_zip = zipfile.ZipFile(class_folder + zip_name, 'w')
 
