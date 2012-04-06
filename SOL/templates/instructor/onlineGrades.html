@@ -47,30 +47,39 @@
 				<td width=175>
 					<strong>SFU ID</strong>
 				</td>
-				<td>
+				<td width=175>
 					<strong>Mark</strong>
+				</td>
+				<td>
+					<strong>Comments</strong>
 				</td>
 			</tr>
 		
 			<form action="{{ activity.aid }}" method="POST">
 			{% csrf_token %}
-				{% for student in students %}
+				{% for student in student_grades %}
 					<tr>
 						<td>
-							{{ student.user.last_name }}
+							{{ student.uid.user.last_name }}
 						</td>
 						<td>
-							{{ student.user.first_name }}
+							{{ student.uid.user.first_name }}
 						</td>
 						<td>
-							{{ student.sfu_id }}
+							{{ student.uid.sfu_id }}
 						</td>
 						<td>
-							<input type="text" size="5" name="{{ student.sfu_id }}" />
+							<input type="text" size="5" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/> / {{ activity.out_of }}
+						</td>
+						<td>
+							<a href="{{ classUrl }}instructor/grades/form/{{ student.uid.sfu_id }}/">Comment</a>
 						</td>
 					</tr>
 				{% endfor %}
-				<p><input type="submit" name="update" value="Update Grades" /></p>
+				<tr>
+					<td></td><td></td><td></td><td></td>
+					<td><input type="submit" name="update" value="Update Grades" /></td>
+				</tr>
 			</form>
 		</table>
 		</div>
