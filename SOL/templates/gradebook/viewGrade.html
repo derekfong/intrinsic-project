@@ -1,7 +1,7 @@
 {% extends "student/index.html" %}
 
 {% block head %}
-	{% if isMarked == 2 %}
+	{% if isMarked == 2 and flavour == "full" %}
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	    <script type="text/javascript">
 	      google.load('visualization', '1.1', {packages: ['barchart']});
@@ -45,11 +45,11 @@
 
 {% block student %}
 	
-	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }} Grades</h2>
-	<p><a href=".">Back to Assignments</a></p>
+	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }}</h2>
+	<p class="back"><a href=".">Back to Assignments</a></p>
 	{% if isMarked == 2 %}
 		{% if stats.mark__count > 0 %}
-			<h3>Grade Information</h3>
+			<h3 class="viewGrades">Grade Information</h3>
 			<div id="table">
 				<div id="actWrapper">
 					<div id="actLeft">
@@ -117,7 +117,7 @@
 				</div>
 				<div id="endAct"></div>
 			</div>
-			<h3>Comments</h3>
+			<h3 class="viewGrades">Comments</h3>
 			<div id="table">
 				{% if comments.count > 0 %}
 					{% for comment in comments %}
@@ -134,7 +134,7 @@
 					<p>There are no comments for this assignment</p>
 				{% endif %}
 			</div>
-			<h3>Statistics</h3>
+			<h3 class="viewGrades">Statistics</h3>
 			<div id="table">
 				<div id="actWrapper">
 					<div id="actLeft">
@@ -186,8 +186,10 @@
 				</div>
 				<div id="endAct"></div>
 			</div>
-			<h3>Histogram</h3>
-			<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
+			{% if flavour == "full" %}
+				<h3>Histogram</h3>
+				<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
+			{% endif %}
 		{% else %}
 			<p>There have been no marks entered for this assignment</p>
 		{% endif %}

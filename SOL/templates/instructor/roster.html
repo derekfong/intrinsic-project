@@ -7,22 +7,23 @@
 		{% else %}
 			<h3 class="title">Instructor</h3>
 		{% endif %}
+
 		{% for instructor in instructors %}
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Name:
-				</div>
-				<div id="rosterRight">
+				</span>
+				<span id="rosterRight">
 					 {{ instructor.user.first_name }} {{ instructor.user.last_name}}
-				</div>
+				</span>
 			</div>
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Email:
-				</div>
-				<div id="rosteRight">
+				</span>
+				<span id="rosteRight">
 					 {{ instructor.user.email }}
-				</div>
+				</span>
 			</div>
 			<div id="endAct"></div>
 			{% if not forloop.last %}
@@ -38,20 +39,20 @@
 		{% endif %}
 		{% for ta in tas %}
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Name:
-				</div>
-				<div id="rosterRight">
+				</span>
+				<span id="rosterRight">
 					 {{ ta.user.first_name }} {{ ta.user.last_name}}
-				</div>
+				</span>
 			</div>
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Email:
-				</div>
-				<div id="rosteRight">
+				</span>
+				<span id="rosteRight">
 					 {{ ta.user.email }}
-				</div>
+				</span>
 			</div>
 			<div id="endAct"></div>
 			{% if not forloop.last %}
@@ -63,20 +64,20 @@
 		<h3 class="title">Students</h3>
 		{% for student in students %}
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Name:
-				</div>
-				<div id="rosterRight">
+				</span>
+				<span id="rosterRight">
 					 {{ student.user.first_name }} {{ student.user.last_name}}
-				</div>
+				</span>
 			</div>
 			<div id="rosterWrapper">
-				<div id="rosterLeft">
+				<span id="rosterLeft">
 					Email:
-				</div>
-				<div id="rosteRight">
+				</span>
+				<span id="rosteRight">
 					 {{ student.user.email }}
-				</div>
+				</span>
 			</div>
 			<div id="endAct"></div>
 			{% if not forloop.last %}

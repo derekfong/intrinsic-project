@@ -7,6 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
 	{% else %}
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/mobile.css">
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/mobileFields.css">
 	{% endif %}
 	<link rel="icon" href="{{ STATIC_URL}}images/favicon.gif" type="image/gif">
 	{% block head %}{% endblock %}
@@ -14,7 +15,10 @@
 <body>
 <div id="container">
 	<div id="header">
-	
+	{% if flavour == "mobile" %}
+		<span class="logo">SFU Synergy Online</span><br>
+		<span class="subLogo">Engaging the World</span>
+	{% endif %}
 	</div>
 	<div id="navigation">
 		<ul>
@@ -57,7 +61,7 @@
 					<p>Your account is not active!</p>
 				{% endif %}
 			{% else %}
-				<h1>Welcome to Synergy Online</h1>
+				<h2>Welcome to Synergy Online</h2>
 				{% if message %}
 					<div id="loginFail">
 						<h4 class="error">Invalid Login</h4>

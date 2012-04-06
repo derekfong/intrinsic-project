@@ -2,7 +2,7 @@ html, body {
 	margin: 0px;
 	padding: 0px;
 	font-family: Helvetica, Arial, sans-serif;
-	font-size: 35px;
+	font-size: 40px;
 	color: #323232;
 	height: 100%;
 }
@@ -15,15 +15,30 @@ a
 
 #container
 {
+	width: 100%;
 	min-height: 100%;
 	position: relative;
+	text-align: center;
 }
 
 #header {
 	display: block;
 	background-color: #B5111A; 
-	height: 100px;
+	height: 125px;
 	top: 0px;
+	width: 100%;
+}
+
+.logo 
+{
+	color: #FFF;
+	font-size: 60px;
+}
+
+.subLogo
+{
+	color: #FFF;
+	font-size: 30px;
 }
 
 #navigation
@@ -31,28 +46,41 @@ a
 	float: left;
 	width: 100%;
 	background: #333;
+	position:relative;
+	overflow: hidden;
 }
 
 #navigation ul
 {
-	margin: 0;
+	clear: left;
+	float: left;
+	list-style: none;
+	margin: 0 ;
 	padding: 0;
+	position: relative;
+	left: 50%;
+	text-align: center;
 }
 
 #navigation ul li
 {
-	list-style-type: none;
-	display: inline;
+	list-style: none;
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+	position: relative;
+	right: 50%;
+	border-right: 1px solid #fff;
 }
 
 #navigation li a
 {
 	display: block;
 	float: left;
-	padding: 20px;
+	padding: 15px;
 	color: #fff;
 	text-decoration: none;
-	border-right: 1px solid #fff;
 }
 
 #innerNav
@@ -68,7 +96,7 @@ a
 
 #content 
 {
-	padding: 25px 0 50px 0 ;
+	padding: 25px 0 75px 0 ;
 }
 
 #footer 
@@ -80,24 +108,15 @@ a
 	position: absolute;
 	bottom: 0px;
 	left: 0;
-	padding: 15px;
+	padding: 15px 0 15px 0;
 }
 
 #table 
 {
+	
 	border: 1px solid gray;
 	padding: 20px;
 	margin: 20px;
-}
-
-label 
-{
-	font-weight: bold;
-}
-
-input
-{
-	font-size: 36px;
 }
 
 #loginFail
@@ -110,13 +129,13 @@ input
 
 ul.studentNav {
 	list-style-type:none;
-	margin: 0px;
+	margin: 0;
 	padding: 0px;
 }
 
 ul.studentNav li {
 	height: 50px;
-	padding: 10px 0 10px 20px ;
+	padding: 10px 0 10px 0 ;
 	border-bottom: 1px solid #c2c2c2;
 }
 
@@ -135,4 +154,39 @@ h2.title
 	margin: 0px;
 	padding: 0px;
 	padding-left: 20px;
+}
+
+.grades td
+{
+	font-size: 35px;
+	padding-bottom: 25px;
+}
+
+p.back 
+{
+	margin: 0;
+	padding: 10px 0 10px 0;
+}
+
+h3.viewGrades, h3.title
+{
+	margin: 0px;
+	padding: 15px 0 0 0;
+}
+
+.calculator td
+{
+	font-size: 35px;
+	padding-bottom: 15px;
+}
+
+.postDate
+{
+	display: block;
+	font-size: 25px;
+}
+
+.time
+{
+	font-size: 25px;
 }

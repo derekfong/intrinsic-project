@@ -1,6 +1,6 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
-    <h2>Input Student Grades</h2>
+    <h2 class="title">Input Student Grades</h2>
     {% if form %}
     	<div id="table">
 		<h3 class="title">Generate Grade Form:</h3>
@@ -8,13 +8,13 @@
 			{% csrf_token %}
 			{% for field in form %}
 			<div id="fieldWrapper">
-				<div id="fieldSylLeft">
+				<span id="fieldSylLeft">
 					{{ field.label_tag }}:
-				</div>
-				<div id="fieldSylRight">
+				</span>
+				<span id="fieldSylRight">
 						{{ field.errors }}
 						{{ field }}
-				</div>
+				</span>
 			</div>
 			{% endfor %}
 			<div id="submit">
@@ -34,25 +34,43 @@
     {% endif %}
     
     {% if activity %}
+		<h2 class="title">Activity: {{ activity.activity_name }}</h2>
     	<div id="table">
-		<h4>Activity: {{ activity.activity_name }}</h4>
-		<table border=0>
+		<table border=0 class="addGrades">
 			<tr>
-				<td width=150>
-					<strong>Last Name</strong>
-				</td>
-				<td width=200>
-					<strong>First Name</strong>
-				</td>
-				<td width=175>
-					<strong>SFU ID</strong>
-				</td>
-				<td width=175>
-					<strong>Mark</strong>
-				</td>
-				<td>
-					<strong>Comments</strong>
-				</td>
+				{% if flavour == "full" %}
+					<td width=150>
+						<strong>Last Name</strong>
+					</td>
+					<td width=200>
+						<strong>First Name</strong>
+					</td>
+					<td width=175>
+						<strong>SFU ID</strong>
+					</td>
+
+					<td width=175>
+						<strong>Mark</strong>
+					</td>
+					<td>
+						<strong>Comments</strong>
+					</td>
+				{% else %}
+					<td>
+						<strong>L Name</strong>
+					</td>
+					<td>
+						<strong>F Name</strong>
+					</td>
+					<td>
+						<strong>SFU ID</strong>
+					</td>
+
+					<td>
+						<strong>Mark</strong>
+					</td>
+				{% endif %}
+
 			</tr>
 		
 			<form action="{{ activity.aid }}" method="POST">
@@ -69,15 +87,28 @@
 							{{ student.uid.sfu_id }}
 						</td>
 						<td>
-							<input type="text" size="5" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/> / {{ activity.out_of }}
+							<div class="gradeMark">
+								{% if flavour == "full" %}
+									<input type="text" size="4" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/> 
+									/ {{ activity.out_of }}
+								{% else %}
+									<input type="text" size="4" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/>
+								{% endif %}
+							</div>
 						</td>
-						<td>
-							<a href="{{ classUrl }}instructor/grades/form/{{ student.uid.sfu_id }}/">Comment</a>
-						</td>
+						{% if flavour == "full" %}
+							<td>
+								<a href="{{ classUrl }}instructor/grades/form/{{ student.uid.sfu_id }}/">Comment</a>
+							</td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 				<tr>
-					<td></td><td></td><td></td><td></td>
+					{% if flavour == "full" %}
+						<td></td><td></td><td></td><td></td>
+					{% else %}
+						<td></td><td></td><td></td>
+					{% endif %}
 					<td><input type="submit" name="update" value="Update Grades" /></td>
 				</tr>
 			</form>

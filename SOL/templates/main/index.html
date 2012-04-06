@@ -7,30 +7,50 @@
 {% endblock %}
 
 {% block content %}
-	<h1>Synergy Online</h1>
-	<h2>Current Courses</h2>
+	{% if flavour == "full" %}
+		<h2 class="title">Welcome to Synergy Online</h2>
+	{% endif %}
+	<h3 class="title">Current Courses</h3>
 	{% if class_list.count > 0 %}
-	<ul>
-	{% for course in class_list %}
-		<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
-			{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
-		</a></li>
-	{% endfor %}
+	<ul class="studentNav">
+	{% if flavour == "full" %}
+		{% for course in class_list %}
+			<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
+				{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
+			</a></li>
+		{% endfor %}
+	{% else %}
+		{% for course in class_list %}
+			<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
+				{{ course.department }} {{ course.class_number }} {{course.section}}
+			</a></li>
+		{% endfor %}
+	{% endif %}
 	</ul>
 	{% else %}
 		<p>You are not enrolled in any classes this semester.</p>
 	{% endif %}
-		
-	<h2>Past Course Grades</h2>
+		<br>
+	<h3 class="title">Past Course Grades</h3>
 	{% if old_class_list.count > 0 %}
-	<ul>
-	{% for course in old_class_list %}
-		<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
-			{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
-		</a>(<strong>{{ course.semester }} {{ course.year }}</strong>)</li>
-	{% endfor %}
+	<ul class="studentNav">
+	{% if flavour == "full" %}
+		{% for course in old_class_list %}
+			<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
+				{{ course.department }} {{ course.class_number }} {{course.section}} - {{ course.class_name }}
+			</a>(<strong>{{ course.semester }} {{ course.year }}</strong>)</li>
+		{% endfor %}
+	{% else %}
+		{% for course in old_class_list %}
+			<li><a href="/course/{{ course.department }}/{{ course.class_number }}/{{ course.year }}/{{ course.semester }}/{{ 				course.section }}/">
+				{{ course.department }} {{ course.class_number }} {{course.section}}
+			</a>(<strong>{{ course.semester }} {{ course.year }}</strong>)</li>
+		{% endfor %}
+	{% endif %}
 	</ul>
 	{% else %}
-		<p>You have no past classes.</p>
+		<ul class="studentNav">
+			<li>You have no past classes.</li>
+		</ul>
 	{% endif %}
 {% endblock %}

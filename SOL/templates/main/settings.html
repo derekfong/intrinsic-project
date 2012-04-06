@@ -20,28 +20,28 @@
 	{% endif %}
 	<div id="table">
 		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
+			<span id="fieldSylLeft">
 				User: 
-			</div>
-				<div id="fieldSylRight">
-					{{ user.username }}
-				</div>
+			</span>
+			<span id="fieldSylRight">
+				{{ user.username }}
+			</span>
 		</div>
 		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
+			<span id="fieldSylLeft">
 				SFU ID: 
-			</div>
-				<div id="fieldSylRight">
-					{{ user.userprofile.sfu_id}}
-				</div>
+			</span>
+			<span id="fieldSylRight">
+				{{ user.userprofile.sfu_id}}
+			</span>
 		</div>
 		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
+			<span id="fieldSylLeft">
 				Email: 
-			</div>
-				<div id="fieldSylRight">
-					{{ user.email }}
-				</div>
+			</span>
+			<span id="fieldSylRight">
+				{{ user.email }}
+			</span>
 		</div>
 		
 		<div id="bottomPosts">
@@ -50,13 +50,13 @@
 				{% csrf_token %}
 				{% for field in form %}
 					<div id="fieldWrapper">
-						<div id="fieldSylLeft">
+						<span id="fieldSylLeft">
 							{{ field.label_tag }}: 
-						</div>
-							<div id="fieldSylRight">
-								{{ field.errors }}
-								{{ field }}
-							</div>
+						</span>
+						<span id="fieldSylRight">
+							{{ field.errors }}
+							{{ field }}
+						</span>
 					</div>
 				{% endfor %}
 				<input type="submit" value="Submit">

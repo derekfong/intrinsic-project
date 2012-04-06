@@ -79,8 +79,14 @@
 		{% block student %}
 			{% if isCurrent %}
 				<div id="bottomPosts">
-					<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}} - {{ class.class_name }}</h2>
-					<p class="intro">I would like to welcome you all to {{ class.department }} {{ class.class_number}}.  I look forward to this semester and I hope you all have fun and enjoy.</p>
+					{% if flavour == "full" %}
+						<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}} - {{ class.class_name }}</h2>
+					{% else %}
+						<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}}</h2>
+					{% endif %}
+					<div id="table">
+						<p class="intro">I would like to welcome you all to {{ class.department }} {{ class.class_number}}.  I look forward to this semester and I hope you all have fun and enjoy.</p>
+					</div>
 				</div>
 			{% else %}
 				<p>You are not currently enrolled in this class.</p>

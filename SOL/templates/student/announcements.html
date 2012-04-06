@@ -8,15 +8,13 @@
 					<div id="table">
 						<div id="postTop">
 							<strong>{{ announcement.title }}</strong> 
-							<span class="postDate">({{ announcement.date_posted }}) </span>
-						</div>
-						<div id="edit">
+							<span class="postDate">({{ announcement.date_posted }} 
 							{% if announcement.was_updated == 1 %}
-								<span class="edit">
 								Updated on: {{ announcement.updated_on }} 
 								By: {{ announcement.updated_by.user.first_name }} {{ announcement.updated_by.user.last_name }}
-								</span>
 							{% endif %}
+							)
+							</span>
 						</div>
 						<div id="postBottom">
 							{{ announcement.content }}

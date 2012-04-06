@@ -7,25 +7,25 @@
 			{% for activity in activities %}
 				<div id="table">
 					<div id="actWrapper">
-						<div id="actLeft">Activity Name: </div>
-						<div id="actRight">{{ activity.activity_name }}</div>
+						<span id="actLeft">Activity Name: </span>
+						<span id="actRight">{{ activity.activity_name }}</span>
 					</div>
 					<div id="actWrapper">
-						<div id="actLeft">Out Of: </div>
-						<div id="actRight">{{ activity.out_of }}</div>
+						<span id="actLeft">Out Of: </span>
+						<span id="actRight">{{ activity.out_of }}</span>
 					</div>
 					<div id="actWrapper">
-						<div id="actLeft">Worth: </div>
-						<div id="actRight">{{ activity.worth }}%</div>
+						<span id="actLeft">Worth: </span>
+						<span id="actRight">{{ activity.worth }}%</span>
 					</div>
 					<div id="actWrapper">
-						<div id="actLeft">Due Date: </div>
-						<div id="actRight">{{ activity.due_date }}</div>
+						<span id="actLeft">Due Date: </span>
+						<span id="actRight">{{ activity.due_date }}</span>
 					</div>
 					{% if activity.description %}
 					<div id="actWrapper">
-						<div id="actLeft">Description: </div>
-						<div id="actRight">
+						<span id="actLeft">Description: </span>
+						<span id="actRight">
 							{{ activity.description|linebreaksbr }}
 							{% if activity.description_doc %}
 								<br />
@@ -36,16 +36,16 @@
 					{% else %}
 						{% if activity.description_doc %}
 							<div id="actWrapper">
-								<div id="actLeft">Description: </div>
-								<div id="actRight">
+								<span id="actLeft">Description: </span>
+								<span id="actRight">
 										<a href="{{ MEDIA_URL }}{{ activity.description_doc }}">View Description</a>
-								</div>
+								</span>
 							</div>
 						{% endif %}
 					{% endif %}
 					<div id="actWrapper">
-						<div id="actLeft">Status: </div>
-						<div id="actRight">
+						<span id="actLeft">Status: </span>
+						<span id="actRight">
 							{% if activity.status == 0 %}
 								Not Marked
 							{% else %}
@@ -55,11 +55,11 @@
 									Marked and released
 								{% endif %}
 							{% endif %}
-						</div>
+						</span>
 					</div>
 					<div id="actWrapper">
-						<div id="actLeft">Actions: </div>
-						<div id="actRight">
+						<span id="actLeft">Actions: </span>
+						<span id="actRight">
 							{% if activity.pastDue %}
 								None
 							{% else %}
@@ -67,7 +67,7 @@
 									<a href="{{ activity.aid }}/submission">Make Submission</a>
 								</span>
 							{% endif %}
-						</div>
+						</span>
 					</div>
 					<div id="endAct"></div>
 				</div>

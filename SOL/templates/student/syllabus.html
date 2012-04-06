@@ -12,20 +12,20 @@
 				<div id="table">
 					{% for instructor in instructors %}	
 						<div id="sylWrapper">
-							<div id="sylLeft">Name: </div>
-							<div id="sylRight">{{ instructor.user.first_name }} {{ instructor.user.last_name }}</div>
+							<span id="sylLeft">Name: </span>
+							<span id="sylRight">{{ instructor.user.first_name }} {{ instructor.user.last_name }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Email: </div>
-							<div id="sylRight">{{ instructor.user.email }}</div>
+							<span id="sylLeft">Email: </span>
+							<span id="sylRight">{{ instructor.user.email }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Office Hours: </div>
-							<div id="sylRight">{{ syllabus.officeHrs }}</div>
+							<span id="sylLeft">Office Hours: </span>
+							<span id="sylRight">{{ syllabus.officeHrs }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Office Location: </div>
-							<div id="sylRight">{{ syllabus.officeLocation }}</div>
+							<span id="sylLeft">Office Location: </span>
+							<span id="sylRight">{{ syllabus.officeLocation }}</span>
 						</div>
 						<div id="endAct"></div>
 						{% if not forloop.last %}
@@ -39,20 +39,20 @@
 				<div id="table">
 					{% for ta in tas %}	
 						<div id="sylWrapper">
-							<div id="sylLeft">Name: </div>
-							<div id="sylRight">{{ ta.user.first_name }} {{ ta.user.last_name }}</div>
+							<span id="sylLeft">Name: </span>
+							<span id="sylRight">{{ ta.user.first_name }} {{ ta.user.last_name }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Email: </div>
-							<div id="sylRight">{{ ta.user.email }}</div>
+							<span id="sylLeft">Email: </span>
+							<span id="sylRight">{{ ta.user.email }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Office Hours: </div>
-							<div id="sylRight">{{ syllabus.TaOfficeHrs }}</div>
+							<span id="sylLeft">Office Hours: </span>
+							<span id="sylRight">{{ syllabus.TaOfficeHrs }}</span>
 						</div>
 						<div id="sylWrapper">
-							<div id="sylLeft">Office Location: </div>
-							<div id="sylRight">{{ syllabus.TaOfficeLocation }}</div>
+							<span id="sylLeft">Office Location: </span>
+							<span id="sylRight">{{ syllabus.TaOfficeLocation }}</span>
 						</div>
 						<div id="endAct"></div>
 						{% if not forloop.last %}

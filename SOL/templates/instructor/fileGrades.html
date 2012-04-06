@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block instructorcontent %}
-    <h2>Input Student Grades</h2>
+    <h2 class="title">Input Student Grades</h2>
     {% if message %}
 		<div id="updateSuccess">
 			<h4 class="success">Upload Successfully</h4>
@@ -24,13 +24,13 @@
 		{% csrf_token %}
 		{% for field in form_down %}
 		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
+			<span id="fieldSylLeft">
 				{{ field.label_tag }}:
-			</div>
-			<div id="fieldSylRight">
+			</span>
+			<span id="fieldSylRight">
 					{{ field.errors }}
 					{{ field }}
-			</div>
+			</span>
 		</div>
 		{% endfor %}
 		<div id="submit">
@@ -45,13 +45,13 @@
 		{% csrf_token %}
 		{% for field in form_up %}
 		<div id="fieldWrapper">
-			<div id="fieldSylLeft">
+			<span id="fieldSylLeft">
 				{{ field.label_tag }}:
-			</div>
-			<div id="fieldSylRight">
+			</span>
+			<span id="fieldSylRight">
 					{{ field.errors }}
 					{{ field }}
-			</div>
+			</span>
 		</div>
 		{% endfor %}
 		<div id="submit">

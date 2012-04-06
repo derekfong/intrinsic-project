@@ -1,21 +1,34 @@
 {% extends "student/index.html" %}
 {% block student %}
 	<h2 class="title">Grade Calculator</h2>
-	<p><a href="..">Back to Assignments</a></p>
+	<p class="back"><a href="..">Back to Assignments</a></p>
 	<div id="table">
-		<table border=0>
-			<tr>
-				<td width=200>
-					<strong>Assignment Name</strong>
-				</td>
-				<td width=200>
-					<strong>Worth</strong>
-				</td>
-				<td width=200>
-					<strong>Mark</strong>
-				</td>
-			</tr>
-		
+		<table border=0 class="calculator">
+			{% if flavour == "full" %}
+				<tr>
+					<td width=200>
+						<strong>Assignment Name</strong>
+					</td>
+					<td width=200>
+						<strong>Worth</strong>
+					</td>
+					<td width=200>
+						<strong>Mark</strong>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td width=275>
+						<strong>Name</strong>
+					</td>
+					<td width=250>
+						<strong>Worth</strong>
+					</td>
+					<td width=250>
+						<strong>Mark</strong>
+					</td>
+				</tr>
+			{% endif %}
 			<form action="" method="POST">
 			{% csrf_token %}
 				{% for activity in activities %}
@@ -27,11 +40,13 @@
 							{{ activity.worth }}%
 						</td>
 						<td>
-							{% if activity.mark %}
-								<input type="text" size="3" name="{{ activity.aid }}" value="{{ activity.mark }}" class="grade"> / {{ activity.out_of }}
-							{% else %}
-								<input type="text" size="3" name="{{ activity.aid }}" value="0" class="grade"> / {{ activity.out_of }}
-							{% endif %}
+							<div class="gradeMark">
+								{% if activity.mark %}
+									<input type="text" size="4" name="{{ activity.aid }}" value="{{ activity.mark }}" class="grade"> / {{ activity.out_of }}
+								{% else %}
+									<input type="text" size="4" name="{{ activity.aid }}" value="0" class="grade"> / {{ activity.out_of }}
+								{% endif %}
+							</div>
 						</td>
 					</tr>
 				{% endfor %}
@@ -43,7 +58,7 @@
 				</tr>
 			</form>
 		</table>
-		<h2 class="title">Calculated Progress:</h2>
+		<h2 class="title">Calculated Progress</h2>
 			<p>
 				{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)
 			</p>
