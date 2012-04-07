@@ -35,20 +35,20 @@ def view_Questions(request, quiz_id):
 
 	print request.POST
 	
-
 	response = ""
 
 	#.POST['answer'] should return the ID of the answer chosen
 	if request.method == 'POST':
-			chosen_answer = request.POST['answer']
+			# chosen_answer = request.POST['answer']
 			#print request.POST['answer']
 			#print Answer.objects.get(pk = chosen_answer) 
 
-			correct_answer = Answer.objects.filter(id = )
+			# check if the chosen answer has is_correct as True or False
+			chosen_answer = Answer.objects.get(id = request.POST['answer'])
 			print correct_answer			
 
 			# grab question and grab answer...			
-			if correct_answer:
+			if chosen_answer.is_correct:
 				response = "Correct Answer"
 			else: 
 				response = "Wrong Answer"
@@ -69,6 +69,6 @@ def view_Questions(request, quiz_id):
 # to find specific answer, .GET that specific one
 #	ans = Answer.object.get(question = ques.answer_id)
 
-	return render_to_response("results.html", {'question_list': ques}, context_instance=RequestContext(request))
+#	return render_to_response("results.html", {'question_list': ques}, context_instance=RequestContext(request))
 
 #def detail(request):
