@@ -1,5 +1,6 @@
 {% extends "instructor/index.html" %}
 {% block instructorcontent %}
+{% load instructor_extras %}
     <h2 class="title">Input Student Grades</h2>
     {% if form %}
     	<div class="table">
@@ -74,24 +75,33 @@
 		
 			<form action="{{ activity.aid }}" method="POST">
 			{% csrf_token %}
-				{% for student in student_grades %}
+				{% for student in students %}
 					<tr>
 						<td>
-							{{ student.uid.user.last_name }}
+							{{ student.user.last_name }}
 						</td>
 						<td>
-							{{ student.uid.user.first_name }}
+							{{ student.user.first_name }}
 						</td>
 						<td>
-							{{ student.uid.sfu_id }}
+							{{ student.sfu_id }}
 						</td>
 						<td>
 							<div class="gradeMark">
-								{% if flavour == "full" %}
-									<input type="text" size="4" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/> 
-									/ {{ activity.out_of }}
+								{% if student.sfu_id in existing_marks %}
+									{% if flavour == "full" %}
+										<input type="text" size="4" name="{{ student.sfu_id }}" value="{{ existing_marks|get_key_value:student.sfu_id }}" /> 
+										/ {{ activity.out_of }}
+									{% else %}
+										<input type="text" size="4" name="{{ student.sfu_id }}" value="{{ existing_marks|get_key_value:student.sfu_id }}" />
+									{% endif %}
 								{% else %}
-									<input type="text" size="4" name="{{ student.uid.sfu_id }}" value="{{ student.mark }}"/>
+									{% if flavour == "full" %}
+										<input type="text" size="4" name="{{ student.sfu_id }}" /> 
+										/ {{ activity.out_of }}
+									{% else %}
+											<input type="text" size="4" name="{{ student.sfu_id }}" />
+									{% endif %}
 								{% endif %}
 							</div>
 						</td>

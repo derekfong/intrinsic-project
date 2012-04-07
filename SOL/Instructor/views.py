@@ -554,10 +554,11 @@ def download_grades(student_list, aid):
 def grades_form(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
-	student_grades = ''
+	students = getStudents(c.cid)
 	
 	message = ""
 	activity = ""
+	existing_marks = {}
 	
 	form = OnlineGrade(cid=c.cid)
 	if request.method == 'POST':
@@ -566,12 +567,16 @@ def grades_form(request, department, class_number, year, semester, section):
 			if form.is_valid():
 				activity = Activity.objects.get(aid=request.POST['activity_name'])
 				student_grades = Grade.objects.filter(aid=request.POST['activity_name'])
+				
+				for student in student_grades:
+					existing_marks[int(student.uid.sfu_id)] = student.mark
 	
 	content = getContent(c, user)
 	content['form'] = form
 	content['message'] = message
 	content['activity'] = activity
-	content['student_grades'] = student_grades
+	content['existing_marks'] = existing_marks
+	content['students'] = students
 	return render_to_response('instructor/onlineGrades.html', content, 
 		context_instance=RequestContext(request))
 
