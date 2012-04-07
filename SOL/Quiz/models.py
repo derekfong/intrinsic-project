@@ -41,3 +41,8 @@ class Answer(models.Model):
 	def __unicode__(self):
 		return self.answer
 
+# this will hold the user's actual 
+class Posted(models.Model):
+	user = models.ForeignKey(User)
+	answer = models.ForeignKey(Answer)
+	
