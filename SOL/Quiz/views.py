@@ -32,8 +32,6 @@ def view_Questions(request, quiz_id):
 	questions = Question.objects.filter(pk=quiz_id)
 
 	quiz = Quiz.objects.filter(pk=quiz_id)
-
-	print request.POST
 	
 	response = ""
 
@@ -44,8 +42,7 @@ def view_Questions(request, quiz_id):
 			#print Answer.objects.get(pk = chosen_answer) 
 
 			# check if the chosen answer has is_correct as True or False
-			chosen_answer = Answer.objects.get(id = request.POST['answer'])
-			print correct_answer			
+			chosen_answer = Answer.objects.get(id = request.POST['answer'])			
 
 			# grab question and grab answer...			
 			if chosen_answer.is_correct:
