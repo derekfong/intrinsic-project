@@ -46,7 +46,7 @@
 {% block student %}
 	
 	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }}</h2>
-	<p class="back"><a href=".">Back to Assignments</a></p>
+	<p class="back"><button><a href=".">Back to Assignments</a></button></p>
 	{% if isMarked == 2 %}
 		{% if stats.mark__count > 0 %}
 			<h3 class="viewGrades">Grade Information</h3>
@@ -112,7 +112,7 @@
 						Submission: 
 					</span>
 					<span class="actRight">
-						<a href="#submission">View Submission</a>
+						<a href="{{ classUrl }}activities/{{ activity.aid.aid }}/submission">View Submission</a>
 					</span>
 				</div>
 				<div class="endAct"></div>
@@ -191,9 +191,13 @@
 				<div id="chart_div" style="width: 500px; height: 425px; padding: 0px; margin: 0px;"></div>
 			{% endif %}
 		{% else %}
-			<p>There have been no marks entered for this assignment</p>
+			<div class="table">
+				<p>There have been no marks entered for this assignment</p>
+			</div>
 		{% endif %}
 	{% else %}
-		<p>This assignment has not been marked yet.
+		<div class="table">
+			<p>This assignment has not been marked yet.
+		</div>
 	{% endif %}
 {% endblock %}

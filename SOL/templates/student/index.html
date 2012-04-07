@@ -1,10 +1,16 @@
 {% extends "base.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		$(document).ready(function() {
+	    	$("#accordion").accordion();
+	  	});
+	</script>
+{% endblock %}
+
 {% if flavour == "mobile" %}
 	{% block mobileNav %}
 		{% if accessToStudent %}
-			{% if flavour == "full" %}
-				<h2 class="title">{{ class.department }} {{class.class_number }} - Student</h2>
-			{% endif %}
 			<ul class="studentNav">
 				<li><a href="{{ classUrl }}">Course Home</a></li>
 				<li><a href="{{ classUrl }}syllabus/">View Syllabus</a></li>
@@ -33,10 +39,12 @@
 					<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
 				{% endif %}
 				<li><a href="{{ classUrl }}grades">View Grades</a></li>
-				{% if accessToInst %}
-					<li><a href="{{ classUrl }}instructor"><strong>Go to Instructor View</strong></a></li>
-				{% endif %}
 			</ul>
+			{% if accessToInst %}
+				<div class="changeView">
+					<button><a href="{{ classUrl }}instructor">Go to Instructor View</a></button>
+				</div>
+			{% endif %}
 			{% if isCurrent %}
 				{% if flavour == "full" %}
 					<h2 class="announce">Announcements</h2>
@@ -44,7 +52,10 @@
 					{% if latestAnnouncements.count > 0 %}
 						{% for announcement in latestAnnouncements %}
 							<div class="announceTitle">
-								{{ announcement.title }}
+								{{ announcement.title }} 
+								{% if announcement.isNew %}
+									<img src="/static/images/new.png" alt="back"> 
+								{% endif %}
 							</div>
 							<div class="announceContent">
 								{{ announcement.content }}
@@ -52,9 +63,9 @@
 						{% endfor %}
 					
 						<div class="announceLink">
-							<a href="{{ classUrl }}announcements">View All</a>
+							<button><a href="{{ classUrl }}announcements">View All</a></button>
 							{% if accessToInst %}
-								| <a href="{{classUrl }}instructor/announcement">Edit All</a>
+								<button><a href="{{classUrl }}instructor/announcement">Edit All</a></button>
 							{% endif %}
 						</div>
 					{% else %}
@@ -79,12 +90,38 @@
 		{% block student %}
 			{% if isCurrent %}
 				{% if flavour == "full" %}
-					<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}} - {{ class.class_name }}</h2>
+					<h2 class="title">{{ class.department }} {{ class.class_number}} - {{ class.class_name }}</h2>
 				{% else %}
-					<h2 class="title">Welcome to {{ class.department }} {{ class.class_number}}</h2>
+					<h2 class="title">{{ class.department }} {{ class.class_number}}</h2>
 				{% endif %}
 				<div class="table">
-					<p class="intro">I would like to welcome you all to {{ class.department }} {{ class.class_number}}.  I look forward to this semester and I hope you all have fun and enjoy.</p>
+					<h3 class="title">Welcome</h3>
+					<div class="intro">{{ greeting|linebreaksbr }}</div>
+					{% if accessToInst %}
+						<p><button><a href="instructor/edit">Edit Greeting</a></button></p>
+					{% endif %}
+				</div>
+				<h2 class="title">Upcoming Events</h2>
+				<div class="table">
+					{% if upcomingActivity.count > 0 %}
+						<div class="sylWrapper">
+							<span class="sylLeft">Event Name</span>
+							<span class="sylRight"> 
+								<strong>Due In</strong>
+							</span>
+						</div>
+						{% for event in upcomingActivity %}
+							<div class="sylWrapper">
+								<span class="sylLeft">{{ event.activity_name }}:</span>
+								<span class="sylRight"> 
+									{{ event.due_date|timeuntil }}
+								</span>
+							</div>
+						{% endfor %}
+						<div class="endAct"></div>
+					{% else %}
+						There are no upcoming events for this class.
+					{% endif %}
 				</div>
 			{% else %}
 				<p>You are not currently enrolled in this class.</p>

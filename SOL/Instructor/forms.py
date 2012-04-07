@@ -1,12 +1,15 @@
 from django import forms
 from django.forms import ModelForm
-from Instructor.models import Announcement, Activity, CourseContent, Slide
+from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
 from Main.models import Setting
 from Gradebook.models import Grade
 import datetime
 
-## this file overrides the built-in forms provided by Django
-
+## this file creates forms from models provided by Django
+class GreetingsForm(ModelForm):
+	class Meta:
+		model = Greeting
+		exclude = ('cid')
 class AnnounceForm(ModelForm):
 	class Meta:
 		model = Announcement
@@ -16,6 +19,19 @@ class ActivityForm(ModelForm):
 	class Meta:
 		model = Activity
 		exclude = ('cid',)
+	def clean_worth(self):
+		worth = self.cleaned_data["worth"]
+		cid = self.instance.cid
+		aid = self.instance.aid
+
+		totalWorth = 0
+		activities = Activity.objects.filter(cid=cid).exclude(aid=aid)
+		for activity in activities:
+			totalWorth += activity.worth
+		if totalWorth + worth > 100:
+			raise forms.ValidationError("Combined assignments cannot be worth more than 100%.")
+		else:
+			return worth
 		
 class CourseForm(ModelForm):
 	class Meta:

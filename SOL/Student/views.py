@@ -3,13 +3,14 @@ from django.http import Http404
 from django.template import RequestContext
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
-from Instructor.models import Activity, Announcement, CourseContent, Slide
+from Instructor.models import Activity, Announcement, CourseContent, Slide, Greeting
 from Main.views import currentSemester
 from Student.models import Submission
 from Student.forms import SubmissionForm
 #from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 import datetime, os
+from datetime import timedelta
 	
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
@@ -17,7 +18,18 @@ def index(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 	
+	nextWeek = datetime.datetime.now()+timedelta(days=14)
+
+	upcomingActivity = Activity.objects.filter(due_date__lte = nextWeek, due_date__gte = datetime.datetime.now(), cid=c.cid).order_by('due_date')
+	
+	try: 
+		greeting = Greeting.objects.get(cid=c.cid).message
+	except Greeting.DoesNotExist:
+		greeting = "I would like to welcome you all to "+c.department+" "+c.class_number+".  I look forward to this semester and I hope you all have fun and enjoy."
+		
 	content = getContent(c, user)
+	content['upcomingActivity'] = upcomingActivity
+	content['greeting'] = greeting
 	
 	return render_to_response('student/index.html', content,
 		context_instance=RequestContext(request))
@@ -199,7 +211,7 @@ def checkCurrent(c):
 def getClassList(user):
 	year = datetime.date.today().year
 	semester = currentSemester()
-	return Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	return Course.objects.filter(classlist__uid=user.id, year=year, semester=semester).order_by('department', 'class_number')
 	
 def getClassObject(department, class_number, year, semester, section, user):
 	try:
@@ -216,9 +228,15 @@ def getContent(c, user):
 	tas = getTas(c.cid)
 	students = getStudents(c.cid)
 	enrolled = getEnrolled(c.cid)
+	latestAnnouncements = getAnnouncements(c.cid)
+	for announce in latestAnnouncements:
+		if (datetime.datetime.now() - announce.date_posted) < timedelta(days=1):
+			announce.isNew = 1
+		else:
+			announce.isNew = 0
 
 	content = {'class': c , 'instructors': instructors, 
 		'tas': tas, 'students': students, 'accessToInst': instAccess(instructors, tas, user), 
-		'accessToStudent': studentAccess(enrolled, user), 'latestAnnouncements': getAnnouncements(c.cid), 'classUrl': getClassUrl(c), 
-		'class_list': getClassList(user), 'isCurrent': checkCurrent(c) }
+		'accessToStudent': studentAccess(enrolled, user), 'latestAnnouncements': latestAnnouncements, 'classUrl': getClassUrl(c), 
+		'class_list': getClassList(user), 'isCurrent': checkCurrent(c), }
 	return content

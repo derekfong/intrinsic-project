@@ -1,7 +1,19 @@
 {% extends "student/index.html" %}
+
+{% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $("#progressbar").progressbar({ value: {{ total.value|floatformat:2 }} });
+		});
+	</script>
+{% endblock %}
+
 {% block student %}
 	<h2 class="title">Grade Calculator</h2>
-	<p class="back"><a href="..">Back to Assignments</a></p>
+	<p class="back"><button><a href="..">Back to Assignments</a></button></p>
 	<div class="table">
 		<table border=0 class="calculator">
 			{% if flavour == "full" %}
@@ -58,9 +70,13 @@
 				</tr>
 			</form>
 		</table>
-		<h2 class="title">Calculated Progress</h2>
-			<p>
-				{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)
-			</p>
+		<div class="endAct"></div>
+	</div>
+	<h2 class="title">Calculated Progress</h2>
+	<div class="table">
+			<div id="progressbar" style="width: 650px; float:left; margin-top: 10px"></div>
+			<div class="progress"> {{ total.value|floatformat:2 }}% </div>
+			<div class="endAct"></div>
+			<br>
 	</div>
 {% endblock %}

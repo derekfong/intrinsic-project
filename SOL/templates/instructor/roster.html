@@ -19,10 +19,18 @@
 			</div>
 			<div class="rosterWrapper">
 				<span class="rosterLeft">
+					SFU ID:
+				</span>
+				<span class="rosterRight">
+					 {{ instructor.sfu_id }}
+				</span>
+			</div>
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
 				<span class="rosteRight">
-					 {{ instructor.user.email }}
+					 <a href="mailto:{{ instructor.user.email }}">{{ instructor.user.email }}</a>
 				</span>
 			</div>
 			<div class="endAct"></div>
@@ -48,10 +56,18 @@
 			</div>
 			<div class="rosterWrapper">
 				<span class="rosterLeft">
+					SFU ID:
+				</span>
+				<span class="rosterRight">
+					 {{ ta.sfu_id }}
+				</span>
+			</div>
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
 				<span class="rosteRight">
-					 {{ ta.user.email }}
+					 <a href="mailto:{{ ta.user.email }}">{{ ta.user.email }}</a>
 				</span>
 			</div>
 			<div class="endAct"></div>
@@ -73,10 +89,18 @@
 			</div>
 			<div class="rosterWrapper">
 				<span class="rosterLeft">
+					SFU ID:
+				</span>
+				<span class="rosterRight">
+					 {{ student.sfu_id }}
+				</span>
+			</div>
+			<div class="rosterWrapper">
+				<span class="rosterLeft">
 					Email:
 				</span>
 				<span class="rosteRight">
-					 {{ student.user.email }}
+					 <a href="mailto:{{ student.user.email }}">{{ student.user.email }}</a>
 				</span>
 			</div>
 			<div class="endAct"></div>

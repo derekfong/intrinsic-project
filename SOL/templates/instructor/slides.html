@@ -27,11 +27,14 @@
 		{% for slide in slides %}
 			<div class="table">
 				<div class="actWrapper">
-					<div class="actLeft">{{ slide.title }}</div>
-					<div class="actRight">
-						<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a> | 
-						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/update">Update</a> | 
-						<a href="{{ classUrl }}instructor/slides/{{ slide.id }}/remove">Remove</a></div>
+					<span class="actLeft">{{ slide.title }}</span>
+					<span class="actRight">
+						<button>
+							<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a>
+						</button> 
+						<button><a href="{{ classUrl }}instructor/slides/{{ slide.id }}/update">Update</a></button>  
+						<button><a href="{{ classUrl }}instructor/slides/{{ slide.id }}/remove">Remove</a></button>
+					</span>
 				</div>
 				<div class="endAct"></div>
 			</div>

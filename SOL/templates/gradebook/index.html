@@ -1,4 +1,16 @@
 {% extends "student/index.html" %}
+
+{% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    $("#progressbar").progressbar({ value: {{ total.value|floatformat:2 }} });
+		});
+	</script>
+{% endblock %}
+
 {% block student %}
 	<h2 class="title">View Grades</h2>
 	{% if activities.count > 0 %}
@@ -72,10 +84,10 @@
 		</div>
 		<h2 class="title">Current Progress</h2>
 		<div class="table">
-				<p class="calculator">
-					{{ total.value|floatformat:2 }}/{{ total.out_of|floatformat:2 }} ({{ total.percent|floatformat:2 }}%)</p><p>
-					<a href="calculator">Grade Calculator</a>
-				</p>
+				<div id="progressbar" style="width: 90%; float:left; margin-top: 10px"></div>
+				<div class="progress">{{ total.value|floatformat:2 }}%</div>
+				<p class="completed"><button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-al"><a href="calculator"><span class="ui-button-text">Grade Calculator</span></a></button></p>
+				<div class="endAct"></div>
 		</div>
 	{% else %}
 		<div class="table">

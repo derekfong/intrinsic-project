@@ -1,10 +1,10 @@
 html, body {
 	background: #A7A8A0;
 	color: #323232;
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: 'Gudea', sans-serif;
 	font-size: 14px;
 	padding: 0px;
-	margin: 0px;f
+	margin: 0px;
 }
 
 #container
@@ -52,6 +52,11 @@ html, body {
 	color: #fff;
 	text-decoration: none;
 	border-right: 1px solid #fff;
+}
+
+#navigation li a:hover
+{
+	color: #0a7ed7;
 }
 
 .greeting
@@ -184,3 +189,49 @@ p.success
 {
 	font-size: 12px;
 }
+
+.progress
+{
+	font-size: 18px;
+	font-weight: bold;
+	padding-top: 15px;
+	float: right;
+	padding-right: 10px;
+}
+
+.completed
+{
+	clear: both;
+	padding-top: 5px;
+}
+
+.backNav
+{
+	height
+}
+
+h3.accordionTitle
+{
+	padding: 10px 0 0 25px;
+}
+
+#container button
+{
+	margin: 0;
+	font-size: 11px;
+	padding: 0;
+}
+
+.changeView
+{
+	margin-left: 20px;
+}
+
+.forgotpass
+{
+	padding-left: 10px;
+}
+
+
+
+

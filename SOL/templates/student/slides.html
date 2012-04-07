@@ -1,19 +1,27 @@
 {% extends "student/index.html" %}
 {% block student %}
 	{% if isCurrent %}
-	<h2 class="title">Lecture Slides</h2>
-		<div class="table">
-			{% if slides.count > 0 %}
-			<ul>
-			{% for slide in slides %}
-				<li><a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">{{ slide.title }}</a></li>
-			{% endfor %}
-			</ul>
-			{% else %}
+		{% if slides.count > 0 %}
+		<h2 class="title">Lecture Slides</h2>
+		{% for slide in slides %}
+			<div class="table">
+				<div class="actWrapper">
+					<strong>{{ slide.title }}</strong> 
+						<button>
+							<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a>
+						</button> 
+					</span>
+				</div>
+				<div class="endAct"></div>
+			</div>
+		{% endfor %}
+		{% else %}
+			<h2 class="title">Lecture Slides</h2>
+			<div class="table">
 				<p>There have been no lecture slides posted.</p>
-			{% endif %}
-		</div>
-	</div> 
+			</div>
+		{% endif %}
+
 	{% else %}
 		<p>You are not currently enrolled in this class.</p>
 	{% endif %}

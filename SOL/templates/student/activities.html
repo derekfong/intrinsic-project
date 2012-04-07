@@ -30,7 +30,7 @@
 								<br />
 								<a href="{{ MEDIA_URL }}{{ activity.description_doc }}" title="{{ activity.activity_name }}" target="_blank">View Description</a>
 							{% endif %}
-						</div>
+						</span>
 					</div>
 					{% else %}
 						{% if activity.description_doc %}
@@ -63,7 +63,7 @@
 								None
 							{% else %}
 								<span class="postLinks">
-									<a href="{{ activity.aid }}/submission">Make Submission</a>
+									<button><a href="{{ activity.aid }}/submission">Make Submission</a></button>
 								</span>
 							{% endif %}
 						</span>

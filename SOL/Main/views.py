@@ -2,11 +2,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth
-from Main.models import Course, Setting
+from Main.models import Course, Setting, ClassList
 from datetime import date
 from Instructor.forms import SettingForm
+from Instructor.models import Announcement
 from django.contrib.auth import authenticate, login
 import datetime
+from datetime import timedelta
 
 #This is just for the index page when user first reaches website
 
@@ -16,9 +18,11 @@ def index(request):
 	user = request.user
 	year = datetime.date.today().year
 	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-	old_class_list = Course.objects.filter(classlist__uid=user.id, year__lt=year)
-	return render_to_response('main/index.html', {'class_list': class_list, 'old_class_list': old_class_list},
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester).order_by('department', 'class_number')
+	old_class_list = Course.objects.filter(classlist__uid=user.id, year__lt=year).order_by('-year', 'department', 'class_number')
+		
+	content={'class_list': class_list, 'old_class_list': old_class_list, 'globalAnnouncements': getGlobalAnnouncements(user)}
+	return render_to_response('main/index.html', content,
 			context_instance=RequestContext(request))
 
 def login_view(request):
@@ -46,7 +50,7 @@ def setting(request):
 	
 	year = datetime.date.today().year
 	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester).order_by('department', 'class_number')
 	
 	message = ''
 	if request.method == 'POST':
@@ -62,7 +66,8 @@ def setting(request):
 		except Setting.DoesNotExist:
 			form = SettingForm()
 		
-	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form, 'message': message },
+	content = {'class_list': class_list, 'form': form, 'message': message, 'globalAnnouncements': getGlobalAnnouncements(user) }
+	return render_to_response('main/settings.html', content,
 		context_instance=RequestContext(request))
 	
 def updateSetting(request):
@@ -70,7 +75,7 @@ def updateSetting(request):
 
 	year = datetime.date.today().year
 	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
+	class_list = class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester).order_by('department', 'class_number')
 
 	message = ''
 	if request.method == 'POST':
@@ -82,7 +87,8 @@ def updateSetting(request):
 		setting = Setting.objects.get(uid=user.id)
 		form = SettingForm(initial={'email_announcement': setting.email_announcement, 'email_activity': setting.email_activity})
 
-	return render_to_response('main/settings.html', {'class_list': class_list, 'form': form, 'message': message },
+	content = {'class_list': class_list, 'form': form, 'message': message, 'globalAnnouncements': getGlobalAnnouncements(user) }
+	return render_to_response('main/settings.html', content,
 		context_instance=RequestContext(request))	
 
 def currentSemester():
@@ -101,3 +107,21 @@ def currentSemester():
 		return 'Fall'
 	else: 
 		return 0
+		
+def getGlobalAnnouncements(user):
+	cids = []
+	classes = ClassList.objects.filter(uid=user.id)
+	for c in classes:
+		cids.append(c.cid)
+	latestAnnouncements = Announcement.objects.filter(cid__in=cids).order_by('-date_posted')[:5]
+	for announcement in latestAnnouncements:
+		if (datetime.datetime.now() - announcement.date_posted) < timedelta(days=1):
+			announcement.isNew = 1
+		else:
+			announcement.isNew = 0
+		if len(announcement.title) > 15:
+			announcement.title = announcement.title[:15] + '...' 
+
+		if len(announcement.content) > 100:
+			announcement.content = announcement.content[:100] + '...'
+	return latestAnnouncements

@@ -60,7 +60,7 @@ class ActivityAdmin(admin.ModelAdmin):
 	
 class AnnouncementAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['uid', 'cid', 'title', 'content', 'date_posted', 'send_email']})
+		(None, {'fields': ['uid', 'cid', 'title', 'content', 'date_posted', 'send_email', 'was_updated', 'updated_by', 'updated_on']})
 	]
 	list_filter=['cid', 'uid']
 	search_filter=['cid', 'uid']

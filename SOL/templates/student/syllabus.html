@@ -2,10 +2,6 @@
 {% block student %}
 	<h2 class="title">Course Syllabus</h2>
 	{% if syllabus %}
-		<p class="time"><strong>Created:</strong> {{ syllabus.created_on }}</p>
-		{% if syllabus.was_updated %}
-			<p class="time"><strong>Last Updated:</strong> {{ syllabus.updated_on }}</p>
-		{% endif %}
 		{% if instructors.count > 0 %}
 			<h3 class="title">Instructors</h3>
 			<div class="table">
@@ -92,6 +88,10 @@
 			</div>
 			<div class="endAct"></div>
 		</div>
+		<p class="time"><strong>Created:</strong> {{ syllabus.created_on }}</p>
+		{% if syllabus.was_updated %}
+			<p class="time"><strong>Last Updated:</strong> {{ syllabus.updated_on }}</p>
+		{% endif %}
 	{% else %}
 		<div class="table">
 			<p>{{ message }}</p>

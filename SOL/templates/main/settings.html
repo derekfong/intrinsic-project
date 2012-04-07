@@ -10,6 +10,31 @@
 	</script>
 {% endblock %}
 
+{% block sidebar %}
+	{% if flavour == "full" %}
+		<h2 class="title">Announcements</h2>
+	
+		{% if globalAnnouncements.count > 0 %}
+			{% for announcement in globalAnnouncements %}
+				<div class="announceTitle">
+					{{ announcement.cid.department }} {{ announcement.cid.class_number }}: {{ announcement.title }} 
+					{% if announcement.isNew %}
+						<img src="/static/images/new.png" alt="back"> 
+					{% endif %}
+				</div>
+				<div class="announceContent">
+					{{ announcement.content }}
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="announceContent">
+				No announcements
+			</div>
+		
+		{% endif %}
+	{% endif %}
+{% endblock %}
+
 {% block content %}
 	<h2 class="title">Account Settings</h2>
 	{% if message %}
@@ -19,6 +44,14 @@
 		</div>
 	{% endif %}
 	<div class="table">
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
+				Name: 
+			</span>
+			<span class="fieldSylRight">
+				{{ user.first_name }} {{ user.last_name }}
+			</span>
+		</div>
 		<div class="fieldWrapper">
 			<span class="fieldSylLeft">
 				User: 
@@ -41,6 +74,14 @@
 			</span>
 			<span class="fieldSylRight">
 				{{ user.email }}
+			</span>
+		</div>
+		<div class="fieldWrapper">
+			<span class="fieldSylLeft">
+				Password: 
+			</span>
+			<span class="fieldSylRight">
+				<button><a href="/accounts/password/change/">Change Password</a></button>
 			</span>
 		</div>
 		

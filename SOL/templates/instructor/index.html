@@ -26,8 +26,44 @@
 				<li><a href="{{ classUrl }}instructor/announcement">Add/Modify Announcements</a></li>
 				<li><a href="{{ classUrl }}instructor/activity/">Add/Modify Graded Activities</a></li>
 				<li><a href="{{ classUrl }}instructor/grades">Input/Modify Student Grades</a></li>
-				<li><a href="{{ classUrl }}"><strong>Go to Student View</strong></a></li>
 			</ul>
+			<div class="changeView">
+				<button><a href="{{ classUrl }}">Go to Student View</a></button>
+			</div>
+			{% if flavour == "full" %}
+				<h2 class="announce">Announcements</h2>
+			
+				{% if latestAnnouncements.count > 0 %}
+					{% for announcement in latestAnnouncements %}
+						<div class="announceTitle">
+							{{ announcement.title }} 
+							{% if announcement.isNew %}
+								<img src="/static/images/new.png" alt="back"> 
+							{% endif %}
+						</div>
+						<div class="announceContent">
+							{{ announcement.content }}
+						</div>
+					{% endfor %}
+				
+					<div class="announceLink">
+						<button><a href="{{ classUrl }}announcements">View All</a></button>
+						{% if accessToInst %}
+							<button><a href="{{classUrl }}instructor/announcement">Edit All</a></button>
+						{% endif %}
+					</div>
+				{% else %}
+					<div class="announceContent">
+						No announcements
+					</div>
+					{% if accessToInst %}
+						<div class="announceLink">
+							<a href="{{classUrl }}instructor/announcement">Create One</a>
+						</div>
+					{% endif %}
+				
+				{% endif %}
+			{% endif %}
 		{% endif %}
 	{% endblock %}
 {% endif %}

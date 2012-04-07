@@ -10,13 +10,14 @@ from Student.views import instAccess, studentAccess, getInsts, getTas, getEnroll
 from django.db.models import Avg, Max, Min, Count, StdDev
 from decimal import Decimal, getcontext
 import datetime, re
+from datetime import timedelta
 
 #view that lists all the assignments
 def index(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 	
-	activities = Activity.objects.filter(cid = c.cid).order_by('due_date')
+	activities = Activity.objects.filter(cid = c.cid,).order_by('due_date')
 	
 	#calculate aggregate grade for course
 	total = {}
@@ -30,7 +31,8 @@ def index(request, department, class_number, year, semester, section):
 				percent = (activity.mark / activity.out_of) * 100
 			else:
 				percent = 0
-			total['value'] += percent*activity.worth/100
+			if activity.status == 2:
+				total['value'] += percent*activity.worth/100
 		except Grade.DoesNotExist:
 			activity.mark = 0
 			percent = 0
@@ -39,7 +41,7 @@ def index(request, department, class_number, year, semester, section):
 		
 	if total['out_of'] > 0:
 		total['percent'] = total['value'] / total['out_of']*100
-	
+			
 	# content is helper function below
 	content = getContent(c, user)
 	content['activities'] = activities
@@ -209,7 +211,10 @@ def calculator(request, department, class_number, year, semester, section):
 		#calculate aggregate grade for course
 		for activity in activities:
 			try:
-				activity.mark = Grade.objects.get(aid=activity.aid, uid = user.id).mark
+				if activity.status == 2:
+					activity.mark = Grade.objects.get(aid=activity.aid, uid = user.id).mark
+				else:
+					activity.mark = 0 
 			except Grade.DoesNotExist:
 				activity.mark = 0
 				percent = 0
@@ -244,8 +249,14 @@ def percentOne(grades):
 
 # helper function to grab the correct content
 def getContent(c, user):
+	latestAnnouncements = getAnnouncements(c.cid)
+	for announce in latestAnnouncements:
+		if (datetime.datetime.now() - announce.date_posted) < timedelta(days=1):
+			announce.isNew = 1
+		else:
+			announce.isNew = 0
 	content = {'class': c , 'accessToInst': instAccess(getInsts(c.cid), getTas(c.cid), user), 
-		'accessToStudent': studentAccess(getEnrolled(c.cid), user), 'latestAnnouncements': getAnnouncements(c.cid), 
+		'accessToStudent': studentAccess(getEnrolled(c.cid), user), 'latestAnnouncements': latestAnnouncements, 
 		'classUrl': getClassUrl(c), 'class_list': getClassList(user), 'isCurrent': checkCurrent(c) }
 	return content
 	

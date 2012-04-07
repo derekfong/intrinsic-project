@@ -24,6 +24,10 @@ class CourseContent(models.Model):
 	updated_on = models.DateTimeField()
 	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
 		# syllabus will be dl'able as pdf, hence media rot needed	
+
+class Greeting(models.Model):
+	cid = models.ForeignKey(Course, verbose_name="Course")
+	message = models.TextField(verbose_name="Greeting")
 	
 class Slide(models.Model):
 	#slide is the lecture notes

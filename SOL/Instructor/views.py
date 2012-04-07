@@ -2,11 +2,11 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
-from Instructor.models import Announcement, Activity, CourseContent, Slide
+from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
 from Student.models import Submission
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList
-from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm
+from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm, GreetingsForm
 from decimal import Decimal, getcontext
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
@@ -16,6 +16,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import datetime, xlrd, xlwt, re, zipfile, os, time
+from django import forms
+from datetime import timedelta
 
 #View to generate the page for the main view of Instructor App
 def index(request, department, class_number, year, semester, section):
@@ -24,6 +26,37 @@ def index(request, department, class_number, year, semester, section):
 	
 	content = getContent(c, user)
 	return render_to_response('instructor/index.html', content,
+		context_instance=RequestContext(request))
+
+def greeting(request, department, class_number, year, semester, section):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	
+	message = ''
+	classUrl = getClassUrl(c)
+	# note that you cannot delete a syllabus once created
+	if request.method == 'POST':
+		greeting = Greeting(cid=c)
+		form = GreetingsForm(request.POST, instance=greeting)
+		if form.is_valid():
+			try:
+				Greeting.objects.get(cid=c.cid)
+				update = Greeting.objects.filter(cid=c.cid).update(message=form.cleaned_data["message"])
+			except Greeting.DoesNotExist:
+				form.save()
+			message = 'You have successfully updated the course greeting.'
+	else:
+		try:
+			greet = Greeting.objects.get(cid=c.cid)
+			form = GreetingsForm(initial={'message': greet.message,})
+		except Greeting.DoesNotExist:
+			greet = "I would like to welcome you all to "+c.department+" "+c.class_number+".  I look forward to this semester and I hope you all have fun and enjoy."
+			form = GreetingsForm(initial={'message': greet,})
+	content = getContent(c, user)
+	content['form'] = form
+	content['classUrl'] = classUrl
+	content['message'] = message
+	return render_to_response('instructor/greeting.html', content, 
 		context_instance=RequestContext(request))
 
 #View to generate the page for the syllabus view of Instructor App
@@ -153,7 +186,7 @@ def activity(request, department, class_number, year, semester, section):
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
 	emailStudents = UserProfile.objects.filter(classlist__cid=c.cid, setting__email_activity=1)
-	activities = Activity.objects.filter(cid=c.cid)
+	activities = Activity.objects.filter(cid=c.cid).order_by('due_date')
 	
 	if request.method == 'POST':
 		activity = Activity(cid=c)
@@ -177,7 +210,7 @@ def activity(request, department, class_number, year, semester, section):
 				#created announcement for it
 				title = 'Grade released for '+form.cleaned_data['activity_name']
 				content = "A new grade was released for "+form.cleaned_data['activity_name']
-				act = Announcement(uid=user.userprofile, title=title, content=text_content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
+				act = Announcement(uid=user.userprofile, title=title, content=content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
 				act.save()
 			return HttpResponseRedirect("")
 	else:
@@ -590,7 +623,13 @@ def getContent(c, user):
 	
 	instructors = getInsts(c.cid)
 	tas = getTas(c.cid)
+	latestAnnouncements = getAnnouncements(c.cid)
+	for announce in latestAnnouncements:
+		if (datetime.datetime.now() - announce.date_posted) < timedelta(days=1):
+			announce.isNew = 1
+		else:
+			announce.isNew = 0
 
 	content = {'class': c , 'instructors': instructors, 'tas': tas, 'accessToInst': instAccess(instructors, tas, user), 
-		'class_list': getClassList(user), 'classUrl': getClassUrl(c), }
+		'class_list': getClassList(user), 'classUrl': getClassUrl(c), 'latestAnnouncements': latestAnnouncements}
 	return content
