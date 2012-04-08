@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+		
+{% endblock %}
+
+{% block content %}
+	<script type="text/javascript">
+		$(function() {
+	    	$('#id_date').datetimepicker({
+				dateFormat: "yy-mm-dd"
+			});
+		});
+	</script>
+
+	<h2 class="title">Create New Event</h2>
+	<form action="" method="POST">
+		<div class="table">
+		{% csrf_token %}
+			{% for field in form %}
+			<div class="fieldWrapper">
+				<div class="fieldLeft">
+					{{ field.label_tag }}:
+				</div>
+					<div class="fieldRight">
+						{{ field.errors }}
+						{{ field }}
+						{% if 'Label' in field.label_tag %}
+							<a href="label">Create New Label</a>
+						{% endif %}
+					</div>
+			</div>
+			{% endfor %}
+			<div class="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
+	</form>
+
+{% endblock %}

@@ -4,6 +4,7 @@ from django.template import RequestContext
 from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
+from Calendar.models import Event, Label
 from Student.models import Submission
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm, GreetingsForm
@@ -194,6 +195,20 @@ def activity(request, department, class_number, year, semester, section):
 		if form.is_valid():
 			#commit to database
 			form.save()
+			
+			#create a calendar event for each activity created
+			name = c.department +" "+ c.class_number
+			try:
+				label = Label.objects.get(name=name, color='Green')
+			except Label.DoesNotExist:	
+				label = Label(name=name, color='Green')
+				label.save()
+			event_name = request.POST['activity_name']
+			date = request.POST['due_date']
+			description = request.POST['description']
+			event = Event(cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
+			event.save()
+			
 			#if grade has been released
 			if form.cleaned_data['status'] == 2:
 				#generate+send email announcement

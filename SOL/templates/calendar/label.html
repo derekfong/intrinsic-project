@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2 class="title">Create New Label</h2>
+	<form action="" method="POST">
+		<div class="table">
+		{% csrf_token %}
+			{% for field in form %}
+			<div class="fieldWrapper">
+				<div class="fieldLeft">
+					{{ field.label_tag }}:
+				</div>
+					<div class="fieldRight">
+						{{ field.errors }}
+						{{ field }}
+					</div>
+			</div>
+			{% endfor %}
+			<div class="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
+	</form>
+
+{% endblock %}

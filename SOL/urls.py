@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
 	url(r'^accounts/', include('Main.urls')),
+	
+	url(r'^calendar/', include('Calendar.urls')),
 		
 	url(r'^course/(?P<department>[a-zA-z]+)/(?P<class_number>\d+)/(?P<year>\d+)/(?P<semester>[a-zA-z]+)/(?P<section>[a-zA-z]\d{3})/instructor/', include('Instructor.urls')),
 	

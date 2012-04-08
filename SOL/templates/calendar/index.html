@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% if flavour == "mobile" %}
+	
+{% else %}
+	{% block sidebar %}
+		
+	{% endblock %}
+	
+	{% block content %}
+		{% load calendar_extras %}
+		<div id="cal_header_left">
+			<a href="event">Create New Event</a>
+			<form action="" method="POST">
+				{% csrf_token %}
+				{% for field in form %}
+					{{ field }} {{ field.errors }}
+				{% endfor %}
+		    	<input type="submit" name="change_cal" value="Change Month" />
+			</form>
+		</div>
+		<div id="cal_header_right">
+			<h1 id="month_name">{{ month.name }} {{ year }}</h1>
+		</div>
+		
+	    <table id="cal_table" border="0" cellpadding="0" cellspacing="0">
+	    	<tr id="weekdays">
+	    		<td class="dayname">Sunday</td>
+	    		<td class="dayname">Monday</td>
+	    		<td class="dayname">Tuesday</td>
+	    		<td class="dayname">Wednesday</td>
+	    		<td class="dayname">Thursday</td>
+	    		<td class="dayname">Friday</td>
+	    		<td class="dayname">Saturday</td>
+	    	</tr>
+	    	{% for week in all_weeks %}
+	    		<tr>
+	    			{% for day in week %}
+	    				{% if day == 0 %}
+	    					<td class="day"></td>
+	    				{% else %}
+							{% if day in days_with_events %}
+								<td class="day">
+									<a href="/calendar/{{ year }}/{{ month.number }}/{{ day }}/">
+										<div class="dayTop">
+											{{ day }}
+										</div>
+										<div class="dayBottom">
+											<ul>
+												{% for event in days_with_events|get_key_value:day|get_key_value:'limit' %}
+													<font color="{{ event.lid.color }}"><li>{{ event.event_name }}</li></font>
+												{% endfor %}
+												{% if days_with_events|get_key_value:day|get_key_value:'total' > 4 %}
+													<li>. . .</li>
+												{% endif %}
+											</ul>
+										</div>
+									</a>
+								</td>
+							{% else %}
+								<td class="day">
+									{{ day }}
+								</td>
+							{% endif %}
+	    				{% endif %}
+	    			{% endfor %}
+	    		</tr>
+	    	{% endfor %}
+
+	    </table> 
+	{% endblock %}
+{% endif %}

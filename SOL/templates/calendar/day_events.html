@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2 class="title">{{ selected_day.month }} {{ selected_day.day }}, {{ selected_day.year }} - Events</h2>
+	<p class="back"><a href="/calendar">Back to Calendar</a></p>
+	
+	{% for event in events %}
+		<div class="table">
+			<div class="postTop">
+				<font color="{{ event.lid.color }}">
+					{{ event.date|date:"g:i a" }}
+					({{ event.lid.name }})
+				</font>
+				<strong>{{ event.event_name }}</strong>
+				{% if event.location %}
+					<span class="postDate"> - {{ event.location }}</span>
+				{% endif %}
+			</div>
+			<div class="postBottom">
+				{{ event.description }}
+			</div>
+		</div>
+	{% endfor %}
+	
+{% endblock %}
