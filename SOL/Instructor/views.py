@@ -248,7 +248,15 @@ def updateActivity(request, department, class_number, year, semester, section, a
 	if request.method == 'POST':
 		activity = Activity(cid=c, aid=aid)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
+		
 		if form.is_valid():
+			#Update the calendar event for the activity
+			event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
+			event.date = request.POST['due_date']
+			event.description = request.POST['description']
+			event.name = request.POST['activity_name']
+			event.save()
+			
 			#commit to database
 			form.save()
 			if form.cleaned_data['status'] == 2:
@@ -290,6 +298,10 @@ def removeActivity(request, department, class_number, year, semester, section, a
 	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
 
 	if accessToInst:
+		#Remove the calendar event for the activity
+		event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
+		event.delete()
+		
 		activity = Activity.objects.get(aid=aid)
 		activity.delete()
 		url = getClassUrl(c) + 'instructor/activity'
