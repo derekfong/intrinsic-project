@@ -624,10 +624,12 @@ def grades_input(request, department, class_number, year, semester, section, aid
 				# If the student already has a grade, update it
 				# If the student does not have a grade, make a new one
 				try:
-					student_grade = Grade.objects.filter(uid=uid, aid=aid).update(mark = mark)
+					student_grade = Grade.objects.get(uid=uid, aid=aid)
 				except Grade.DoesNotExist:
 					student_grade = Grade(uid=student, aid=a)
-					student_grade.save()
+				
+				student_grade.mark = mark
+				student_grade.save()
 					
 			message = "Successfully inputted student grades."
 	
