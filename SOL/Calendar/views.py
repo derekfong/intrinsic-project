@@ -4,9 +4,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, Context
 from itertools import chain
 from operator import attrgetter
-import calendar, datetime
+import calendar, datetime, random
 
-from Student.views import getClassObject, getClassList
+from Student.views import getClassList, getStudents
 from Calendar.models import Event, Label
 from Calendar.forms import EventForm, LabelForm, CalendarForm
 
@@ -48,12 +48,13 @@ def day_events(request, year, month, day):
 	selected_day = { 'year': year, 'month': month_name, 'day': day }
 
 	# Get all events created by the user for the specified day
-	custom_events = Event.objects.filter(uid=request.user.id, date__year=year, date__month=month, date__day=day).order_by('date')
+	custom_events = Event.objects.filter(uid=request.user, date__year=year, date__month=month, date__day=day).order_by('date')
 	
 	# Get all events for that day for the classes for which the student is enrolled in
 	events_chain = chain(custom_events)
 	for course in all_classes:
-		events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month, date__day=day), events_chain)
+		if request.user.userprofile in getStudents(course.cid):
+			events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month, date__day=day), events_chain)
 	
 	# Chain all events retrieved into one events queryset
 	events = sorted(events_chain, key=attrgetter('date'))
@@ -71,7 +72,7 @@ def event(request):
 			location = request.POST['location']
 			label = Label.objects.get(lid=request.POST['lid'])
 			description = request.POST['description']
-			event = Event(uid=request.user.id, event_name=event_name, date=date, location=location, lid=label, description=description)
+			event = Event(uid=request.user.userprofile, event_name=event_name, date=date, location=location, lid=label, description=description)
 			event.save()
 			return HttpResponseRedirect("/calendar")
 	else:
@@ -114,12 +115,13 @@ def getCalendar(cal, year, month):
 # Method to get the events for a month
 def getEvents(user, all_classes, year, month):
 	# Get all events created by the user
-	custom_events = Event.objects.filter(uid=user.id, date__year=year, date__month=month).order_by('date')
+	custom_events = Event.objects.filter(uid=user, date__year=year, date__month=month).order_by('date')
 	
 	# Get all events for the classes for which the student is enrolled in
 	events_chain = chain(custom_events)
 	for course in all_classes:
-		events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month), events_chain)
+		if user.userprofile in getStudents(course.cid):
+			events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month), events_chain)
 	
 	# Chain all events retrieved into one events queryset
 	events = sorted(events_chain, key=attrgetter('date'))
@@ -146,3 +148,16 @@ def getEvents(user, all_classes, year, month):
 			days_with_events[day] = { 'limit': limit_events, 'all': all_days_events, 'total': len(all_days_events) }
 
 	return days_with_events
+
+# Method for getting or creating a label for a particular class
+def getClassLabel(cid, department, class_number):
+	name = department +" "+ class_number
+	COLOR_CHOICES = ['Cyan', 'Blue', 'Lime', 'Fuchsia', 'Silver', 'Brown', 'Maroon', 
+		'Olive', 'Plum', 'Thistle', 'Turquoise', 'Gold', 'Chocolate', 'Pink']
+	color = random.choice(COLOR_CHOICES)
+	try:
+		label = Label.objects.get(cid=cid)
+	except Label.DoesNotExist:	
+		label = Label(cid=cid, name=name, color=color)
+		label.save()
+	return label

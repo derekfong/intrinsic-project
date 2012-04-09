@@ -5,6 +5,7 @@ from Main.models import Course, ClassList
 from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
 from Calendar.models import Event, Label
+from Calendar.views import getClassLabel
 from Student.models import Submission
 from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList
 from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm, GreetingsForm
@@ -197,16 +198,11 @@ def activity(request, department, class_number, year, semester, section):
 			form.save()
 			
 			#create a calendar event for each activity created
-			name = c.department +" "+ c.class_number
-			try:
-				label = Label.objects.get(name=name, color='Green')
-			except Label.DoesNotExist:	
-				label = Label(name=name, color='Green')
-				label.save()
+			label = getClassLabel(c.cid, department, class_number)
 			event_name = request.POST['activity_name']
 			date = request.POST['due_date']
 			description = request.POST['description']
-			event = Event(cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
+			event = Event(uid=request.user.userprofile, cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
 			event.save()
 			
 			#if grade has been released
@@ -561,6 +557,7 @@ def download_grades(student_list, aid):
 		sheet.write(row,3, sfu_id)
 		sheet.write(row,4, mark)
 		row = row + 1
+		
 	mark_file.save("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
@@ -599,9 +596,9 @@ def grades_form(request, department, class_number, year, semester, section):
 def grades_input(request, department, class_number, year, semester, section, aid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
+	a = get_object_or_404(Activity, pk=aid)
 	students = getStudents(c.cid)
 
-	# ADD INITALLY POPULATED MARKS
 	message = ""
 	
 	if request.method == 'POST':
@@ -624,12 +621,11 @@ def grades_input(request, department, class_number, year, semester, section, aid
 				# If the student already has a grade, update it
 				# If the student does not have a grade, make a new one
 				try:
-					student_grade = Grade.objects.get(uid=uid, aid=aid)
+					student_grade = Grade.objects.filter(uid=uid, aid=aid).update(mark = mark)
 				except Grade.DoesNotExist:
-					student_grade = Grade(uid=student, aid=Activity.objects.get(aid=aid))
-				
-				student_grade.mark = mark
-				student_grade.save()
+					student_grade = Grade(uid=student, aid=a)
+					student_grade.save()
+					
 			message = "Successfully inputted student grades."
 	
 	content = getContent(c, user)

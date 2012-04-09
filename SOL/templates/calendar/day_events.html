@@ -16,6 +16,9 @@
 					<span class="postDate"> - {{ event.location }}</span>
 				{% endif %}
 			</div>
+			<div class="postMiddle">
+				<span class="postDate">Created by: {{ event.uid.user.first_name }} {{ event.uid.user.last_name }}
+			</div>
 			<div class="postBottom">
 				{{ event.description }}
 			</div>

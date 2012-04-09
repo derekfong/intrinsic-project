@@ -117,6 +117,13 @@ ul.errorlist {
 	font-size: 15px;
 }
 
+.postMiddle
+{
+	font-size: 12pt;
+	padding-top: 5px;
+	padding-left: 25px;
+}
+
 .postBottom
 {
 	padding: 5px 0 10px 25px;

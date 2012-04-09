@@ -12,7 +12,8 @@ class EventForm(ModelForm):
 class LabelForm(ModelForm):
 	class Meta:
 		model = Label
-
+		exclude = ('cid',)
+		
 class CalendarForm(forms.Form):
 	MONTH_CHOICES = (
 		(1, u'January'),
