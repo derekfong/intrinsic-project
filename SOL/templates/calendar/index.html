@@ -4,7 +4,27 @@
 	
 {% else %}
 	{% block sidebar %}
-		
+		{% if flavour == "full" %}
+			<h2 class="title">Announcements</h2>
+			{% if globalAnnouncements.count > 0 %}
+				{% for announcement in globalAnnouncements %}
+					<div class="announceTitle">
+						{{ announcement.cid.department }} {{ announcement.cid.class_number }}: {{ announcement.title }} 
+						{% if announcement.isNew %}
+							<img src="/static/images/new.png" alt="back"> 
+						{% endif %}
+					</div>
+					<div class="announceContent">
+						{{ announcement.content }}
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="announceContent">
+					No announcements
+				</div>
+
+			{% endif %}
+		{% endif %}
 	{% endblock %}
 	
 	{% block content %}

@@ -6,13 +6,14 @@ from itertools import chain
 from operator import attrgetter
 import calendar, datetime, random
 
+from Main.views import getGlobalAnnouncements
 from Student.views import getClassList, getStudents
 from Calendar.models import Event, Label
 from Calendar.forms import EventForm, LabelForm, CalendarForm
 
 #View to generate the page for the main view of Calendar App
 def index(request):
-	all_classes = getClassList(request.user)
+	class_list = getClassList(request.user)
 	
 	cal = calendar.Calendar(6)
 	curr_date = datetime.datetime.today()
@@ -49,20 +50,21 @@ def index(request):
 				year = int(request.POST['year'])
 				month = { 'name': month_name[request.POST['month']], 'number': int(request.POST['month']) }
 			all_weeks = getCalendar(cal, year, month['number'])
-			days_with_events = getEvents(request.user, all_classes, year, month['number'])
+			days_with_events = getEvents(request.user, class_list, year, month['number'])
 	else:
 		form = CalendarForm()
 		all_weeks = getCalendar(cal, curr_date.year, curr_date.month)
 		year = curr_date.year
 		month = {'name': curr_date.strftime("%B"), 'number': curr_date.month }
-		days_with_events = getEvents(request.user, all_classes, year, month['number'])
+		days_with_events = getEvents(request.user, class_list, year, month['number'])
 		
-	context = { 'form': form, 'days_with_events': days_with_events, 'all_weeks': all_weeks, 'year': year, 'month': month, }
+	context = { 'form': form, 'days_with_events': days_with_events, 'all_weeks': all_weeks, 'year': year, 'month': month, 
+		'globalAnnouncements': getGlobalAnnouncements(request.user), 'class_list': class_list }
 	return render_to_response('calendar/index.html', context, RequestContext(request))
 
 # View for displaying all events for a particular day
 def day_events(request, year, month, day):
-	all_classes = getClassList(request.user)
+	class_list = getClassList(request.user)
 	
 	month_name = { '1': 'January', '2': 'February', '3': 'March', '4': 'April', '5': 'May', '6': 'June', '7': 'July', '8': 'August', '9': 'September', '10': 'October', '11': 'November', '12': 'December' }		
 	
@@ -74,18 +76,20 @@ def day_events(request, year, month, day):
 	
 	# Get all events for that day for the classes for which the student is enrolled in
 	events_chain = chain(custom_events)
-	for course in all_classes:
+	for course in class_list:
 		if request.user.userprofile in getStudents(course.cid):
 			events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month, date__day=day), events_chain)
 	
 	# Chain all events retrieved into one events queryset
 	events = sorted(events_chain, key=attrgetter('date'))
 	
-	context = { 'events': events, 'selected_day': selected_day }
+	context = { 'events': events, 'selected_day': selected_day, 'globalAnnouncements': getGlobalAnnouncements(request.user),
+		'class_list': class_list }
 	return render_to_response('calendar/day_events.html', context, RequestContext(request))
 
 # View for creating a new event
 def event(request):
+	class_list = getClassList(request.user)
 	label_error = ''
 	if request.method == 'POST':
 		form = EventForm(request.POST, uid=request.user.id)
@@ -116,12 +120,13 @@ def event(request):
 		form = EventForm(uid=request.user.id)
 	
 	update = 0
-	context = { 'form': form, 'label_error': label_error, 'update': update }
+	context = { 'form': form, 'label_error': label_error, 'update': update, 'globalAnnouncements': getGlobalAnnouncements(request.user),
+	 	'class_list': class_list }
 	return render_to_response('calendar/event.html', context, RequestContext(request))
 
 # View for updating an existing event
 def update_event(request, year, month, day, eid):
-	
+	class_list = getClassList(request.user)
 	if request.method == 'POST':
 		lid = Label.objects.get(lid=request.POST['lid'])
 		event = Event(uid=request.user.userprofile, eid=eid, lid=lid)
@@ -135,7 +140,8 @@ def update_event(request, year, month, day, eid):
 		form = EventForm(uid=request.user.id, initial=existing_event)
 		
 	update = 1
-	context = { 'form': form, 'update': update }
+	context = { 'form': form, 'update': update, 'globalAnnouncements': getGlobalAnnouncements(request.user),
+	 	'class_list': class_list }
 	return render_to_response('calendar/event.html', context, RequestContext(request))
 
 # View for removing an existing event
@@ -146,6 +152,7 @@ def remove_event(request, year, month, day, eid):
 
 # View for creating a label
 def label(request):
+	class_list = getClassList(request.user)
 	if request.method == 'POST':
 		form = LabelForm(request.POST)
 		if 'update_label' in request.POST:
@@ -161,11 +168,13 @@ def label(request):
 		form = LabelForm()
 		
 	update = 0
-	context = { 'form': form, 'update': update }
+	context = { 'form': form, 'update': update, 'globalAnnouncements': getGlobalAnnouncements(request.user),
+	 	'class_list': class_list }
 	return render_to_response('calendar/label.html', context, RequestContext(request))
 
 # View for updating a label
 def update_label(request, lid):
+	class_list = getClassList(request.user)
 	if request.method == 'POST':
 		label = Label(uid=request.user.userprofile, lid=lid)
 		form = LabelForm(request.POST, instance=label)
@@ -177,7 +186,8 @@ def update_label(request, lid):
 		form = LabelForm(initial={ 'name': tmp.name, 'color': tmp.color })
 		
 	update = 1
-	context = { 'form': form, 'update': update }
+	context = { 'form': form, 'update': update, 'globalAnnouncements': getGlobalAnnouncements(request.user),
+	 	'class_list': class_list }
 	return render_to_response('calendar/label.html', context, RequestContext(request))
 
 # Method to retrieve a calendar
@@ -196,13 +206,13 @@ def getCalendar(cal, year, month):
 	return all_weeks
 
 # Method to get the events for a month
-def getEvents(user, all_classes, year, month):
+def getEvents(user, class_list, year, month):
 	# Get all events created by the user
 	custom_events = Event.objects.filter(uid=user, date__year=year, date__month=month).order_by('date')
 	
 	# Get all events for the classes for which the student is enrolled in
 	events_chain = chain(custom_events)
-	for course in all_classes:
+	for course in class_list:
 		if user.userprofile in getStudents(course.cid):
 			events_chain = chain(Event.objects.filter(cid=course.cid, date__year=year, date__month=month), events_chain)
 	
