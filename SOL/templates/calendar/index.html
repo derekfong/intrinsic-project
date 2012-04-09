@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% if flavour == "mobile" %}
 	
 {% else %}
@@ -17,7 +18,7 @@
 				{% for field in form %}
 					{{ field }} {{ field.errors }}
 				{% endfor %}
-				<input type="submit" name="change_month" value="Change Month" />
+				<input type="submit" name="change_month" value="Change Month" class="ui-button-text">
 				<input type="submit" name="prev_month" value="<<" />
 				<input type="submit" name="next_month" value=">>" />
 				<input type="hidden" name="curr_year" value="{{ year }}" />
