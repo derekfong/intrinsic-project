@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block head %}
+	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
 	<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
 		
 {% endblock %}
@@ -25,10 +28,11 @@
 			<div class="announceContent">
 				No announcements
 			</div>
-
+		
 		{% endif %}
 	{% endif %}
 {% endblock %}
+
 
 {% block content %}
 	<script type="text/javascript">

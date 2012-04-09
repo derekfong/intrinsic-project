@@ -283,6 +283,73 @@ input.sideFieldButton
 	width: 90px;
 } 
 
+
+
+#sidebar_cal_table {
+	table-layout: fixed;
+	font-size: 9pt;
+	width: 210px;
+	height: 240px;
+	border: 2px solid #a9a9a9;
+	border-collapse: collapse;
+}
+
+td.sidebar_dayname {
+	height: 10px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid #a9a9a9;
+}
+
+td.sidebar_day {
+	height: 46px;
+	width: 70px;
+	vertical-align: top;
+	border: 1px solid #a9a9a9;
+	padding: 2px;
+}
+
+td.sidebar_day a {
+	text-decoration: none;
+	color: #323232;
+}
+
+div.sidebar_dayTop {
+	font-weight: bold;
+	float: left;
+	width: 26px;
+	height: 10px;
+}
+
+
+div.sidebar_dayBottom {
+	font-weight: bold;
+	float: left;
+	width: 26px;
+	height: 36px;
+}
+
+div.sidebar_dayBottom ul {
+	font-size: 9pt;
+	display: inline;
+}
+
+div.sidebar_dayBottom li {
+	margin-left: 18px;
+}
+
+div.sidebar_event {
+	float: left;
+	font-weight: bold;
+	margin-bottom: 3px;
+	width: 13px;
+	height: 12px;
+}
+
+
+
+
 .quizQ input
 {
 	border: 1px solid #c8c8c8;

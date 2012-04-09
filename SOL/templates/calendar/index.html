@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-
 {% if flavour == "mobile" %}
 	
 {% else %}
 	{% block sidebar %}
+	{% load calendar_extras %}
 		{% if flavour == "full" %}
 			<h2 class="title">Announcements</h2>
 			{% if globalAnnouncements.count > 0 %}
@@ -25,33 +25,79 @@
 
 			{% endif %}
 		{% endif %}
+		
+		
+		<p><strong>{{ month.name }} {{ year }}</strong></p>
+	    <table id="sidebar_cal_table" border="0" cellpadding="0" cellspacing="0">
+	    	<tr id="weekdays">
+	    		<td class="sidebar_dayname">S</td>
+	    		<td class="sidebar_dayname">M</td>
+	    		<td class="sidebar_dayname">T</td>
+	    		<td class="sidebar_dayname">W</td>
+	    		<td class="sidebar_dayname">T</td>
+	    		<td class="sidebar_dayname">F</td>
+	    		<td class="sidebar_dayname">S</td>
+	    	</tr>
+	    	{% for week in all_weeks %}
+	    		<tr>
+	    			{% for day in week %}
+	    				{% if day == 0 %}
+	    					<td class="sidebar_day"></td>
+	    				{% else %}
+							{% if day in days_with_events %}
+								<td class="sidebar_day">
+									<a href="/calendar/{{ year }}/{{ month.number }}/{{ day }}">
+										<div class="sidebar_dayTop">
+											{{ day }}
+										</div>
+										<div class="sidebar_dayBottom">
+											<ul>
+												{% for event in days_with_events|get_key_value:day|get_key_value:'limit' %}
+													<div class="sidebar_event">
+														<font color="{{ event.lid.color }}"><li></li></font>
+													</div>
+												{% endfor %}
+											</ul>
+										</div>
+									</a>
+								</td>
+							{% else %}
+								<td class="sidebar_day">
+									{{ day }}
+								</td>
+							{% endif %}
+	    				{% endif %}
+	    			{% endfor %}
+	    		</tr>
+	    	{% endfor %}
+
+
+	    </table>
+		
 	{% endblock %}
 	
 	{% block content %}
 		{% load calendar_extras %}
-		<div id="cal_header">
-			<div id="cal_header_left">
-					<button><a href="event">Create New Event</a></button>
-			</div>
-			<div id="cal_header_right">
-				<div id="head_date">
-					<form action="" method="POST">
-						{% csrf_token %}
-						{% for field in form %}
-							{{ field }} {{ field.errors }}
-						{% endfor %}
-						<input type="submit" name="change_month" value="Change Month">
-						<input type="submit" name="prev_month" value="<<" />
-						<input type="submit" name="next_month" value=">>" />
-						<input type="hidden" name="curr_year" value="{{ year }}" />
-						<input type="hidden" name="curr_month" value="{{ month.number }}" />
-					</form>
-				</div>
-				<div id="head_month">
-					<h1>{{ month.name }} {{ year }}</h1>
-				</div>
-			</div>
+		<div id="cal_header_left">
+			<span class="postLinks">
+				<button><a href="event">Create New Event</a></button>
+			</span>
+			<form action="" method="POST">
+				{% csrf_token %}
+				{% for field in form %}
+					{{ field }} {{ field.errors }}
+				{% endfor %}
+				<input type="submit" name="change_month" value="Change Month" />
+				<input type="submit" name="prev_month" value="<<" />
+				<input type="submit" name="next_month" value=">>" />
+				<input type="hidden" name="curr_year" value="{{ year }}" />
+				<input type="hidden" name="curr_month" value="{{ month.number }}" />
+			</form>
 		</div>
+		<div id="cal_header_right">
+			<h1 id="month_name">{{ month.name }} {{ year }}</h1>
+		</div>
+		
 	    <table id="cal_table" border="0" cellpadding="0" cellspacing="0">
 	    	<tr id="weekdays">
 	    		<td class="dayname">Sunday</td>
