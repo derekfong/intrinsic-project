@@ -287,27 +287,26 @@ input.sideFieldButton
 
 #sidebar_cal_table {
 	table-layout: fixed;
-	font-size: 9pt;
-	width: 210px;
-	height: 240px;
-	border: 2px solid #a9a9a9;
+	font-size: 8pt;
+	width: 100%;
+	border: 1px solid #a9a9a9;
 	border-collapse: collapse;
+	background: white;
 }
 
 td.sidebar_dayname {
-	height: 10px;
+	height: 25px;
 	font-weight: bold;
 	text-align: center;
 	vertical-align: middle;
-	border: 1px solid #a9a9a9;
 }
 
 td.sidebar_day {
-	height: 46px;
+	height: 38px;
 	width: 70px;
 	vertical-align: top;
-	border: 1px solid #a9a9a9;
-	padding: 2px;
+	border: 1px dashed #ececec;
+	padding: 3px 0 0 5px;
 }
 
 td.sidebar_day a {
@@ -327,7 +326,7 @@ div.sidebar_dayBottom {
 	font-weight: bold;
 	float: left;
 	width: 26px;
-	height: 36px;
+	height: 28px;
 }
 
 div.sidebar_dayBottom ul {
