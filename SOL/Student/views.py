@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import Http404
-from django.template import RequestContext
+from django.template import RequestContext, Context
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
 from Instructor.models import Activity, Announcement, CourseContent, Slide, Greeting, Quiz, QuizQuestion
@@ -12,6 +12,10 @@ from Student.forms import SubmissionForm
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime, os
 from datetime import timedelta
+import xhtml2pdf.pisa as pisa
+import cStringIO as StringIO
+import cgi
+from django.template.loader import get_template
 	
 # Create your views here.
 def index(request, department, class_number, year, semester, section):
@@ -53,6 +57,32 @@ def syllabus(request, department, class_number, year, semester, section):
 	
 	return render_to_response('student/syllabus.html', content, 
 		context_instance=RequestContext(request))
+		
+def downloadSyllabus(request, department, class_number, year, semester, section):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+
+	message = ''
+	try:
+		syllabus = CourseContent.objects.get(cid = c.cid)
+	except CourseContent.DoesNotExist:
+		message = 'No syllabus has been created for this class.'
+		syllabus = []
+
+	content = getContent(c, user)
+	content['syllabus'] = syllabus
+	content['message'] = message
+
+	template_src= 'student/syllabusPDF.html'
+	context_dict = content
+	template = get_template(template_src)
+	context = Context(context_dict)
+	html  = template.render(context)
+	result = StringIO.StringIO()
+	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-16")), result)
+	if not pdf.err:
+		return HttpResponse(result.getvalue(), mimetype='application/pdf')
+	return HttpResponse('We had some errors<pre>%s</pre>' % cgi.escape(html))
 
 def slides(request, department, class_number, year, semester, section):
 	# slides are lecture notes 
