@@ -253,3 +253,10 @@ div.dayBottom li
 {
 	margin-left: 20px;
 }
+
+input.sideFieldButton
+{
+	font-size: 11px;
+	text-align: center;
+	width: 90px;
+}
