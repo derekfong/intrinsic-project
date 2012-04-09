@@ -159,3 +159,11 @@ input.grade
 {
 	border: 1px solid #c8c8c8;
 }
+
+.quizQ input
+{
+	border: 1px solid #c8c8c8;
+	font-size: 12px;
+	padding: 3px;
+	width: 500px;
+}

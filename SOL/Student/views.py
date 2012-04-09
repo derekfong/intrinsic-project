@@ -3,12 +3,13 @@ from django.http import Http404
 from django.template import RequestContext
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
-from Instructor.models import Activity, Announcement, CourseContent, Slide, Greeting
+from Instructor.models import Activity, Announcement, CourseContent, Slide, Greeting, Quiz, QuizQuestion
 from Main.views import currentSemester
-from Student.models import Submission
+from Student.models import Submission, QuizAttempt, QuizResult
+from Gradebook.models import Grade
 from Student.forms import SubmissionForm
 #from reportlab.pdfgen import canvas
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import datetime, os
 from datetime import timedelta
 	
@@ -127,6 +128,104 @@ def activities_submit(request, department, class_number, year, semester, section
 	return render_to_response('student/submission.html', content, 
 		context_instance=RequestContext(request))
 
+def quiz(request, department, class_number, year, semester, section):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	
+	now = datetime.datetime.now()
+	quizzes = Quiz.objects.filter(cid=c.cid)
+	for quiz in quizzes:
+		quiz.attempts = QuizAttempt.objects.filter(qid=quiz.id, uid=user.id).count()
+		if quiz.start_date <= now and quiz.end_date >= now:
+			quiz.current = 1
+		else:
+			quiz.current = 0
+	
+	content = getContent(c, user)
+	content["quizzes"] = quizzes
+		
+	return render_to_response('student/quiz.html', content, 
+		context_instance=RequestContext(request))
+	
+def quizTake(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	
+	q = get_object_or_404(Quiz, pk=qid)
+	now = datetime.datetime.now()
+	
+	if q.start_date <= now and q.end_date >= now:
+		q.current = 1
+	else:
+		q.current = 0
+	
+	attempts = QuizAttempt.objects.filter(qid=q.id, uid=user.id)
+	
+	questions = QuizQuestion.objects.filter(qid=q.id)
+	
+	message = ''
+	if request.method == "POST":
+		finalMark = 0
+		try: 
+			answers = []
+			for question in questions:
+				question.guess = int(request.POST.__getitem__(str(question.id)))
+				answer = question.answer
+				if question.guess == answer:
+					question.result = 1
+					finalMark += 1
+				else:
+					question.result = 0
+			attempt = QuizAttempt(qid=q, uid=user.userprofile, time=datetime.datetime.now(), result=finalMark)
+			attempt.save()
+
+			for question in questions:
+				qObj = QuizQuestion.objects.get(id=question.id)
+				QuizResult(attempt=attempt, question=qObj, guess=question.guess).save()
+			
+			content = getContent(c, user)
+			content["quiz"] = q
+			content["questions"]=questions
+			content["finalMark"] = finalMark
+
+			return render_to_response('student/quizResult.html', content, 
+				context_instance=RequestContext(request))
+				
+		except KeyError:
+			message = 'You need to answer all questions'
+
+	
+	content = getContent(c, user)
+	
+	content["quiz"] = q
+	content["questions"]=questions
+	content["message"] = message
+	content["attempts"] = attempts
+		
+	return render_to_response('student/quizTake.html', content, 
+		context_instance=RequestContext(request))
+		
+def quizResults(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	q = get_object_or_404(Quiz, pk=qid)
+	
+	attempts = QuizAttempt.objects.filter(qid=q.id, uid=user.id)
+	for attempt in attempts:
+		attempt.results = QuizResult.objects.filter(attempt=attempt.id)
+		attempt.out_of = attempt.results.count()
+		for result in attempt.results:
+			if result.guess == result.question.answer:
+				result.result = 1
+			else:
+				result.result = 0
+
+	content = getContent(c, user)
+	content["attempts"] = attempts
+	content["quiz"] = q
+
+	return render_to_response('student/quizAttempts.html', content, 
+		context_instance=RequestContext(request))	
 
 def announcements(request, department, class_number, year, semester, section):
 	# instructors can leave annoucement messages on the home page for students to view 

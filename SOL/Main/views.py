@@ -113,7 +113,7 @@ def getGlobalAnnouncements(user):
 	classes = ClassList.objects.filter(uid=user.id)
 	for c in classes:
 		cids.append(c.cid)
-	latestAnnouncements = Announcement.objects.filter(cid__in=cids).order_by('-date_posted')[:5]
+	latestAnnouncements = Announcement.objects.filter(cid__in=cids).order_by('-date_posted')[:4]
 	for announcement in latestAnnouncements:
 		if (datetime.datetime.now() - announcement.date_posted) < timedelta(days=1):
 			announcement.isNew = 1

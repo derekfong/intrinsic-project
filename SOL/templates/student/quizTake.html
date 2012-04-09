@@ -1,0 +1,53 @@
+{% extends 'student/index.html' %}
+
+{% block student %}
+	<h2 class="title">{{ quiz.name }}</h2>
+	{% if quiz.current %}
+		{% if attempts.count < 3 %}
+			{% if message %}
+				<div id="loginFail">
+					<h4>Quiz Not Submitted</h4>
+					<p>{{ message }}</p>
+				</div>
+			{% endif %}
+			<form action="" method="POST">
+				{% csrf_token %}
+				{% for question in questions %}
+					<div class="table">
+						<p class="qName">{{ question.question }}</p>
+						{% if question.guess == 0 %}
+							<input type="radio" name="{{ question.id }}" value="0" checked> {{ question.option1 }}<br>
+						{% else %}
+							<input type="radio" name="{{ question.id }}" value="0"> {{ question.option1 }}<br>
+						{% endif %}
+						{% if question.guess == 1 %}
+							<input type="radio" name="{{ question.id }}" value="1" checked> {{ question.option2 }}<br>
+						{% else %}
+							<input type="radio" name="{{ question.id }}" value="1"> {{ question.option2 }}<br>
+						{% endif %}					
+						{% if question.guess == 2 %}
+							<input type="radio" name="{{ question.id }}" value="2" checked> {{ question.option3 }}<br>
+						{% else %}
+							<input type="radio" name="{{ question.id }}" value="2"> {{ question.option3 }}<br>
+						{% endif %}
+						{% if question.guess == 3 %}
+							<input type="radio" name="{{ question.id }}" value="3" checked> {{ question.option4 }}<br>
+						{% else %}
+							<input type="radio" name="{{ question.id }}" value="3"> {{ question.option4 }}<br>
+						{% endif %}
+					</div>
+				{% endfor %}
+				<input type="submit" value="Submit Quiz">
+			</form>
+		{% else %}
+			<div class="table">
+				You can only take this quiz a maximum of 3 times.
+			</div>
+		{% endif %}
+	{% else %}
+		<div class="table">
+			This quiz is not active.
+		</div>
+	{% endif %}
+		
+{% endblock %}

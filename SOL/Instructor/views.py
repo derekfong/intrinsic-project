@@ -2,19 +2,21 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
-from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
+from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting, Quiz, QuizQuestion
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
 from Student.models import Submission
-from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList
-from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm, GreetingsForm
+from Student.views import instAccess, getInsts, getTas, getStudents, getClassUrl, getEnrolled, studentAccess, getAnnouncements, currentSemester, getClassObject, getClassList, QuizAttempt
+from forms import AnnounceForm, ActivityForm, CourseForm, GradeForm, SlideForm, GreetingsForm, QuizForm
 from decimal import Decimal, getcontext
 from django.forms.models import modelformset_factory
+from django.forms.formsets import formset_factory
 from django.contrib.auth.models import User
 from Main.models import UserProfile
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.db.models import Max
 import datetime, xlrd, xlwt, re, zipfile, os, time
 from django import forms
 from datetime import timedelta
@@ -125,7 +127,7 @@ def slides(request, department, class_number, year, semester, section):
 		form = SlideForm(request.POST, request.FILES, instance=slide)
 		if form.is_valid():
 			form.save()
-			HttpResponseRedirect("")
+			return HttpResponseRedirect("")
 	else:
 		form = SlideForm()
 		
@@ -421,6 +423,121 @@ def roster(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/roster.html', content, 
 		context_instance=RequestContext(request))
 
+def quizCreate(request, department, class_number, year, semester, section):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+
+	quizzes = Quiz.objects.filter(cid=c.cid)
+
+	if request.method == 'POST':
+		quiz = Quiz(cid=c)
+		form = QuizForm(request.POST, instance=quiz)
+		if form.is_valid():
+			#Activity(cid=c, activity_name=form.cleaned_data['name'], out_of=0, worth=0, due_date=form.cleaned_data['end_date'], status=2).save()
+			form.save()
+			url = getClassUrl(c) + 'instructor/quiz/create/'
+			return HttpResponseRedirect("")
+	else:
+		form = QuizForm()
+
+	content = getContent(c, user)
+	content['form'] = form
+	content['quizzes'] = quizzes
+
+	return render_to_response('instructor/quizCreate.html', content, 
+		context_instance=RequestContext(request))
+
+def quizRemove(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	q = get_object_or_404(Quiz, pk=qid)
+
+	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
+
+	classUrl = getClassUrl(c)
+	if accessToInst:
+		#Activity.objects.get(cid=c.cid, activity_name=q.name).delete()
+		quiz = Quiz.objects.get(id=qid)
+		quiz.delete()
+		url = classUrl + 'instructor/quiz/create'
+		return HttpResponseRedirect(url)
+	else:
+		content = {'accessToInst': accessToInst, 'classUrl': classUrl}
+		return render_to_response('instructor/quizCreate.html', content, 
+			context_instance=RequestContext(request))
+			
+def quizUpdate(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	q = get_object_or_404(Quiz, pk=qid)
+	
+	quizzes = Quiz.objects.filter(cid=c.cid)
+
+	if request.method == 'POST':
+		form = QuizForm(request.POST)
+		if form.is_valid():
+			#Activity.objects.filter(cid=c.cid, activity_name=q.name).update(activity_name=form.cleaned_data['name'], due_date=form.cleaned_data['end_date'])
+			Quiz.objects.filter(id=q.id).update(name=form.cleaned_data["name"], start_date=form.cleaned_data["start_date"], end_date=form.cleaned_data["end_date"])
+			url = getClassUrl(c) + 'instructor/quiz/create/'
+			return HttpResponseRedirect("")
+	else:
+		form = QuizForm(initial={'name': q.name, 'start_date': q.start_date, 'end_date': q.end_date, 'student_attempts': q.student_attempts, 'quiz_length': q.quiz_length} )
+
+	content = getContent(c, user)
+	content['form'] = form
+	content['quizzes'] = quizzes
+
+	return render_to_response('instructor/quizCreate.html', content, 
+		context_instance=RequestContext(request))
+					
+def quizQuestions(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	q = get_object_or_404(Quiz, pk=qid)
+	
+	QuizFormSet = modelformset_factory(QuizQuestion, exclude=('qid'), extra=1)
+	query = QuizQuestion.objects.filter(qid=qid)
+	if request.method == "POST":		
+		data = request.POST.copy()
+		formset = QuizFormSet(data, queryset=query)
+		if formset.is_valid():
+			for form in formset:
+				quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
+				form.instance = quiz
+			formset.save()
+			#numQuestions = QuizQuestion.objects.filter(qid=q).count()
+			#Activity.objects.filter(cid=c.cid, activity_name=q.name).update(out_of=numQuestions)
+			return HttpResponseRedirect("")
+	else: 
+		formset = QuizFormSet(queryset=query)
+		
+	content = getContent(c, user)
+	content['formset'] = formset
+	content['quiz'] = q
+	return render_to_response('instructor/quizOptions.html', content,
+		context_instance=RequestContext(request))
+
+def quizGrades(request, department, class_number, year, semester, section, qid):
+	user = request.user
+	c = getClassObject(department, class_number, year, semester, section, user)
+	q = get_object_or_404(Quiz, pk=qid)
+
+	students = getStudents(c.cid)
+	out_of = QuizQuestion.objects.filter(qid=qid).count()
+	for student in students:
+		gradesAgg = QuizAttempt.objects.filter(qid=qid, uid=student.id)
+		if gradesAgg.count() > 0:
+			student.grade = gradesAgg.aggregate(Max('result'))
+		else: 
+			student.grade = 0
+	
+	content = getContent(c, user)
+	content["students"] = students
+	content["quiz"] = q
+	content["out_of"] = out_of
+	return render_to_response('instructor/quizGrades.html', content, 
+		context_instance=RequestContext(request))
+				
 # View for grades input
 def grades(request, department, class_number, year, semester, section):
 	user = request.user

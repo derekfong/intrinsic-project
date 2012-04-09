@@ -1,0 +1,83 @@
+{% extends "student/index.html" %}
+
+{% block head %}
+	<script type="text/javascript">
+		$(document).ready(function() {
+	    	$("#accordion").accordion();
+	  	});
+	</script>
+{% endblock %}
+
+{% block student %}
+	<h2 class="title">{{ quiz.name }} - View Attempts </h2>
+	<div class="table">
+		<button><a href="{{ classUrl }}quiz">Back to Quizzes</a></button><br>
+		<div id="accordion">
+		{% for attempt in attempts %}
+				<h3 class="accordionTitle">Attempt {{ forloop.counter }}</h3>
+				<div>
+					<div class="actWrapper">
+						<span class="actLeft">Time: </span>
+						<span class="actRight">{{ attempt.time }}</span>
+					</div>
+					<div class="actWrapper">
+						<span class="actLeft">Mark: </span>
+						<span class="actRight">{{ attempt.result }} out of {{ attempt.out_of }}</span>
+					</div>
+					<div class="actWrapper">
+						<span class="actLeft">Results: </span>
+						<div class="actRight">
+							{% for result in attempt.results %}
+								{% if result.result %}
+									<div class="rightAnswer">
+								{% else %}
+									<div class="wrongAnswer">
+								{% endif %}
+									<p class="qName">{{ result.question.question }}</p>
+									<ul>
+										{% if result.question.answer == 0 %}
+											<li><strong>{{ result.question.option1 }}</strong> - Correct Answer</li>
+										{% else %}
+											{% if result.guess == 0 %}
+												<li>{{ result.question.option1 }} - <em>Your Answer</em></li>
+											{% else %}
+												<li>{{ result.question.option1 }}</li>
+											{% endif %}
+										{% endif %}
+										{% if result.question.answer == 1 %}
+											<li><strong>{{ result.question.option2 }}</strong> - Correct Answer</li>
+										{% else %}
+											{% if result.guess == 1 %}
+												<li>{{ result.question.option2 }} - <em>Your Answer</em></li>
+											{% else %}
+												<li>{{ result.question.option2 }}</li>
+											{% endif %}
+										{% endif %}	
+										{% if result.question.answer == 2 %}
+												<li><strong>{{ result.question.option3 }}</strong> - Correct Answer</li>
+										{% else %}
+											{% if result.guess == 2 %}
+												<li>{{ result.question.option3 }} - <em>Your Answer</em></li>
+											{% else %}
+												<li>{{ result.question.option3 }}</li>
+											{% endif %}
+										{% endif %}	
+										{% if result.question.answer == 3 %}
+												<li><strong>{{ result.question.option4 }}</strong> - Correct Answer</li>
+										{% else %}
+											{% if result.guess == 3 %}
+												<li>{{ result.question.option4 }} - <em>Your Answer</em></li>
+											{% else %}
+												<li>{{ result.question.option4 }}</li>
+											{% endif %}
+										{% endif %}
+									</ul>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+		</div>
+	</div>
+{% endblock %}

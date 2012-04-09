@@ -1,6 +1,6 @@
 #Student Model
 from django.db import models
-from Instructor.models import Activity, Course
+from Instructor.models import Activity, Course, Quiz, QuizQuestion
 from Main.models import UserProfile
 import os
 
@@ -25,3 +25,13 @@ class Submission(models.Model):
 	submit_number = models.IntegerField()	# num of times an assn is submitted
 	file_path = models.FileField(upload_to=get_submission_path)
 	
+class QuizAttempt(models.Model):
+	qid = models.ForeignKey(Quiz, verbose_name="Quiz")
+	uid = models.ForeignKey(UserProfile)
+	time = models.DateTimeField()
+	result = models.IntegerField()
+
+class QuizResult(models.Model):
+	attempt = models.ForeignKey(QuizAttempt)
+	question = models.ForeignKey(QuizQuestion)
+	guess = models.IntegerField()
