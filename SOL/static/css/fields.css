@@ -167,25 +167,47 @@ input.grade
 	border: 1px solid #c8c8c8;
 }
 
+#cal_header
+{
+	width: 100%;
+	padding: 15px 0 5px 0;
+}
+
 #cal_header_left
 {
 	float: left;
-	width: 450px;
-	height: 60px;
+	padding-left: 5px;
+}
+
+#cal_header_right input, #cal_header_left button
+
+{
+	font-size: 11px;
 }
 
 #cal_header_right
 {
-	float: left;
-	text-align: right;
-	vertical-align: top;
-	width: 310px;
-	height: 60px;
+	float: right;
+	
 }
 
-#month_name
+#head_date
 {
-	padding: 0px;
+	float: left;
+	padding-right: 15px;
+}
+
+#head_month
+{
+	float: right;
+	padding-right: 5px;
+}
+
+#head_month h1
+{
+	margin: 0;
+	padding: 0;
+	margin-bottom: 5px;
 }
 
 #cal_table
@@ -267,10 +289,5 @@ input.sideFieldButton
 	font-size: 12px;
 	padding: 3px;
 	width: 500px;
-}
-
-.ui-button .ui-button-text
-{
- font-size:10px !important;
 }
 
