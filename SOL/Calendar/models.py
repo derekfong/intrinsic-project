@@ -21,6 +21,7 @@ class Label(models.Model):
 	lid = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=256)
 	color = models.CharField(max_length=32, choices=COLOR_CHOICES)
+	uid = models.ForeignKey(UserProfile, verbose_name='SFU ID')
 	cid = models.IntegerField(blank=True, null=True)
 	def __unicode__(self):
 		return '(' + self.color +') '+ self.name

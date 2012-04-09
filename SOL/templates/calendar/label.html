@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h2 class="title">Create New Label</h2>
+
+	{% if update %}
+		<h2 class="title">Update Label Form</h2>
+	{% else %}
+		<h2 class="title">Create New Label</h2>
+	{% endif %}
+	
+	<p class="back"><button><a href="/calendar/event">Back to Create New Event</a></button></p>
+	
 	<form action="" method="POST">
 		<div class="table">
 		{% csrf_token %}

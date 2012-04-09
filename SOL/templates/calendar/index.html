@@ -9,13 +9,15 @@
 	{% block content %}
 		{% load calendar_extras %}
 		<div id="cal_header_left">
-			<a href="event">Create New Event</a>
+			<span class="postLinks">
+				<button><a href="event">Create New Event</a></button>
+			</span>
 			<form action="" method="POST">
 				{% csrf_token %}
 				{% for field in form %}
 					{{ field }} {{ field.errors }}
 				{% endfor %}
-		    	<input type="submit" name="change_month" value="Change Month" />
+				<input type="submit" name="change_month" value="Change Month" />
 				<input type="submit" name="prev_month" value="<<" />
 				<input type="submit" name="next_month" value=">>" />
 				<input type="hidden" name="curr_year" value="{{ year }}" />

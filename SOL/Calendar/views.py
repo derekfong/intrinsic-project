@@ -17,14 +17,37 @@ def index(request):
 	cal = calendar.Calendar(6)
 	curr_date = datetime.datetime.today()
 	
-	day = curr_date.day
 	month_name = { '1': 'January', '2': 'February', '3': 'March', '4': 'April', '5': 'May', '6': 'June', '7': 'July', '8': 'August', '9': 'September', '10': 'October', '11': 'November', '12': 'December' }		
 	
 	if request.method == 'POST':
 		form = CalendarForm(request.POST)
 		if form.is_valid():
-			year = int(request.POST['year'])
-			month = { 'name': month_name[request.POST['month']], 'number': int(request.POST['month']) }
+			curr_month = int(request.POST.__getitem__('curr_month'))
+			curr_year = int(request.POST.__getitem__('curr_year'))
+			# If previous month is selected, get the previous month and associated year
+			if 'prev_month' in request.POST:
+				prev_month = curr_month - 1
+				if prev_month == 0:
+					prev_month = 12
+					year = curr_year - 1
+				else:
+					year = curr_year
+				month = { 'name': month_name[str(prev_month)], 'number': prev_month }
+				all_weeks = getCalendar(cal, year, month['number'])
+			# Else if next month is selected, get the next month and associated year
+			elif 'next_month' in request.POST:
+				next_month = curr_month + 1
+				if next_month == 13:
+					next_month = 1
+					year = curr_year + 1
+				else:
+					year = curr_year
+				month = { 'name': month_name[str(next_month)], 'number': next_month }
+				all_weeks = getCalendar(cal, year, month['number'])
+			# Otherwise, return the current month and associated year
+			else:
+				year = int(request.POST['year'])
+				month = { 'name': month_name[request.POST['month']], 'number': int(request.POST['month']) }
 			all_weeks = getCalendar(cal, year, month['number'])
 			days_with_events = getEvents(request.user, all_classes, year, month['number'])
 	else:
@@ -34,8 +57,7 @@ def index(request):
 		month = {'name': curr_date.strftime("%B"), 'number': curr_date.month }
 		days_with_events = getEvents(request.user, all_classes, year, month['number'])
 		
-	context = { 'form': form, 'days_with_events': days_with_events, 'all_weeks': all_weeks, 
-				'year': year, 'month': month, 'day': day, 'curr_date': curr_date }
+	context = { 'form': form, 'days_with_events': days_with_events, 'all_weeks': all_weeks, 'year': year, 'month': month, }
 	return render_to_response('calendar/index.html', context, RequestContext(request))
 
 # View for displaying all events for a particular day
@@ -64,9 +86,24 @@ def day_events(request, year, month, day):
 
 # View for creating a new event
 def event(request):
+	label_error = ''
 	if request.method == 'POST':
-		form = EventForm(request.POST)
-		if form.is_valid():
+		form = EventForm(request.POST, uid=request.user.id)
+		if 'update_label' in request.POST:
+			if request.POST['lid']:
+				label = Label.objects.get(lid=request.POST['lid'])
+				# Check to see if the label is associated to a class
+				if label.cid:
+					form = EventForm(uid=request.user.id)
+					label_error = 'You cannot edit that course label'
+				else:
+					return HttpResponseRedirect("/calendar/event/label/" + request.POST['lid'])
+			else:
+				form = EventForm(uid=request.user.id)
+				label_error = 'Please choose a label to edit'
+		elif 'create_label' in request.POST:
+			return HttpResponseRedirect("/calendar/event/label/")
+		elif form.is_valid():
 			event_name = request.POST['event_name']
 			date = request.POST['date']
 			location = request.POST['location']
@@ -76,25 +113,71 @@ def event(request):
 			event.save()
 			return HttpResponseRedirect("/calendar")
 	else:
-		form = EventForm()
-
-	context = { 'form': form }
+		form = EventForm(uid=request.user.id)
+	
+	update = 0
+	context = { 'form': form, 'label_error': label_error, 'update': update }
 	return render_to_response('calendar/event.html', context, RequestContext(request))
+
+# View for updating an existing event
+def update_event(request, year, month, day, eid):
+	
+	if request.method == 'POST':
+		lid = Label.objects.get(lid=request.POST['lid'])
+		event = Event(uid=request.user.userprofile, eid=eid, lid=lid)
+		form = EventForm(request.POST, uid=request.user.userprofile, instance=event)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("..")
+	else:
+		tmp = Event.objects.get(eid=eid)
+		existing_event = { 'lid': tmp.lid, 'event_name': tmp.event_name, 'date': tmp.date, 'location': tmp.location, 'description': tmp.description }
+		form = EventForm(uid=request.user.id, initial=existing_event)
+		
+	update = 1
+	context = { 'form': form, 'update': update }
+	return render_to_response('calendar/event.html', context, RequestContext(request))
+
+# View for removing an existing event
+def remove_event(request, year, month, day, eid):
+	event = Event.objects.get(eid=eid)
+	event.delete()
+	return HttpResponseRedirect("/calendar/%s" %year + '/%s' %month + '/%s' %day)
 
 # View for creating a label
 def label(request):
 	if request.method == 'POST':
 		form = LabelForm(request.POST)
-		if form.is_valid():
+		if 'update_label' in request.POST:
+			return HttpResponseRedirect("/calendar/event/" + request.POST['lid'])
+		elif form.is_valid():
+			user = request.user
 			label_name = request.POST['name']
 			color = request.POST['color']
-			label = Label(name=label_name, color=color)
+			label = Label(uid=user.userprofile, name=label_name, color=color)
 			label.save()
 			return HttpResponseRedirect("/calendar/event")
 	else:
 		form = LabelForm()
+		
+	update = 0
+	context = { 'form': form, 'update': update }
+	return render_to_response('calendar/label.html', context, RequestContext(request))
 
-	context = { 'form': form, }
+# View for updating a label
+def update_label(request, lid):
+	if request.method == 'POST':
+		label = Label(uid=request.user.userprofile, lid=lid)
+		form = LabelForm(request.POST, instance=label)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect("/calendar/event")
+	else:
+		tmp = Label.objects.get(lid=lid)
+		form = LabelForm(initial={ 'name': tmp.name, 'color': tmp.color })
+		
+	update = 1
+	context = { 'form': form, 'update': update }
 	return render_to_response('calendar/label.html', context, RequestContext(request))
 
 # Method to retrieve a calendar
@@ -150,7 +233,7 @@ def getEvents(user, all_classes, year, month):
 	return days_with_events
 
 # Method for getting or creating a label for a particular class
-def getClassLabel(cid, department, class_number):
+def getClassLabel(user, cid, department, class_number):
 	name = department +" "+ class_number
 	COLOR_CHOICES = ['Cyan', 'Blue', 'Lime', 'Fuchsia', 'Silver', 'Brown', 'Maroon', 
 		'Olive', 'Plum', 'Thistle', 'Turquoise', 'Gold', 'Chocolate', 'Pink']
@@ -158,6 +241,6 @@ def getClassLabel(cid, department, class_number):
 	try:
 		label = Label.objects.get(cid=cid)
 	except Label.DoesNotExist:	
-		label = Label(cid=cid, name=name, color=color)
+		label = Label(uid=user.userprofile, cid=cid, name=name, color=color)
 		label.save()
 	return label

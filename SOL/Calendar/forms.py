@@ -1,10 +1,16 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.models import ModelChoiceField
 from Calendar.models import Event, Label
 import datetime
 
 # Create your models here.
 class EventForm(ModelForm):
+	def __init__(self, *args, **kwargs):
+		uid=kwargs.pop('uid')
+		super(EventForm, self).__init__(*args, **kwargs)
+		self.fields['lid'] = ModelChoiceField(queryset=Label.objects.filter(uid=uid), empty_label="<Choose Label>")
+	
 	class Meta:
 		model = Event
 		exclude = ('uid', 'cid',)
@@ -12,7 +18,7 @@ class EventForm(ModelForm):
 class LabelForm(ModelForm):
 	class Meta:
 		model = Label
-		exclude = ('cid',)
+		exclude = ('cid', 'uid', )
 		
 class CalendarForm(forms.Form):
 	MONTH_CHOICES = (

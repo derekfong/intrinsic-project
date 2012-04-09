@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h2 class="title">{{ selected_day.month }} {{ selected_day.day }}, {{ selected_day.year }} - Events</h2>
-	<p class="back"><a href="/calendar">Back to Calendar</a></p>
+	<p class="back"><button><a href="/calendar">Back to Calendar</a></button></p>
 	
 	{% for event in events %}
 		<div class="table">
@@ -15,6 +15,11 @@
 				{% if event.location %}
 					<span class="postDate"> - {{ event.location }}</span>
 				{% endif %}
+				<span class="postLinks">
+					{% if not event.cid %}
+						<button><a href="{{ event.eid }}">Edit</a></button> <button><a href="{{ event.eid }}/remove">Remove</a></button>
+					{% endif %}
+				</span>
 			</div>
 			<div class="postMiddle">
 				<span class="postDate">Created by: {{ event.uid.user.first_name }} {{ event.uid.user.last_name }}

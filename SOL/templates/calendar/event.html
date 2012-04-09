@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-	<link type="text/css" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
+	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
 	<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
@@ -17,27 +17,47 @@
 			});
 		});
 	</script>
-
-	<h2 class="title">Create New Event</h2>
+	
+	{% if update %}
+		<h2 class="title">Update Event Form</h2>
+		<p class="back"><button><a href="..">Back To Events</a></button></p>
+	{% else %}
+		<h2 class="title">Create New Event</h2>
+		<p class="back"><button><a href="/calendar">Back to Calendar</a></button></p>
+	{% endif %}
+	
+	<font color="red">{{ label_error }}</font>
 	<form action="" method="POST">
 		<div class="table">
 		{% csrf_token %}
 			{% for field in form %}
 			<div class="fieldWrapper">
 				<div class="fieldLeft">
-					{{ field.label_tag }}:
+					{% if 'Lid' in field.label_tag %}
+						Label: 
+					{% else %}
+						{{ field.label_tag }}:
+					{% endif %}
 				</div>
 					<div class="fieldRight">
 						{{ field.errors }}
 						{{ field }}
-						{% if 'Label' in field.label_tag %}
-							<a href="label">Create New Label</a>
+						
+						{% if 'Lid' in field.label_tag %}
+							{% if not update %}
+								<input class="sideFieldButton" type="submit" name="create_label" value="Create Label">
+								<input class="sideFieldButton" type="submit" name="update_label" value="Edit Label">
+							{% endif %}
 						{% endif %}
 					</div>
 			</div>
 			{% endfor %}
 			<div class="submit">
-				<input type="submit" value="Submit">
+				{% if update %}
+					<input type="submit" value="Update">
+				{% else %}
+					<input type="submit" value="Submit">
+				{% endif %}
 			</div>
 		</div>
 	</form>
