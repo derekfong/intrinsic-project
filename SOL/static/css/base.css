@@ -147,7 +147,7 @@ a:hover
 	margin: 10px;
 }
 
-#loginFail
+#loginFail, .wrongAnswer
 {
 	background: #edc1c1;
 	border: 1px solid red;
@@ -166,7 +166,7 @@ p.error
 	padding-bottom: 10px;
 }
 
-#updateSuccess
+#updateSuccess, .rightAnswer
 {
 	background: #d0f4d0;
 	border: 1px solid green;
@@ -231,6 +231,15 @@ h3.accordionTitle
 {
 	padding-left: 10px;
 }
+
+.qName
+{
+	padding-top: 10px;
+	margin-top: 0px;
+	font-weight: bold;
+}
+
+
 
 
 

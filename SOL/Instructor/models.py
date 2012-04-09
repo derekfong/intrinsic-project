@@ -1,6 +1,8 @@
 #Instructor Model
 from django.db import models
 from Main.models import UserProfile, Course
+from django.forms.models import ModelChoiceField
+
 
 # Create your models here.
 class CourseContent(models.Model):
@@ -29,6 +31,35 @@ class Greeting(models.Model):
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	message = models.TextField(verbose_name="Greeting")
 	
+class Quiz(models.Model):
+	cid = models.ForeignKey(Course, verbose_name="Course")
+	name = models.CharField(max_length=256)
+	start_date = models.DateTimeField(verbose_name="Start Date")
+	end_date = models.DateTimeField(verbose_name="End Date")
+	student_attempts = models.IntegerField(verbose_name="Student Attempts")
+	quiz_length = models.IntegerField(verbose_name="Length (in mins)")
+	def __unicode__(self):
+		return self.name
+
+class QuizQuestion(models.Model):
+	ANSWER_CHOICES = (
+		(0, u'A'),
+		(1, u'B'),
+		(2, u'C'),
+		(3, u'D'),
+	)
+	qid = models.ForeignKey(Quiz, verbose_name="Quiz")
+	question = models.CharField(max_length=512)
+	option1 = models.CharField(max_length=512, verbose_name="Option A")
+	option2 = models.CharField(max_length=512, verbose_name="Option B")
+	option3 = models.CharField(max_length=512, verbose_name="Option C")
+	option4 = models.CharField(max_length=512, verbose_name="Option D")
+	answer = models.IntegerField(choices=ANSWER_CHOICES)
+	#def __init__(self, *args, **kwargs):
+	#	qid=kwargs.pop('qid')
+	#	super(QuizQuestion, self).__init__(*args, **kwargs)
+	#	self.fields['name'] = ActivityModelChoiceField(queryset=Quiz.objects.get(id=qid), empty_label="<Choose Quiz>")
+
 class Slide(models.Model):
 	#slide is the lecture notes
 	cid = models.ForeignKey(Course, verbose_name="Course")
@@ -74,4 +105,8 @@ class AnnounceRead(models.Model):
 	uid = models.ForeignKey(UserProfile)
 	read = models.BooleanField()
 	
+class ActivityModelChoiceField(ModelChoiceField):
+	def label_from_instance(self, obj):
+		return obj.name
+		
 #class Content (CMS??????)

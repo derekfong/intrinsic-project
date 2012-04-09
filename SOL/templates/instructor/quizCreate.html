@@ -1,0 +1,54 @@
+{% extends "instructor/index.html" %}
+
+{% block head %}
+<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+	$(function() {
+    	$('#id_start_date, #id_end_date').datetimepicker({
+			dateFormat: "yy-mm-dd"
+		});
+	});
+</script>
+{% endblock %}
+
+{% block instructorcontent %}
+	<h2 class="title">Create Quiz</h2>
+	<form action="" method="POST">
+		<div class="table">
+			{% csrf_token %}
+			{% for field in form %}
+			<div class="fieldWrapper">
+				<div class="fieldSylLeft">
+					{{ field.label_tag }}: 
+				</div>
+					<div class="fieldSylRight">
+						{{ field.errors }}
+						{{ field }}
+					</div>
+			</div>
+			{% endfor %}
+			<div class="submit">
+				<input type="submit" value="Submit">
+			</div>
+		</div>
+	</form>
+	
+	<div class="bottomPosts">
+		<h2 class="title">Quizzes</h2>
+		{% for quiz in quizzes %}
+			<div class="table">
+				<div class="actWrapper">
+					<span class="actLeft">{{ quiz.name }}</span>
+					<span class="actRight">
+						<button><a href="{{ classUrl }}instructor/quiz/questions/{{ quiz.id }}">Add Questions</a></button>  
+						<button><a href="{{ classUrl }}instructor/quiz/delete/{{ quiz.id }}">Remove</a></button>
+						<button><a href="{{ classUrl }}instructor/quiz/update/{{ quiz.id }}">Update</a></button>
+						<button><a href="{{ classUrl }}instructor/quiz/grades/{{ quiz.id }}">View Grades</a></button>
+					</span>
+				</div>
+				<div class="endAct"></div>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

@@ -17,6 +17,7 @@
 				{% if isCurrent %}
 					<li><a href="{{ classUrl }}announcements">Announcements</a></li>
 					<li><a href="{{ classUrl }}slides/">Lecture Slides</a></li>
+					<li><a href="{{ classUrl }}quiz/">View Quizzes</a></li>
 					<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
 				{% endif %}
 				<li><a href="{{ classUrl }}grades">View Grades</a></li>
@@ -36,6 +37,7 @@
 				{% if isCurrent %}
 					<li><a href="{{ classUrl }}announcements">Announcements</a></li>
 					<li><a href="{{ classUrl }}slides/">Lecture Slides</a></li>
+					<li><a href="{{ classUrl }}quiz/">View Quizzes</a></li>
 					<li><a href="{{ classUrl }}activities">Assignments and Activities</a></li>
 				{% endif %}
 				<li><a href="{{ classUrl }}grades">View Grades</a></li>
@@ -112,7 +114,7 @@
 						</div>
 						{% for event in upcomingActivity %}
 							<div class="sylWrapper">
-								<span class="sylLeft">{{ event.activity_name }}:</span>
+								<span class="sylLeft">{{ event.activity_name }}</span>
 								<span class="sylRight"> 
 									{{ event.due_date|timeuntil }}
 								</span>

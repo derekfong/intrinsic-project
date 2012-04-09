@@ -239,12 +239,18 @@ def calculator(request, department, class_number, year, semester, section):
 # calculate percent for all grades in assignment
 def percentAll(grades):
 	for grade in grades:
-		grade.percent = ((grade.mark / grade.aid.out_of) * 100)
+		if grade.aid.out_of > 0:
+			grade.percent = ((grade.mark / grade.aid.out_of) * 100)
+		else: 
+			grade.percent = 0
 	return grades
 
 # calculate percent for a grade
 def percentOne(grades):
-	grades.percent = ((grades.mark / grades.aid.out_of) * 100)
+	if grades.aid.out_of > 0:
+		grades.percent = ((grades.mark / grades.aid.out_of) * 100)
+	else:
+		grades.percent = 0
 	return grades
 
 # helper function to grab the correct content

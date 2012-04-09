@@ -6,4 +6,4 @@ class SubmissionForm(ModelForm):
 	class Meta:
 		model = Submission
 		exclude = ('aid', 'uid', 'submit_date', 'submit_number')
-
+	

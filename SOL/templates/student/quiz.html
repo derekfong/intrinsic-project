@@ -1,0 +1,38 @@
+{% extends 'student/index.html' %}
+
+{% block student %}
+	<h2 class="title">Quizzes</h2>
+	{% if quizzes.count > 0 %}
+		{% for quiz in quizzes %}
+			<div class="table">
+				<div class="actWrapper">
+					<span class="actLeft">Quiz Name:</span>
+					<span class="actRight">{{ quiz.name }}</span>
+				</div>
+				<div class="actWrapper">
+					<span class="actLeft">Start Date:</span>
+					<span class="actRight">{{ quiz.start_date }}</span>
+				</div>
+				<div class="actWrapper">
+					<span class="actLeft">End Date:</span>
+					<span class="actRight">{{ quiz.end_date }}</span>
+				</div>
+				{% if quiz.current %}
+					<button>
+						<a href="{{ quiz.id }}" title="{{ quiz.name }}">Take Quiz</a>
+					</button>
+				{% endif %}
+				{% if quiz.attempts > 0 %}
+					<button>
+						<a href="results/{{ quiz.id }}">View Results</a>
+					</button>
+				{% endif %}
+				<div class="endAct"></div>
+			</div>
+		{% endfor %}
+	{% else %}
+		<div class="table">
+			There are no quizzes for this class.
+		</div>
+	{% endif %}
+{% endblock %}

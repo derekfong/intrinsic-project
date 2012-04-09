@@ -1,0 +1,29 @@
+{% extends "instructor/index.html" %}
+{% block instructorcontent %}
+	<h2 class="title">Quiz Grades</h2>
+	<div class="table">
+		<h3 class="title">{{ quiz.name }} Results</h3>
+		<table border=0 width=700>
+			<tr>
+				<td><strong>Last Name</strong></td>
+				<td><strong>First Name</strong></td>
+				<td><strong>SFU ID</strong></td>
+				<td><strong>Result</strong></td>
+			</tr>
+			{% for student in students %}
+				<tr>
+					<td>{{ student.user.last_name }}</td>
+					<td>{{ student.user.first_name }}</td>
+					<td>{{ student.sfu_id }}</td>
+					<td>
+						{% if student.grade %}
+							{{ student.grade.result__max }}/{{ out_of }}
+						{% else %}
+							None
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "instructor/index.html" %}
+
+{% block instructorcontent %}
+	<h2 class="title">{{ quiz.name }} - Question Generation</h2>
+	<div class="table">
+		<form action="" method="post">
+			{% csrf_token %}
+			{{ formset.management_form }}
+		    {% for form in formset %}
+				<table class="quizQ">
+		       		{{ form.as_table }}
+				</table>
+				<br>
+		    {% endfor %}
+			<input type="submit" value="Add Question">
+		</form>
+	</div>
+{% endblock %}

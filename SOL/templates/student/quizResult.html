@@ -1,0 +1,56 @@
+{% extends "student/index.html" %}
+
+{% block student %}
+	<h2 class="title">{{ quiz.name }} Quiz Results</h2>
+	<div class="table">
+		<h3>Final mark: {{ finalMark }} / {{ questions.count }}</h3>
+		{% for question in questions %}
+			{% if question.result %}
+				<div class="rightAnswer">
+			{% else %}
+				<div class="wrongAnswer">
+			{% endif %}
+			<p class="qName">{{ question.question }}</p>
+			<ul>
+				{% if question.answer == 0 %}
+					<li><strong>{{ question.option1 }}</strong> - Correct Answer</li>
+				{% else %}
+					{% if question.guess == 0 %}
+						<li>{{ question.option1 }} - Your Answer</li>
+					{% else %}
+						<li>{{ question.option1 }}</li>
+					{% endif %}
+				{% endif %}
+				{% if question.answer == 1 %}
+					<li><strong>{{ question.option2 }}</strong> - Correct Answer</li>
+				{% else %}
+					{% if question.guess == 1 %}
+						<li>{{ question.option2 }} - Your Answer</li>
+					{% else %}
+						<li>{{ question.option2 }}</li>
+					{% endif %}
+				{% endif %}	
+				{% if question.answer == 2 %}
+						<li><strong>{{ question.option3 }}</strong> - Correct Answer</li>
+				{% else %}
+					{% if question.guess == 2 %}
+						<li>{{ question.option3 }} - Your Answer</li>
+					{% else %}
+						<li>{{ question.option3 }}</li>
+					{% endif %}
+				{% endif %}	
+				{% if question.answer == 3 %}
+						<li><strong>{{ question.option4 }}</strong> - Correct Answer</li>
+				{% else %}
+					{% if question.guess == 3 %}
+						<li>{{ question.option4 }} - Your Answer</li>
+					{% else %}
+						<li>{{ question.option4 }}</li>
+					{% endif %}
+				{% endif %}
+			</ul>
+			</div>
+		{% endfor %}
+		<button><a href=".">Back to Quizzes</a></button>
+	</div>
+{% endblock %}

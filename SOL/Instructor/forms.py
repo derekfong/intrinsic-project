@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting
+from Instructor.models import Announcement, Quiz, Activity, CourseContent, Slide, Greeting
 from Main.models import Setting
 from Gradebook.models import Grade
 import datetime
@@ -37,6 +37,19 @@ class CourseForm(ModelForm):
 	class Meta:
 		model = CourseContent
 		exclude = ('cid', 'was_updated', 'updated_on', 'created_on')
+
+class QuizForm(ModelForm):
+	class Meta:
+		model = Quiz
+		exclude = ('cid')
+	#def clean_name(self):
+	#	name = self.cleaned_data["name"]
+	#	try:
+	#		Quiz.objects.get(name=name)
+	#	except Quiz.DoesNotExist:
+	#		return name
+
+	#	raise forms.ValidationError("A quiz with that name already exists.")
 
 class GradeForm(ModelForm):
 	class Meta:
