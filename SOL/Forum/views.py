@@ -51,8 +51,12 @@ def topic_display(request, department, class_number, year, semester, section):
 
 			return HttpResponseRedirect(classUrl+"forum/")
 
+	content = getContent(current_course, user)
+	content['topics'] = topics
+	content['classUrl'] = classUrl
+	content['instAccess'] = instAccess(instructors, tas, user)
 
-	return render_to_response("forum/topic_display.html", {'topics': topics, 'classUrl': classUrl, 'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
+	return render_to_response("forum/topic_display.html", content, context_instance=RequestContext(request))
 
 
 # list out all messages for that course
@@ -90,7 +94,12 @@ def message_display(request, department, class_number, year, semester, section, 
 	instructors = getInsts(current_course.cid)
 	tas = getTas(current_course.cid)	
 
-	return render_to_response("forum/message_display.html", {'messages': msgs, 'topic': current_topic, 'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
+	content = getContent(current_course, user)
+	content['messages'] = msgs
+	content['topic'] = current_topic
+	content['instAccess'] = instAccess(instructors, tas, user)
+
+	return render_to_response("forum/message_display.html", content, context_instance=RequestContext(request))
 
 
 def remove_topic(request, department, class_number, year, semester, section, topic_id):
@@ -119,3 +128,5 @@ def remove_post(request, department, class_number, year, semester, section, topi
 	classUrl = getClassUrl(current_course)
 
 	return HttpResponseRedirect(classUrl+"forum/" + topic_id)
+
+
