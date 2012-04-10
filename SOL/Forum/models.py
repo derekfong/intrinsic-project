@@ -12,6 +12,8 @@ class Overview(models.Model):
 class Topics(models.Model):
 	topic_name = models.CharField(max_length = 125)
 	course = models.ForeignKey(Overview)
+	# if show is false, means it is deleted
+	# show = models.BooleanField(default = True) 
 
 	def __unicode__(self):
 		return self.topic_name
@@ -22,6 +24,10 @@ class Messages(models.Model):
 	# need to have a post number for that course ??
 	creation_date = models.DateField(auto_now_add = True)
 	message = models.TextField()		# the actual message content itself
+
+	# if show is false, means it is deleted
+	# show = models.BooleanField(default = True) 
+	
 	
 	def __unicode__(self):
 		return self.message

@@ -17,6 +17,20 @@ def topic_display(request, course_id):
 
 	# list all topics of a course
 	topics = Topics.objects.filter(course = course_id)
+	
+	course = Overview.objects.get(id = course_id)
+
+	# bottom of page, user can post a new topic AND a new corresponding message
+	# post given: title, user, and message
+	if request.method == 'POST':
+		user_topic = Topics(topic_name = request.POST['title'], course = course)
+		user_topic.save()
+
+		new_topic = Topics.objects.get(topic_name = request.POST['title'], course=course, id=user_topic.id)
+
+		# use new topic id that was just created
+		user_post = Messages(topic = new_topic, user = request.POST['user'], message = request.POST['message'])
+		user_post.save()
 
 	return render_to_response("topic_display.html", {'course': course_id, 'topics': topics}, context_instance=RequestContext(request))
 

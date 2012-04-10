@@ -8,4 +8,12 @@
 	<br /><a href="/{{ course }}/{{ topic.id }}/">{{ topic.topic_name }}</a>
 {% endfor %}
 
+<form action ="" method="POST">
+{% csrf_token %}
+	Topic Title: <input type="text" name="title" />
+<br />User: <input type="text" name="user" />
+<br />Message: <textarea row="4" col="240" name="message">Msg here</textarea>
+<br /><input type="submit" value="Submit" />
+</form>
+
 {% endblock %}
