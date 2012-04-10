@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Current Topics</h1>
+
+<p>
+{% for topic in topics %}
+	<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
+	{% for msg in topic.messages_set.all %}
+	<br />Posted by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
+	<br />
+	{% endfor %}
+{% endfor %}</p>
+
+<form action ="" method="POST">
+{% csrf_token %}
+	Topic Title: <input type="text" name="title" />
+<br />Message: <textarea row="4" col="240" name="message">Msg here</textarea>
+<br /><input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
