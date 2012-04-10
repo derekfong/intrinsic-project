@@ -133,16 +133,19 @@ def activities_submit(request, department, class_number, year, semester, section
 				file_types_allowed = [activity.submission_file_type,]
 				isProperFileType = checkFileType(uploaded_file, file_types_allowed)
 				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
-				if isProperFileType and isProperFileSize:	
-					num_of_submits = Submission.objects.filter(aid=aid, uid=user.userprofile.id).count()	
-					submit_activity = Submission(aid=activity, uid=user.userprofile, submit_number=num_of_submits+1)
-					submitted_file = request.FILES['file_path']
-					submit_activity.file_path.save(submitted_file.name, submitted_file)
-					message = 'You have successfully submitted your file'
-				elif not isProperFileType:
-					error_message = "Error: File type is incorrect - must be "+ activity.submission_file_type
-				elif not isProperFileSize:
-					error_message = "Error: File size exceeds the max of 8MB"
+				if 'No Submission' == request.POST['submission_file_type']:
+					error_message = "No submission necessary for "+ activity.activity_name
+				else:
+					if isProperFileType and isProperFileSize:	
+						num_of_submits = Submission.objects.filter(aid=aid, uid=user.userprofile.id).count()	
+						submit_activity = Submission(aid=activity, uid=user.userprofile, submit_number=num_of_submits+1)
+						submitted_file = request.FILES['file_path']
+						submit_activity.file_path.save(submitted_file.name, submitted_file)
+						message = 'You have successfully submitted your file'
+					elif not isProperFileType:
+						error_message = "Error: File type is incorrect - must be "+ activity.submission_file_type
+					elif not isProperFileSize:
+						error_message = "Error: File size exceeds the max of 8MB"
 		else:
 			form = SubmissionForm()
 	else:

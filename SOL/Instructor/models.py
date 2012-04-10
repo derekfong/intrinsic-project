@@ -86,7 +86,8 @@ class Activity(models.Model):
 	)
 	
 	FILE_TYPES = (
-		(u'.pdf', u'PDF'),
+		(u'No Submission', u'No Submission'),
+		(u'.pdf', u'Portable Document Format (.pdf)'),
 		(u'.doc', u'Word 2003 Document (.doc)'),
 		(u'.docx', u'Word 2007,2010 Document (.docx)'),
 		(u'.txt', u'Text Document (.txt)'),
