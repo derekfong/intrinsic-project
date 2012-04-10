@@ -1,9 +1,6 @@
 {% extends "student/index.html" %}
 
 {% block head %}
-	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 		    $("#progressbar").progressbar({ value: {{ total.value|floatformat:2 }} });
@@ -15,78 +12,80 @@
 	<h2 class="title">View Grades</h2>
 	{% if activities.count > 0 %}
 		<div class="table">
-			<table border=0 class="grades" align="center">
-				<tr>
-					{% if flavour == "full" %}
-						<td width=200>
-							<strong>Activity Name </strong>
-						</td>
-						<td width=225>
-							<strong>Due Date</strong>
-						</td>
-						<td width=225>
-							<strong>Status</strong>
-						</td>
-						<td>
-							<strong>Grade</strong>
-						</td>
-					{% else %}
-						<td width=275>
-							<strong>Name</strong>
-						</td>
-						<td width=250>
-							<strong>Due Date</strong>
-						</td>
-						<td width=250>
-							<strong>Status</strong>
-						</td>
-					{% endif %}
-				</tr>
-			{% for activity in activities %}
+			<div class="grades">
+				<table>
 					<tr>
-						<td>
-							<a href="{{ activity.aid }}">{{ activity.activity_name }}</a>
-						</td>
-						<td>
-							{% if flavour == "mobile" %}
-								{{ activity.due_date|date:'Y-m-d' }}
-							{% else %}
-								{{ activity.due_date }}
-							{% endif %}
-						</td>
-						<td>
-							{% if flavour == "mobile" %}
-								{% if activity.status == 2 %}
-									Released
-								{% else %}
-									Not Released
-								{% endif %}
-							{% else %}
-								{% if activity.status == 2 %}
-									Grades Released
-								{% else %}
-									Grades not yet released
-								{% endif %}
-							{% endif %}
-						</td>
 						{% if flavour == "full" %}
 							<td>
-								{% if activity.status == 2 %}
-									{{ activity.mark }}/{{ activity.out_of }}
-								{% else %}
-									N/A
-								{% endif %}
+								<strong>Activity Name </strong>
+							</td>
+							<td>
+								<strong>Due Date</strong>
+							</td>
+							<td>
+								<strong>Status</strong>
+							</td>
+							<td>
+								<strong>Grade</strong>
+							</td>
+						{% else %}
+							<td>
+								<strong>Name</strong>
+							</td>
+							<td>
+								<strong>Due Date</strong>
+							</td>
+							<td>
+								<strong>Status</strong>
 							</td>
 						{% endif %}
 					</tr>
-			{% endfor %}
-			</table>
+				{% for activity in activities %}
+						<tr>
+							<td>
+								<a href="{{ activity.aid }}">{{ activity.activity_name }}</a>
+							</td>
+							<td>
+								{% if flavour == "mobile" %}
+									{{ activity.due_date|date:'Y-m-d' }}
+								{% else %}
+									{{ activity.due_date }}
+								{% endif %}
+							</td>
+							<td>
+								{% if flavour == "mobile" %}
+									{% if activity.status == 2 %}
+										Released
+									{% else %}
+										Not Released
+									{% endif %}
+								{% else %}
+									{% if activity.status == 2 %}
+										Grades Released
+									{% else %}
+										Grades not yet released
+									{% endif %}
+								{% endif %}
+							</td>
+							{% if flavour == "full" %}
+								<td>
+									{% if activity.status == 2 %}
+										{{ activity.mark }}/{{ activity.out_of }}
+									{% else %}
+										N/A
+									{% endif %}
+								</td>
+							{% endif %}
+						</tr>
+				{% endfor %}
+				</table>
+			</div>
 		</div>
 		<h2 class="title">Current Progress</h2>
 		<div class="table">
 				<div id="progressbar" style="width: 90%; float:left; margin-top: 10px"></div>
 				<div class="progress">{{ total.value|floatformat:2 }}%</div>
-				<p class="completed"><button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-al"><a href="calculator"><span class="ui-button-text">Grade Calculator</span></a></button></p>
+				<p class="completed"><span class="linkButton"><a href="calculator">Grade Calculator</a></span></p>
 				<div class="endAct"></div>
 		</div>
 	{% else %}

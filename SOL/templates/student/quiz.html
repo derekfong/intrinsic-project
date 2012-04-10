@@ -18,14 +18,14 @@
 					<span class="actRight">{{ quiz.end_date }}</span>
 				</div>
 				{% if quiz.current %}
-					<button>
+					<span class="linkButton">
 						<a href="{{ quiz.id }}" title="{{ quiz.name }}">Take Quiz</a>
-					</button>
+					</span>
 				{% endif %}
 				{% if quiz.attempts > 0 %}
-					<button>
+					<span class="linkButton">
 						<a href="results/{{ quiz.id }}">View Results</a>
-					</button>
+					</span>
 				{% endif %}
 				<div class="endAct"></div>
 			</div>

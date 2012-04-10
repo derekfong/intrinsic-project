@@ -283,8 +283,6 @@ input.sideFieldButton
 	width: 90px;
 } 
 
-
-
 #sidebar_cal_table {
 	table-layout: fixed;
 	font-size: 8pt;
@@ -345,9 +343,6 @@ div.sidebar_event {
 	width: 13px;
 	height: 12px;
 }
-
-
-
 
 .quizQ input
 {

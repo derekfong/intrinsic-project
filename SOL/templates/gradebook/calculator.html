@@ -1,9 +1,6 @@
 {% extends "student/index.html" %}
 
 {% block head %}
-	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 		    $("#progressbar").progressbar({ value: {{ total.value|floatformat:2 }} });
@@ -13,63 +10,65 @@
 
 {% block student %}
 	<h2 class="title">Grade Calculator</h2>
-	<p class="back"><button><a href="..">Back to Assignments</a></button></p>
+	<p class="back"><span class="linkButton"><a href="..">Back to Assignments</a></span></p>
 	<div class="table">
-		<table border=0 class="calculator">
-			{% if flavour == "full" %}
-				<tr>
-					<td width=200>
-						<strong>Assignment Name</strong>
-					</td>
-					<td width=200>
-						<strong>Worth</strong>
-					</td>
-					<td width=200>
-						<strong>Mark</strong>
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td width=275>
-						<strong>Name</strong>
-					</td>
-					<td width=250>
-						<strong>Worth</strong>
-					</td>
-					<td width=250>
-						<strong>Mark</strong>
-					</td>
-				</tr>
-			{% endif %}
+		<div class="grades">
 			<form action="" method="POST">
-			{% csrf_token %}
-				{% for activity in activities %}
+			<table class="calculator">
+				{% if flavour == "full" %}
 					<tr>
 						<td>
-							{{ activity.activity_name }}
+							<strong>Assignment Name</strong>
 						</td>
 						<td>
-							{{ activity.worth }}%
+							<strong>Worth</strong>
 						</td>
 						<td>
-							<div class="gradeMark">
-								{% if activity.mark %}
-									<input type="text" size="4" name="{{ activity.aid }}" value="{{ activity.mark }}" class="grade"> / {{ activity.out_of }}
-								{% else %}
-									<input type="text" size="4" name="{{ activity.aid }}" value="0" class="grade"> / {{ activity.out_of }}
-								{% endif %}
-							</div>
+							<strong>Mark</strong>
 						</td>
 					</tr>
-				{% endfor %}
-				<tr>
-					<td></td><td></td>
-					<td>
-						<input type="submit" value="Update Grades" />
-					</td>
-				</tr>
+				{% else %}
+					<tr>
+						<td>
+							<strong>Name</strong>
+						</td>
+						<td>
+							<strong>Worth</strong>
+						</td>
+						<td>
+							<strong>Mark</strong>
+						</td>
+					</tr>
+				{% endif %}
+				{% csrf_token %}
+					{% for activity in activities %}
+						<tr>
+							<td>
+								{{ activity.activity_name }}
+							</td>
+							<td>
+								{{ activity.worth }}%
+							</td>
+							<td>
+								<div class="gradeMark">
+									{% if activity.mark %}
+										<input type="text" size="4" name="{{ activity.aid }}" value="{{ activity.mark }}" class="grade"> / {{ activity.out_of }}
+									{% else %}
+										<input type="text" size="4" name="{{ activity.aid }}" value="0" class="grade"> / {{ activity.out_of }}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+					<tr>
+						<td></td><td></td>
+						<td>
+							<input type="submit" value="Update Grades" />
+						</td>
+					</tr>
+			</table>
 			</form>
-		</table>
+		</div>
 		<div class="endAct"></div>
 	</div>
 	<h2 class="title">Calculated Progress</h2>

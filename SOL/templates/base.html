@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<link rel='http://fonts.googleapis.com/css?family=Gudea:400,700,400italic' rel="stylesheet" type="text/css">
 	<title>SFU Synergy Online Learning</title>
+	<meta charset='utf-8'> 
 	{% if flavour == "full" %}
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css">
 		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fields.css">
@@ -17,8 +17,9 @@
 	<script>
 		$(function() {
 			$( "input:submit, button", "#container" ).button();
+			$( "a", ".linkButton" ).button();
 		});
-		</script>
+	</script>
 	{% block head %}{% endblock %}
 </head>
 <body>

@@ -1,7 +1,7 @@
 	{% if form.errors %}
 		<p class="error">Oops, invalid username or password</p>
 	{% endif %}
-	<div clas="login">
+	<div class="login">
 		<div class="table">			
 			<form action="/accounts/login/" method="POST">
 				{% csrf_token %}

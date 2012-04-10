@@ -44,7 +44,7 @@
 			</ul>
 			{% if accessToInst %}
 				<div class="changeView">
-					<button><a href="{{ classUrl }}instructor">Go to Instructor View</a></button>
+					<span class="linkButton"><a href="{{ classUrl }}instructor">Go to Instructor View</a></span>
 				</div>
 			{% endif %}
 			{% if isCurrent %}
@@ -65,9 +65,9 @@
 						{% endfor %}
 					
 						<div class="announceLink">
-							<button><a href="{{ classUrl }}announcements">View All</a></button>
+							<span class="linkButton"><a href="{{ classUrl }}announcements">View All</a></span>
 							{% if accessToInst %}
-								<button><a href="{{classUrl }}instructor/announcement">Edit All</a></button>
+								<span class="linkButton"><a href="{{classUrl }}instructor/announcement">Edit All</a></span>
 							{% endif %}
 						</div>
 					{% else %}
@@ -100,7 +100,7 @@
 					<h3 class="title">Welcome</h3>
 					<div class="intro">{{ greeting|linebreaksbr }}</div>
 					{% if accessToInst %}
-						<p><button><a href="instructor/edit">Edit Greeting</a></button></p>
+						<p class="linkButton"><a href="instructor/edit">Edit Greeting</a></p>
 					{% endif %}
 				</div>
 				<h2 class="title">Upcoming Events</h2>

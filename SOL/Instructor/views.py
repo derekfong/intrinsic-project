@@ -32,13 +32,15 @@ def index(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/index.html', content,
 		context_instance=RequestContext(request))
 
+#Lets the instructor add a greeting for the main class view
 def greeting(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 	
 	message = ''
 	classUrl = getClassUrl(c)
-	# note that you cannot delete a syllabus once created
+	
+	#Updates the greeting
 	if request.method == 'POST':
 		greeting = Greeting(cid=c)
 		form = GreetingsForm(request.POST, instance=greeting)
@@ -50,12 +52,14 @@ def greeting(request, department, class_number, year, semester, section):
 				form.save()
 			message = 'You have successfully updated the course greeting.'
 	else:
+		#Initializes the form if a custom message exists, otherwise uses generic message.
 		try:
 			greet = Greeting.objects.get(cid=c.cid)
 			form = GreetingsForm(initial={'message': greet.message,})
 		except Greeting.DoesNotExist:
 			greet = "I would like to welcome you all to "+c.department+" "+c.class_number+".  I look forward to this semester and I hope you all have fun and enjoy."
 			form = GreetingsForm(initial={'message': greet,})
+	
 	content = getContent(c, user)
 	content['form'] = form
 	content['classUrl'] = classUrl
@@ -71,7 +75,7 @@ def syllabus(request, department, class_number, year, semester, section):
 	message = ''
 	classUrl = getClassUrl(c)
 
-	# form that has defined fields for prof to fill out to create a syllabus
+	#Form that has defined fields for prof to fill out to create a syllabus
 	if request.method == 'POST':
 		content = CourseContent(cid=c, created_on=datetime.datetime.now(), was_updated=0, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=content)
@@ -79,6 +83,7 @@ def syllabus(request, department, class_number, year, semester, section):
 			form.save()
 			message = 'You have successfully created a syllabus'
 	else:
+		#If form exists, redirect to update page, otherwise send blank form
 		try:
 			course = CourseContent.objects.get(cid=c.cid)
 			return HttpResponseRedirect(classUrl+"instructor/syllabus/update/%s" %course.id)
@@ -91,7 +96,7 @@ def syllabus(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
-#View to update the graded activity in the Instructor App
+#View to update the graded syllabus in the Instructor App
 def updateSyllabus(request, department, class_number, year, semester, section, sid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
@@ -99,7 +104,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	
 	message = ''
 	classUrl = getClassUrl(c)
-	# note that you cannot delete a syllabus once created
+	#Updates the syllabus
 	if request.method == 'POST':
 		course = CourseContent(id=sid, cid=c, created_on=s.created_on, was_updated=1, updated_on=datetime.datetime.now() )
 		form = CourseForm(request.POST, instance=course)
@@ -107,6 +112,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 			form.save()
 			message = 'You have successfully updated the syllabus'
 	else:
+		#Initializes the form with existing syllabus information
 		course = CourseContent.objects.get(cid=c.cid)
 		form = CourseForm(initial={'officeHrs': course.officeHrs, 'officeLocation': course.officeLocation, 'phoneNumber': course.phoneNumber, 'TaOfficeLocation': course.TaOfficeLocation, 'TaOfficeHrs': course.TaOfficeHrs, 'lectTime': course.lectTime, 'prereq': course.prereq, 'books': course.books, 'topics': course.topics, 'markingScheme': course.markingScheme, 'academicHonesty': course.academicHonesty, 'additionalInfo': course.additionalInfo, 'file_path': course.file_path,})
 	
@@ -117,13 +123,14 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	return render_to_response('instructor/syllabus.html', content, 
 		context_instance=RequestContext(request))
 
+#Allows the instructor to add lecture slides
 def slides(request, department, class_number, year, semester, section):
-	# slides are just lecture notes
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 		
 	slides = Slide.objects.filter(cid=c.cid)
 	
+	#Uploads the slide file and adds to database
 	if request.method == 'POST':
 		slide = Slide(cid=c, uploaded_on=datetime.datetime.now())
 		form = SlideForm(request.POST, request.FILES, instance=slide)
@@ -140,14 +147,18 @@ def slides(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
 		
+#Updates the slides
 def updateSlides(request, department, class_number, year, semester, section, slid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
+	
+	#Makes sure the slide exists, otherwise return 404
 	s = get_object_or_404(Slide, pk=slid)
 
 	slides = Slide.objects.filter(cid=c.cid)
 	
 	classUrl = getClassUrl(c)
+	#Updates the slide file and in the database
 	if request.method == 'POST':
 		slide = Slide(cid=c, uploaded_on=datetime.datetime.now(), id=slid)
 		form = SlideForm(request.POST, request.FILES, instance=slide)
@@ -156,6 +167,7 @@ def updateSlides(request, department, class_number, year, semester, section, sli
 			url = classUrl +'instructor/slides'
 			return HttpResponseRedirect(url)
 	else:
+		#Initializes the form
 		form = SlideForm(initial={'title': s.title, 'file_path': s.file_path})
 	
 	content = getContent(c, user)
@@ -164,11 +176,13 @@ def updateSlides(request, department, class_number, year, semester, section, sli
 	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
 		
+#Deletes the slide from the database
 def removeSlides(request, department, class_number, year, semester, section, slid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
-	s = get_object_or_404(Slide, pk=slid)
 	
+	#Makes sure the slide exists, otherwise return 404
+	s = get_object_or_404(Slide, pk=slid)
 	accessToInst = instAccess(getInsts(c.cid), getTas(c.cid), user)
 
 	classUrl = getClassUrl(c)
@@ -184,22 +198,21 @@ def removeSlides(request, department, class_number, year, semester, section, sli
 			
 #View to generate the page for the graded activities view of Instructor App
 def activity(request, department, class_number, year, semester, section):
-	# activity is the assn, exam, midterm, etc of a course
-	# make sure activity corresponds to correct course
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
-		
+	
+	#Gets the list of students for want to receive email notifications for graded activities
 	emailStudents = UserProfile.objects.filter(classlist__cid=c.cid, setting__email_activity=1)
+
 	activities = Activity.objects.filter(cid=c.cid).order_by('due_date')
 	
 	if request.method == 'POST':
 		activity = Activity(cid=c)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
-			#commit to database
 			form.save()
 			
-			#create a calendar event for each activity created
+			#Create a calendar event for each activity created
 			label = getClassLabel(user, c.cid, department, class_number)
 			event_name = request.POST['activity_name']
 			date = request.POST['due_date']
@@ -207,9 +220,9 @@ def activity(request, department, class_number, year, semester, section):
 			event = Event(uid=request.user.userprofile, cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
 			event.save()
 			
-			#if grade has been released
+			#If grade has been released by instructor/TA
 			if form.cleaned_data['status'] == 2:
-				#generate+send email announcement
+				#Generate+send email announcement
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
@@ -220,7 +233,8 @@ def activity(request, department, class_number, year, semester, section):
 				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 				msg.attach_alternative(html_content, "text/html")
 				msg.send()
-				#created announcement for it
+				
+				#Created announcement for it
 				title = 'Grade released for '+form.cleaned_data['activity_name']
 				content = "A new grade was released for "+form.cleaned_data['activity_name']
 				act = Announcement(uid=user.userprofile, title=title, content=content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
@@ -242,6 +256,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 	c = getClassObject(department, class_number, year, semester, section, user)
 	a = get_object_or_404(Activity, pk=aid)
 
+	#Gets all students who wish to receive email when assignment is released
 	emailStudents = UserProfile.objects.filter(classlist__cid=c.cid, setting__email_activity=1)
 	activities = Activity.objects.filter(cid=c.cid)
 	
@@ -250,6 +265,9 @@ def updateActivity(request, department, class_number, year, semester, section, a
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		
 		if form.is_valid():
+			form.save()
+			
+			
 			#Update the calendar event for the activity
 			event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
 			event.date = request.POST['due_date']
@@ -257,10 +275,8 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			event.name = request.POST['activity_name']
 			event.save()
 			
-			#commit to database
-			form.save()
 			if form.cleaned_data['status'] == 2:
-				#generate+send email announcement
+				#Generate+send email announcement
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
 				to = []
@@ -271,7 +287,8 @@ def updateActivity(request, department, class_number, year, semester, section, a
 				msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 				msg.attach_alternative(html_content, "text/html")
 				msg.send()
-				#created announcement for it
+				
+				#Created announcement for it
 				title = 'Grade released for '+form.cleaned_data['activity_name']
 				content = "A new grade was released for "+form.cleaned_data['activity_name']
 				act = Announcement(uid=user.userprofile, title=title, content=content, date_posted=datetime.datetime.now(), cid=c, send_email=0, was_updated=0, updated_by=user.userprofile, updated_on=datetime.datetime.now())
@@ -360,6 +377,7 @@ def announcement(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
 
+	#Gets all students who wish to receive email when assignment is released
 	emailStudents = UserProfile.objects.filter(classlist__cid=c.cid, setting__email_announcement=1)
 	announcements = Announcement.objects.filter(cid=c.cid).order_by('-date_posted')
 
@@ -415,6 +433,7 @@ def updateAnnouncement(request, department, class_number, year, semester, sectio
 	return render_to_response('instructor/announcement.html', content, 
 		context_instance=RequestContext(request))
 
+#Remove announcement
 def removeAnnouncement(request, department, class_number, year, semester, section, anid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
@@ -434,11 +453,12 @@ def removeAnnouncement(request, department, class_number, year, semester, sectio
 		return render_to_response('instructor/announcement.html', content, 
 			context_instance=RequestContext(request))
 		
+#Display class roster
 def roster(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)	
 
-	#get all students in the class
+	#Get all students in the class
 	students = getStudents(c.cid)
 	
 	content = getContent(c, user)
@@ -446,6 +466,7 @@ def roster(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/roster.html', content, 
 		context_instance=RequestContext(request))
 
+#Create and get grades for quizzes
 def quizCreate(request, department, class_number, year, semester, section):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
@@ -456,7 +477,6 @@ def quizCreate(request, department, class_number, year, semester, section):
 		quiz = Quiz(cid=c)
 		form = QuizForm(request.POST, instance=quiz)
 		if form.is_valid():
-			#Activity(cid=c, activity_name=form.cleaned_data['name'], out_of=0, worth=0, due_date=form.cleaned_data['end_date'], status=2).save()
 			form.save()
 			url = getClassUrl(c) + 'instructor/quiz/create/'
 			return HttpResponseRedirect("")
@@ -470,6 +490,7 @@ def quizCreate(request, department, class_number, year, semester, section):
 	return render_to_response('instructor/quizCreate.html', content, 
 		context_instance=RequestContext(request))
 
+#Remove quizzes
 def quizRemove(request, department, class_number, year, semester, section, qid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
@@ -479,7 +500,7 @@ def quizRemove(request, department, class_number, year, semester, section, qid):
 
 	classUrl = getClassUrl(c)
 	if accessToInst:
-		#Activity.objects.get(cid=c.cid, activity_name=q.name).delete()
+		#Delete quiz from database
 		quiz = Quiz.objects.get(id=qid)
 		quiz.delete()
 		url = classUrl + 'instructor/quiz/create'
@@ -499,7 +520,6 @@ def quizUpdate(request, department, class_number, year, semester, section, qid):
 	if request.method == 'POST':
 		form = QuizForm(request.POST)
 		if form.is_valid():
-			#Activity.objects.filter(cid=c.cid, activity_name=q.name).update(activity_name=form.cleaned_data['name'], due_date=form.cleaned_data['end_date'])
 			Quiz.objects.filter(id=q.id).update(name=form.cleaned_data["name"], start_date=form.cleaned_data["start_date"], end_date=form.cleaned_data["end_date"])
 			url = getClassUrl(c) + 'instructor/quiz/create/'
 			return HttpResponseRedirect("")
@@ -518,18 +538,21 @@ def quizQuestions(request, department, class_number, year, semester, section, qi
 	c = getClassObject(department, class_number, year, semester, section, user)
 	q = get_object_or_404(Quiz, pk=qid)
 	
+	#Create a formset of forms relating to the QuizQuestion model.
 	QuizFormSet = modelformset_factory(QuizQuestion, exclude=('qid'), extra=1)
+	#Restrict quizzes displayed to only those for that quiz
 	query = QuizQuestion.objects.filter(qid=qid)
-	if request.method == "POST":		
+	if request.method == "POST":
+		#Copy POST data and send to formset		
 		data = request.POST.copy()
 		formset = QuizFormSet(data, queryset=query)
+		
 		if formset.is_valid():
+			#Populate data for each form that isn't entered by the student
 			for form in formset:
 				quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
 				form.instance = quiz
 			formset.save()
-			#numQuestions = QuizQuestion.objects.filter(qid=q).count()
-			#Activity.objects.filter(cid=c.cid, activity_name=q.name).update(out_of=numQuestions)
 			return HttpResponseRedirect("")
 	else: 
 		formset = QuizFormSet(queryset=query)
@@ -540,6 +563,7 @@ def quizQuestions(request, department, class_number, year, semester, section, qi
 	return render_to_response('instructor/quizOptions.html', content,
 		context_instance=RequestContext(request))
 
+#Gets the grades for each student who has taken a certain quiz
 def quizGrades(request, department, class_number, year, semester, section, qid):
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
@@ -548,7 +572,9 @@ def quizGrades(request, department, class_number, year, semester, section, qid):
 	students = getStudents(c.cid)
 	out_of = QuizQuestion.objects.filter(qid=qid).count()
 	for student in students:
+		#Gets all the quiz attempts for a certain quiz and a certain student
 		gradesAgg = QuizAttempt.objects.filter(qid=qid, uid=student.id)
+		#If the student has taken the quiz, return the best result
 		if gradesAgg.count() > 0:
 			student.grade = gradesAgg.aggregate(Max('result'))
 		else: 
@@ -768,9 +794,8 @@ def grades_input(request, department, class_number, year, semester, section, aid
 	return render_to_response('instructor/onlineGrades.html', content, 
 		context_instance=RequestContext(request))
 
-def getContent(c, user):
-	# actually get content for the page depending on your list of classes, etc...
-	
+#Gets the generic contexts for all instructor views
+def getContent(c, user):	
 	instructors = getInsts(c.cid)
 	tas = getTas(c.cid)
 	latestAnnouncements = getAnnouncements(c.cid)

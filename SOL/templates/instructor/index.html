@@ -30,7 +30,7 @@
 				<li><a href="{{ classUrl }}instructor/grades">Input/Modify Student Grades</a></li>
 			</ul>
 			<div class="changeView">
-				<button><a href="{{ classUrl }}">Go to Student View</a></button>
+				<span class="linkButton"><a href="{{ classUrl }}">Go to Student View</a></span>
 			</div>
 			{% if flavour == "full" %}
 				<h2 class="announce">Announcements</h2>
@@ -49,9 +49,9 @@
 					{% endfor %}
 				
 					<div class="announceLink">
-						<button><a href="{{ classUrl }}announcements">View All</a></button>
+						<span class="linkButton"><a href="{{ classUrl }}announcements">View All</a></span>
 						{% if accessToInst %}
-							<button><a href="{{classUrl }}instructor/announcement">Edit All</a></button>
+							<span class="linkButton"><a href="{{classUrl }}instructor/announcement">Edit All</a></span>
 						{% endif %}
 					</div>
 				{% else %}
@@ -76,29 +76,33 @@
 		{% block instructorcontent %}
 			<h2 class="title">Welcome to the {{ class.department }} {{ class.class_number }} Instructor Page</h2>
 			<div class="table">
-				<p class="instructor">
+				<div class="instructor">
 					From the instructor home page, you have the ability to fully manage all related course content.  By navigating through the links on the left, you will be able to do the following:
 					<ul>
 						<li>View and contact all students enrolled in the class.</li>
-						<li>Create and maintain a course syllabus by filling out a simple form.</li>
+						<li>Create and maintain a course syllabus by filling out a simple form.
 							<ul>
 								<li>Alternatively, you can provide students with a custom made document.</li>
 							</ul>
+						</li>
 						<li>Add course lecture slides for students to view.</li>
-						<li>Publish and edit course announcements.</li>
+						<li>Publish and edit course announcements.
 							<ul>
 								<li><strong>Note:</strong> These announcements will be emailed out to students.</li>
 							</ul>
-						<li>Add and edit graded activities</li>
+						</li>
+						<li>Add and edit graded activities
 							<ul>
 								<li><strong>Note:</strong> When marks are released, an email will be sent out to students.</li>
 							</ul>
-						<li>Input and edit students grades.</li>
+						</li>
+						<li>Input and edit students grades.
 							<ul>
 								<li>This can be done manually by inputting them into a simple form, or by downloading, completing, and uploading a Microsoft Excel file.</li>
 							</ul>
+						</li>
 					</ul>
-				</p>
+				</div>
 			</div>
 		{% endblock %}
 	{% else %}

@@ -26,7 +26,7 @@
 
 {% block content %}
 	<h2 class="title">{{ selected_day.month }} {{ selected_day.day }}, {{ selected_day.year }} - Events</h2>
-	<p class="back"><button><a href="/calendar">Back to Calendar</a></button></p>
+	<p class="back"><span class="linkButton"><a href="/calendar">Back to Calendar</a></span></p>
 	
 	{% for event in events %}
 		<div class="table">
@@ -41,7 +41,7 @@
 				{% endif %}
 				<span class="postLinks">
 					{% if not event.cid %}
-						<button><a href="{{ event.eid }}">Edit</a></button> <button><a href="{{ event.eid }}/remove">Remove</a></button>
+						<span class="linkButton"><a href="{{ event.eid }}">Edit</a></span> <span class="linkButton"><a href="{{ event.eid }}/remove">Remove</a></span>
 					{% endif %}
 				</span>
 			</div>

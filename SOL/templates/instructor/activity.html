@@ -1,11 +1,7 @@
 {% extends "instructor/index.html" %}
 {% block head %}
-	<link type="text/css" href="{{ STATIC_URL }}css/blitzer/jquery-ui-1.8.18.custom.css" rel="Stylesheet" /> 
 	<link type="text/css" href="{{ STATIC_URL }}css/timepicker.css" rel="Stylesheet" />
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
-		
 {% endblock %}
 {% block instructorcontent %}
 	<script type="text/javascript">
@@ -105,9 +101,9 @@
 					<span class="actLeft">Actions: </span>
 					<span class="actRight">
 						<span class="postLinks">
-							<button><a href="{{ activity.aid }}">Edit</a></button> 
-							<button><a href="{{ activity.aid }}/remove">Remove</a></button> 
-							<button><a href="{{ activity.aid }}/submissions">Download Submissions</a></button> 
+							<span class="linkButton"><a href="{{ activity.aid }}">Edit</a></span> 
+							<span class="linkButton"><a href="{{ activity.aid }}/remove">Remove</a></span> 
+							<span class="linkButton"><a href="{{ activity.aid }}/submissions">Download Submissions</a></span> 
 						</span>
 					</span>
 				</div>

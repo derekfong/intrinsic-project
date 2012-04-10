@@ -247,6 +247,17 @@ h3.accordionTitle
 	font-weight: bold;
 }
 
+.linkButton a
+{
+	font-size: 11px;
+}
 
+.grades table, tr, td
+{
+	border: 0px;
+}
 
-
+.grades table
+{
+	width: 700px;
+}
