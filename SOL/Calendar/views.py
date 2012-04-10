@@ -47,8 +47,8 @@ def index(request):
 				all_weeks = getCalendar(cal, year, month['number'])
 			# Otherwise, return the current month and associated year
 			else:
-				year = int(request.POST['year'])
-				month = { 'name': month_name[request.POST['month']], 'number': int(request.POST['month']) }
+				year = int(form.cleaned_data['year'])
+				month = { 'name': month_name[form.cleaned_data['month']], 'number': int(form.cleaned_data['month']) }
 			all_weeks = getCalendar(cal, year, month['number'])
 			days_with_events = getEvents(request.user, class_list, year, month['number'])
 	else:
@@ -94,25 +94,25 @@ def event(request):
 	if request.method == 'POST':
 		form = EventForm(request.POST, uid=request.user.id)
 		if 'update_label' in request.POST:
-			if request.POST['lid']:
-				label = Label.objects.get(lid=request.POST['lid'])
+			if form.cleaned_data['lid']:
+				label = Label.objects.get(lid=form.cleaned_data['lid'])
 				# Check to see if the label is associated to a class
 				if label.cid:
 					form = EventForm(uid=request.user.id)
 					label_error = 'You cannot edit that course label'
 				else:
-					return HttpResponseRedirect("/calendar/event/label/" + request.POST['lid'])
+					return HttpResponseRedirect("/calendar/event/label/" + form.cleaned_data['lid'])
 			else:
 				form = EventForm(uid=request.user.id)
 				label_error = 'Please choose a label to edit'
 		elif 'create_label' in request.POST:
 			return HttpResponseRedirect("/calendar/event/label/")
 		elif form.is_valid():
-			event_name = request.POST['event_name']
-			date = request.POST['date']
-			location = request.POST['location']
-			label = Label.objects.get(lid=request.POST['lid'])
-			description = request.POST['description']
+			event_name = form.cleaned_data['event_name']
+			date = form.cleaned_data['date']
+			location = form.cleaned_data['location']
+			label = Label.objects.get(lid=form.cleaned_data['lid'])
+			description = form.cleaned_data['description']
 			event = Event(uid=request.user.userprofile, event_name=event_name, date=date, location=location, lid=label, description=description)
 			event.save()
 			return HttpResponseRedirect("/calendar")
@@ -156,11 +156,11 @@ def label(request):
 	if request.method == 'POST':
 		form = LabelForm(request.POST)
 		if 'update_label' in request.POST:
-			return HttpResponseRedirect("/calendar/event/" + request.POST['lid'])
+			return HttpResponseRedirect("/calendar/event/" + form.cleaned_data['lid'])
 		elif form.is_valid():
 			user = request.user
-			label_name = request.POST['name']
-			color = request.POST['color']
+			label_name = form.cleaned_data['name']
+			color = form.cleaned_data['color']
 			label = Label(uid=user.userprofile, name=label_name, color=color)
 			label.save()
 			return HttpResponseRedirect("/calendar/event")
