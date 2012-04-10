@@ -53,9 +53,6 @@
 					<td width=175>
 						<strong>Mark</strong>
 					</td>
-					<td>
-						<strong>Comments</strong>
-					</td>
 				{% else %}
 					<td width=225>
 						<strong>L Name</strong>
@@ -105,11 +102,6 @@
 								{% endif %}
 							</div>
 						</td>
-						{% if flavour == "full" %}
-							<td>
-								<a href="{{ classUrl }}instructor/grades/form/{{ student.uid.sfu_id }}/">Comment</a>
-							</td>
-						{% endif %}
 					</tr>
 				{% endfor %}
 				<tr>

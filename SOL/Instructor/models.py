@@ -2,7 +2,7 @@
 from django.db import models
 from Main.models import UserProfile, Course
 from django.forms.models import ModelChoiceField
-
+import os
 
 # Create your models here.
 class CourseContent(models.Model):
@@ -60,12 +60,23 @@ class QuizQuestion(models.Model):
 	#	super(QuizQuestion, self).__init__(*args, **kwargs)
 	#	self.fields['name'] = ActivityModelChoiceField(queryset=Quiz.objects.get(id=qid), empty_label="<Choose Quiz>")
 
+def get_slide_path(instance, file_name):
+	course = instance.cid
+
+	year = str(course.year)
+	semester = course.semester
+	department = course.department
+	class_number = course.class_number
+	section = course.section
+
+	return os.path.join('slides', year, semester, department, class_number, section, file_name)
+
 class Slide(models.Model):
 	#slide is the lecture notes
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	title = models.CharField(max_length=128)
 	uploaded_on = models.DateTimeField()
-	file_path = models.FileField(upload_to='slides', verbose_name="Select File")
+	file_path = models.FileField(upload_to=get_slide_path, verbose_name="Select File")
 
 class Activity(models.Model):
 	# Activity is an assn, midterm, exam, checkpoint, etc of a course
@@ -74,12 +85,22 @@ class Activity(models.Model):
 		(1, u'Marked but not Released'),
 		(2, u'Marked and Released'),
 	)
+	
+	FILE_TYPES = (
+		(u'.pdf', u'PDF'),
+		(u'.doc', u'Word 2003 Document (.doc)'),
+		(u'.docx', u'Word 2007,2010 Document (.docx)'),
+		(u'.txt', u'Text Document (.txt)'),
+		(u'.zip', u'Multiple Documents (.zip)'),
+	)
+	
 	aid = models.AutoField(primary_key=True)
 	cid = models.ForeignKey(Course, verbose_name="Class")
 	activity_name = models.CharField(max_length=256, verbose_name="Activity Name")
 	out_of = models.DecimalField(decimal_places=2, max_digits=5)
 	worth = models.IntegerField()
 	due_date = models.DateTimeField()
+	submission_file_type = models.CharField(max_length=64, choices=FILE_TYPES)
 	description = models.TextField(blank=True)
 	description_doc = models.FileField(upload_to='descriptions', blank=True, verbose_name="Add Description")
 	status = models.IntegerField(choices=STATUS_CHOICES)

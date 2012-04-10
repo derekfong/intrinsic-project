@@ -124,46 +124,51 @@ def activities(request, department, class_number, year, semester, section):
 
 #View that allows a student to submit a file for an activity.
 def activities_submit(request, department, class_number, year, semester, section, aid):
-	class_id = Course.objects.get(department=department, class_number=class_number, year=year, semester=semester, section=section).cid
-	c = get_object_or_404(Course, pk=class_id)
 	user = request.user
-
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-	students = getStudents(class_id)
-	enrolled = getEnrolled(class_id)
-	
-	year = datetime.date.today().year
-	semester = currentSemester()
-	class_list = Course.objects.filter(classlist__uid=user.id, year=year, semester=semester)
-
-	accessToStudent = studentAccess(enrolled, user)
-	accessToInst = instAccess(instructors, tas, user)
-	isCurrent = checkCurrent(c)
+	c = getClassObject(department, class_number, year, semester, section, user)
+	activity = get_object_or_404(Activity, pk=aid)
+	user = request.user
 	
 	submissions = Submission.objects.filter(aid=aid, uid=user.id).order_by('-submit_date')
 	
 	for submission in submissions:
 		submission.filename = os.path.basename(submission.file_path.path)
 	
-	activity = Activity.objects.get(aid=aid)
 	message = ''
+	error_message = ''
+	form = ''
 	
-	if request.method == 'POST':
-		form = SubmissionForm(request.POST, request.FILES)
-		if form.is_valid():
-			user_profile = UserProfile.objects.get(user=request.user)
-			num_of_submits = Submission.objects.filter(aid=aid, uid=user_profile.id).count()	
-			activity = Submission(aid=activity, uid=user_profile, submit_number=num_of_submits+1)
-			submitted_file = request.FILES['file_path']
-			activity.file_path.save(submitted_file.name, submitted_file)
-			activity = Activity.objects.get(aid=aid)
-			message = 'You have successfully submitted your file'
+	if datetime.datetime.now() <= activity.due_date:
+		if request.method == 'POST':
+			form = SubmissionForm(request.POST, request.FILES)
+			if form.is_valid():
+				# Verify file type and size (8MB max)
+				uploaded_file = request.FILES['file_path']
+				max_file_size = 16777216
+				file_types_allowed = [activity.submission_file_type,]
+				isProperFileType = checkFileType(uploaded_file, file_types_allowed)
+				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
+				if isProperFileType and isProperFileSize:	
+					num_of_submits = Submission.objects.filter(aid=aid, uid=user.userprofile.id).count()	
+					submit_activity = Submission(aid=activity, uid=user.userprofile, submit_number=num_of_submits+1)
+					submitted_file = request.FILES['file_path']
+					submit_activity.file_path.save(submitted_file.name, submitted_file)
+					message = 'You have successfully submitted your file'
+				elif not isProperFileType:
+					error_message = "Error: File type is incorrect - must be "+ activity.submission_file_type
+				elif not isProperFileSize:
+					error_message = "Error: File size exceeds the max of 8MB"
+		else:
+			form = SubmissionForm()
 	else:
-		form = SubmissionForm()
+		error_message = 'The due date ('+ activity.due_date.strftime("%B %d, %Y %I:%M%p") +') has passed for '+ activity.activity_name
 	
-	content = {'accessToStudent': accessToStudent, 'accessToInst': accessToInst, 'class': c, 'activity': activity, 'submissions': submissions, 'message': message, 'form': form,
-	'classUrl': getClassUrl(c), 'class_list': class_list, 'isCurrent': isCurrent}
+	content = getContent(c, user)
+	content['form'] = form
+	content['activity'] = activity
+	content['submissions'] = submissions
+	content['message'] = message
+	content['error_message'] = error_message
 	return render_to_response('student/submission.html', content, 
 		context_instance=RequestContext(request))
 

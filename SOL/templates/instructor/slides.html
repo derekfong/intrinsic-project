@@ -2,6 +2,7 @@
 
 {% block instructorcontent %}
 	<h2 class="title">Upload Lecture Slides</h2>
+	<font color="red">{{ error_message }}</font>
 	<form action="" method="POST" enctype="multipart/form-data">
 		<div class="table">
 			{% csrf_token %}

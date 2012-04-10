@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from Main.models import Course, ClassList
+from Main.views import checkFileType, checkFileSize
 from Instructor.models import Announcement, Activity, CourseContent, Slide, Greeting, Quiz, QuizQuestion
 from Gradebook.models import Grade, UploadGrade, DownloadGrade, OnlineGrade
 from Calendar.models import Event, Label
@@ -125,9 +126,10 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 
 #Allows the instructor to add lecture slides
 def slides(request, department, class_number, year, semester, section):
+	# slides are just lecture notes
 	user = request.user
 	c = getClassObject(department, class_number, year, semester, section, user)
-		
+	error_message = ''
 	slides = Slide.objects.filter(cid=c.cid)
 	
 	#Uploads the slide file and adds to database
@@ -135,18 +137,31 @@ def slides(request, department, class_number, year, semester, section):
 		slide = Slide(cid=c, uploaded_on=datetime.datetime.now())
 		form = SlideForm(request.POST, request.FILES, instance=slide)
 		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect("")
+			# Verify file type and size (8MB max)
+			uploaded_file = request.FILES['file_path']
+			max_file_size = 16777216
+			file_types_allowed = ['.pdf', '.doc', '.docx', '.ppt', '.pptx', '.txt', '.zip']
+			isProperFileType = checkFileType(uploaded_file, file_types_allowed)
+			isProperFileSize = checkFileSize(uploaded_file, max_file_size)
+			if isProperFileType and isProperFileSize:
+				submit_slide = Slide(cid=c, title=request.POST['title'], uploaded_on=datetime.datetime.now())
+				submitted_file = request.FILES['file_path']
+				submit_slide.file_path.save(submitted_file.name, submitted_file)
+				HttpResponseRedirect("")
+			elif not isProperFileType:
+				error_message = "Error: File type is incorrect - must be one of .pdf, .doc, .docx, .ppt, .pptx, .txt, or .zip"
+			elif not isProperFileSize:
+				error_message = "Error: File size exceeds the max of 8MB"
 	else:
 		form = SlideForm()
 		
 	content = getContent(c, user)
 	content['form'] = form
 	content['slides'] = slides
-
+	content['error_message'] = error_message
 	return render_to_response('instructor/slides.html', content, 
 		context_instance=RequestContext(request))
-		
+	
 #Updates the slides
 def updateSlides(request, department, class_number, year, semester, section, slid):
 	user = request.user
@@ -335,16 +350,14 @@ def getSubmissions(request, department, class_number, year, semester, section, a
 	a = get_object_or_404(Activity, pk=aid)
 
 	user = request.user
-	instructors = getInsts(class_id)
-	tas = getTas(class_id)
-
-	accessToInst = instAccess(instructors, tas, user)
 	
 	activity_name = a.activity_name
 	
 	# Establish a zip file of all submission for the activity
 	#class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
-	class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	#class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	class_folder = '/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	
 	zip_name = activity_name + '.zip'
 	activity_zip = zipfile.ZipFile(class_folder + zip_name, 'w')
 
@@ -605,6 +618,7 @@ def grades_files(request, department, class_number, year, semester, section):
 	students = getStudents(c.cid)
 	
 	message = ""
+	error_message = ""
 	
 	# If statement to check if instructor/ta chose to upload or download grades file
 	if request.method == 'POST':
@@ -614,8 +628,22 @@ def grades_files(request, department, class_number, year, semester, section):
 			form_upload = UploadGrade(request.POST, request.FILES, cid=c.cid)
 			form_download = DownloadGrade(cid=c.cid)
 			if form_upload.is_valid():
-				upload_grades(request.FILES['file_path'], request.POST['activity_name'])
-				message = "Successfully uploaded grades."
+				# Verify file type (XLS only) and size (2MB max)
+				uploaded_file = request.FILES['file_path']
+				max_file_size = 2097152
+				file_types_allowed = ['.xls',]
+				isProperFileType = checkFileType(uploaded_file, file_types_allowed)
+				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
+				if isProperFileType and isProperFileSize:	
+					try:
+						upload_grades(request.FILES['file_path'], request.POST['activity_name'])
+						message = "Successfully uploaded grades"
+					except:
+						error_message = "Error: Format of Excel file is incorrect"
+				elif not isProperFileType:
+					error_message = "Error: File type is incorrect - must be .xls"
+				elif not isProperFileSize:
+					error_message = "Error: File size exceeds the max of 2MB"
 		# If download is chosen and form entry is valid, called download_grades and serve
 		# mark file of the associated activity to the instructor/ta
 		elif 'download' in request.POST:
@@ -635,6 +663,7 @@ def grades_files(request, department, class_number, year, semester, section):
 	content = getContent(c, user)
 	content['form_down'] = form_download
 	content['form_up'] = form_upload
+	content['error_message'] = error_message
 	content['message'] = message
 	content['students'] = students
 	return render_to_response('instructor/fileGrades.html', content, 

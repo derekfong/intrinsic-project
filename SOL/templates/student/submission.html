@@ -8,6 +8,13 @@
 	
 		window.setTimeout( closeMessage, 5000 );
 	</script>
+	
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateFailure").style.display="none";
+		}
+		
+	</script>
 {% endblock %}
 
 {% block student %}
@@ -19,29 +26,37 @@
 				<p class="success">{{ message }}</p>
 			</div>
 		{% endif %}
+		
 		<div class="bottomPosts">
 			<h2 class="title">{{ activity.activity_name }} - Submission</h2>
+			{% if not error_message %}
 				<form action="" method="POST" enctype="multipart/form-data">
 					<div class="table">
-					{% csrf_token %}
-					{% for field in form %}
-					<div class="fieldWrapper">
-						<div class="fieldSylLeft">
-							{{ field.label_tag }}:
+						{% csrf_token %}
+						{% for field in form %}
+						<div class="fieldWrapper">
+							<div class="fieldSylLeft">
+								{{ field.label_tag }}:
+							</div>
+							<div class="fieldSylRight">
+									{{ field.errors }}
+									{{ field }}
+							</div>
 						</div>
-						<div class="fieldSylRight">
-								{{ field.errors }}
-								{{ field }}
+						{% endfor %}
+						<div class="submit">
+							<input type="submit" name="submit" value="Submit" />
 						</div>
-					</div>
-					{% endfor %}
-					<div class="submit">
-						<input type="submit" name="submit" value="Submit" />
 					</div>
 				</form>
-			</div> 
+			{% else %}
+				<div id="updateFailure">
+					<h4 class="success">Submission Due Date Passed</h4>
+					<p class="success">{{ error_message }}</p>
+				</div>
+			{% endif %}
 		</div>
-			
+		
 		<div class="bottomPosts">
 		<h2 class="title">Past Submissions</h2>
 		{% for submission in submissions %}

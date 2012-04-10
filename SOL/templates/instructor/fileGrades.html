@@ -8,6 +8,14 @@
 	
 		window.setTimeout( closeMessage, 5000 );
 	</script>
+	
+	<script type="text/javascript">
+		function closeMessage(){
+			document.getElementById("updateFailure").style.display="none";
+		}
+	
+		window.setTimeout( closeMessage, 20000 );
+	</script>
 {% endblock %}
 
 {% block instructorcontent %}
@@ -18,6 +26,14 @@
 			<p class="success">{{ message }}</p>
 		</div>
 	{% endif %}
+	
+	{% if error_message %}
+		<div id="updateFailure">
+			<h4 class="error">Upload Failed</h4>
+			<p class="error">{{ error_message }}</p>
+		</div>
+	{% endif %}
+	
     <div class="table">
     <h3 class="title">Download Grades Excel File:</h3>
     <form action="" method="POST">
@@ -60,5 +76,6 @@
     </form>
     </div>
     
+	Notes: Download the Grades Excel file, make changes to the Excel file, and Upload to update marks
 
 {% endblock %}
