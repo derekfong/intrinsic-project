@@ -147,7 +147,7 @@ def slides(request, department, class_number, year, semester, section):
 				submit_slide = Slide(cid=c, title=form.cleaned_data['title'], uploaded_on=datetime.datetime.now())
 				submitted_file = request.FILES['file_path']
 				submit_slide.file_path.save(submitted_file.name, submitted_file)
-				HttpResponseRedirect("")
+				return HttpResponseRedirect("")
 			elif not isProperFileType:
 				error_message = "Error: File type is incorrect - must be one of .pdf, .doc, .docx, .ppt, .pptx, .txt, or .zip"
 			elif not isProperFileSize:
