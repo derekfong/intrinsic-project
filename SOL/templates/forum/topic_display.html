@@ -1,23 +1,36 @@
-{% extends 'base.html' %}
+{% extends "student/index.html" %}
 
 {% block content %}
 
-<h1>Current Topics</h1>
+<h2>Current Topics</h2>
 
-<p>
+<div class="table">
 {% for topic in topics %}
-	<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
-	{% for msg in topic.messages_set.all %}
-	<br />Posted by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
-	<br />
-	{% endfor %}
+	{% if topic.not_deleted %}
+		<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
+		{% for msg in topic.messages_set.all %}
+			{% if forloop.last %}
+		<br />Recent post by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
+		{% if instAccess %}<br /><a href="{{ classUrl}}forum/{{ topic.id }}/delete/">Remove</a>{% endif %}
+		<br />
+			{% endif %}
+		{% endfor %}
+	{% endif %}
 {% endfor %}</p>
+</div>
 
-<form action ="" method="POST">
-{% csrf_token %}
-	Topic Title: <input type="text" name="title" />
-<br />Message: <textarea row="4" col="240" name="message">Msg here</textarea>
-<br /><input type="submit" value="Submit" />
-</form>
+<div class="table">
+	<form action ="" method="POST">
+	{% csrf_token %}
+		<div class="sylWrapper">
+			<div class="fieldLeft">Topic Title:</div>
+			<div class="fieldRight"> <input type="text" name="title" /></div>
+			<div class="fieldLeft">Message:</div>
+			<div class="fieldRight"><textarea row="4" col="240" name="message"></textarea></div>
+		</div>
+			<div class="fieldRight">{% if error_message %} {{ error_message }} {% endif %}</div>
+			<div class="submit"><input type="submit" value="Submit" /></div>
+	</form>
+</div>
 
 {% endblock %}
