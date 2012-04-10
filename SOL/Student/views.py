@@ -11,10 +11,7 @@ from Student.forms import SubmissionForm
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime, os
 from datetime import timedelta
-import xhtml2pdf.pisa as pisa
-import cStringIO as StringIO
-import cgi
-from django.template.loader import get_template
+from django_xhtml2pdf.utils import generate_pdf
 	
 #Initial view for students
 def index(request, department, class_number, year, semester, section):
@@ -76,23 +73,11 @@ def downloadSyllabus(request, department, class_number, year, semester, section)
 	content = getContent(c, user)
 	content['syllabus'] = syllabus
 	content['message'] = message
-
-	#Gets the template to use to create the PDF
-	template_src= 'student/syllabusPDF.html'
-	template = get_template(template_src)
-	#Gets the context to send to the template
-	context_dict = content
-	context = Context(context_dict)
-	
-	#Convert the template from HTML into PDF
-	html  = template.render(context)
-	result = StringIO.StringIO()
-	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-16")), result)
-	
-	#Send HTTP Response with the PDF
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), mimetype='application/pdf')
-	return HttpResponse('We had some errors<pre>%s</pre>' % cgi.escape(html))
+	filename = c.department+'%s'%c.class_number+'%s'%year+'.pdf'
+	resp = HttpResponse(content_type='application/pdf')
+	resp['Content-Disposition'] = 'attachment; filename='+filename.lower()
+	result = generate_pdf('student/syllabusPDF.html', file_object=resp, context=content)
+	return result
 
 #Displays slides to students
 def slides(request, department, class_number, year, semester, section):
