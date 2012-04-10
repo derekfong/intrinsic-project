@@ -648,7 +648,7 @@ def grades_files(request, department, class_number, year, semester, section):
 				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
 				if isProperFileType and isProperFileSize:	
 					try:
-						upload_grades(request.FILES['file_path'], form_upload.cleaned_data['activity_name'])
+						upload_grades(request.FILES['file_path'], request.POST['activity_name'])
 						message = "Successfully uploaded grades"
 					except:
 						error_message = "Error: Format of Excel file is incorrect"
@@ -662,7 +662,7 @@ def grades_files(request, department, class_number, year, semester, section):
 			form_download = DownloadGrade(request.POST, cid=c.cid)
 			form_upload = UploadGrade(cid=c.cid)
 			if form_download.is_valid():
-				file_and_name = download_grades(students, form_download.cleaned_data['activity_name'])
+				file_and_name = download_grades(students, request.POST['activity_name'])
 				file_to_send = file_and_name['file']
 				file_name = file_and_name['file_name']
 				response = HttpResponse(file_to_send, content_type='application/vnd.ms-excel')
@@ -779,8 +779,8 @@ def grades_form(request, department, class_number, year, semester, section):
 		if 'generate_form' in request.POST:
 			form = OnlineGrade(request.POST, cid=c.cid)
 			if form.is_valid():
-				activity = Activity.objects.get(aid=form.cleaned_data['activity_name'])
-				student_grades = Grade.objects.filter(aid=form.cleaned_data['activity_name'])
+				activity = Activity.objects.get(aid=form.request.POST['activity_name'])
+				student_grades = Grade.objects.filter(aid=request.POST['activity_name'])
 				
 				for student in student_grades:
 					existing_marks[int(student.uid.sfu_id)] = student.mark
