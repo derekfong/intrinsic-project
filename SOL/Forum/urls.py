@@ -1,11 +1,11 @@
 from django.conf.urls.defaults import patterns, include, url
-from board.views import *
+from Forum.views import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('board.views',
+urlpatterns = patterns('Forum.views',
 	url(r'^$', 'topic_display'),
 	url(r'^(?P<topic_id>\d+)/$', 'message_display'),
 
