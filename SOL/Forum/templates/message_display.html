@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1> Messages for {{ course.course }}</h1>
+
+<table border=1>
+{% for msg in messages %}
+	<tr><td>Post # {{ forloop.counter }}</td></tr>
+	<tr><td>Date: {{ msg.creation_date }}</td></tr>
+	<tr><td>Name: {{ msg.user }}</td></tr>
+	<tr><td>Message: {{ msg.message }}  </td></tr>
+
+{% endfor %}
+</table>
+
+<br />
+<form action ="" method="POST">
+{% csrf_token %}
+	Username: <input type="text" name="user" />
+<br />Message: <textarea row="4" col="120" name="message">Msg here</textarea>
+<br /><input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

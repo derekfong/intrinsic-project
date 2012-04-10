@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1> go to messages </h1>
+
+<br /> display courses
+
+{% for course in courses %}
+	</br >Course <a href="/{{ course.id }}/">{{ course.class_name }}</a>
+
+{% endfor %}
+
+{% endblock %}
+
