@@ -222,9 +222,13 @@ def activity(request, department, class_number, year, semester, section):
 	activities = Activity.objects.filter(cid=c.cid).order_by('due_date')
 	
 	if request.method == 'POST':
-		activity = Activity(cid=c)
+		activity = Activity(cid=c, released=0)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
 		if form.is_valid():
+			if form.cleaned_data['status'] == 2:
+				form.cleaned_data["released"] = 1
+			else:
+				form.cleaned_data["released"] = 0
 			form.save()
 			
 			#Create a calendar event for each activity created
@@ -232,6 +236,8 @@ def activity(request, department, class_number, year, semester, section):
 			event_name = request.POST['activity_name']
 			date = request.POST['due_date']
 			description = request.POST['description']
+			
+			
 			event = Event(uid=request.user.userprofile, cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
 			event.save()
 			
@@ -276,12 +282,15 @@ def updateActivity(request, department, class_number, year, semester, section, a
 	activities = Activity.objects.filter(cid=c.cid)
 	
 	if request.method == 'POST':
-		activity = Activity(cid=c, aid=aid)
+		activity = Activity(cid=c, aid=aid, released=0)
 		form = ActivityForm(request.POST, request.FILES, instance=activity)
-		
 		if form.is_valid():
 			form.save()
-			
+			if form.cleaned_data['status'] == 2:
+				rel = 1
+			else:
+				rel = 0
+			Activity.objects.filter(aid=a.aid).update(released=rel)
 			
 			#Update the calendar event for the activity
 			event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
@@ -290,7 +299,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			event.name = request.POST['activity_name']
 			event.save()
 			
-			if form.cleaned_data['status'] == 2:
+			if form.cleaned_data['status'] == 2 and a.released == 0:
 				#Generate+send email announcement
 				subject = c.department+' %s' %c.class_number+': Grade released for '+form.cleaned_data['activity_name']
 				from_email = 'itsatme@gmail.com'
@@ -331,8 +340,11 @@ def removeActivity(request, department, class_number, year, semester, section, a
 
 	if accessToInst:
 		#Remove the calendar event for the activity
-		event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
-		event.delete()
+		try: 
+			event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
+			event.delete()
+		except:
+			event = ''
 		
 		activity = Activity.objects.get(aid=aid)
 		activity.delete()
@@ -537,7 +549,7 @@ def quizUpdate(request, department, class_number, year, semester, section, qid):
 			url = getClassUrl(c) + 'instructor/quiz/create/'
 			return HttpResponseRedirect("")
 	else:
-		form = QuizForm(initial={'name': q.name, 'start_date': q.start_date, 'end_date': q.end_date, 'student_attempts': q.student_attempts, 'quiz_length': q.quiz_length} )
+		form = QuizForm(initial={'name': q.name, 'start_date': q.start_date, 'end_date': q.end_date, 'student_attempts': q.student_attempts} )
 
 	content = getContent(c, user)
 	content['form'] = form

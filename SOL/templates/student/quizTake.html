@@ -3,7 +3,7 @@
 {% block student %}
 	<h2 class="title">{{ quiz.name }}</h2>
 	{% if quiz.current %}
-		{% if attempts.count < 3 %}
+		{% if attempts.count < quiz.student_attempts %}
 			{% if message %}
 				<div id="loginFail">
 					<h4>Quiz Not Submitted</h4>
@@ -41,7 +41,7 @@
 			</form>
 		{% else %}
 			<div class="table">
-				You can only take this quiz a maximum of 3 times.
+				You have already taken the quiz the maximum number of times.
 			</div>
 		{% endif %}
 	{% else %}

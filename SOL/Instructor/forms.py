@@ -18,7 +18,7 @@ class AnnounceForm(ModelForm):
 class ActivityForm(ModelForm):
 	class Meta:
 		model = Activity
-		exclude = ('cid',)
+		exclude = ('cid', 'released')
 	def clean_worth(self):
 		worth = self.cleaned_data["worth"]
 		cid = self.instance.cid
