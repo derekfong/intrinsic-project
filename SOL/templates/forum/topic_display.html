@@ -6,13 +6,16 @@
 
 <div class="table">
 {% for topic in topics %}
-	<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
-	{% for msg in topic.messages_set.all %}
-		{% if forloop.last %}
-	<br />Recent post by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
-	<br />
-		{% endif %}
-	{% endfor %}
+	{% if topic.not_deleted %}
+		<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
+		{% for msg in topic.messages_set.all %}
+			{% if forloop.last %}
+		<br />Recent post by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
+		{% if instAccess %}<br /><a href="{{ classUrl}}forum/{{ topic.id }}/delete/">Remove</a>{% endif %}
+		<br />
+			{% endif %}
+		{% endfor %}
+	{% endif %}
 {% endfor %}</p>
 </div>
 
