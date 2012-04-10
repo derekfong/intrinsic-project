@@ -37,7 +37,6 @@ class Quiz(models.Model):
 	start_date = models.DateTimeField(verbose_name="Start Date")
 	end_date = models.DateTimeField(verbose_name="End Date")
 	student_attempts = models.IntegerField(verbose_name="Student Attempts")
-	quiz_length = models.IntegerField(verbose_name="Length (in mins)")
 	def __unicode__(self):
 		return self.name
 
@@ -87,7 +86,8 @@ class Activity(models.Model):
 	)
 	
 	FILE_TYPES = (
-		(u'.pdf', u'PDF'),
+		(u'No Submission', u'No Submission'),
+		(u'.pdf', u'Portable Document Format (.pdf)'),
 		(u'.doc', u'Word 2003 Document (.doc)'),
 		(u'.docx', u'Word 2007,2010 Document (.docx)'),
 		(u'.txt', u'Text Document (.txt)'),

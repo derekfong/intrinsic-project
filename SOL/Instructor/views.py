@@ -312,7 +312,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			return HttpResponseRedirect(url)
 	else:
 		tmp = Activity.objects.get(aid=aid)
-		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
+		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'submission_file_type': tmp.submission_file_type, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
 
 	content = getContent(c, user)
 	content['form'] = form
@@ -355,8 +355,8 @@ def getSubmissions(request, department, class_number, year, semester, section, a
 	
 	# Establish a zip file of all submission for the activity
 	#class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
-	#class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
-	class_folder = '/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	#class_folder = '/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
 	
 	zip_name = activity_name + '.zip'
 	activity_zip = zipfile.ZipFile(class_folder + zip_name, 'w')
@@ -745,8 +745,11 @@ def download_grades(student_list, aid):
 	#mark_file.save("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	#file_to_send = file("/var/www/intrinsic-project/SOL/media/marks/"+file_name)
 	
-	mark_file.save("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
-	file_to_send = file("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
+	#mark_file.save("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
+	#file_to_send = file("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
+	
+	mark_file.save("/Users/kevin/Dropbox/intrinsic-project/SOL/media/marks/"+file_name)
+	file_to_send = file("/Users/kevin/Dropbox/intrinsic-project/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
 
 # View for rendering the grade form for mark input
