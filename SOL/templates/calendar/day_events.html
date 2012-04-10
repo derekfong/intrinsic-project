@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/calendar.css">
+{% endblock %}
+
 {% block sidebar %}
 	{% if flavour == "full" %}
 		<h2 class="title">Announcements</h2>
