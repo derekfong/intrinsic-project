@@ -144,7 +144,7 @@ def slides(request, department, class_number, year, semester, section):
 			isProperFileType = checkFileType(uploaded_file, file_types_allowed)
 			isProperFileSize = checkFileSize(uploaded_file, max_file_size)
 			if isProperFileType and isProperFileSize:
-				submit_slide = Slide(cid=c, title=request.POST['title'], uploaded_on=datetime.datetime.now())
+				submit_slide = Slide(cid=c, title=form.cleaned_data['title'], uploaded_on=datetime.datetime.now())
 				submitted_file = request.FILES['file_path']
 				submit_slide.file_path.save(submitted_file.name, submitted_file)
 				HttpResponseRedirect("")
@@ -233,9 +233,9 @@ def activity(request, department, class_number, year, semester, section):
 			
 			#Create a calendar event for each activity created
 			label = getClassLabel(user, c.cid, department, class_number)
-			event_name = request.POST['activity_name']
-			date = request.POST['due_date']
-			description = request.POST['description']
+			event_name = form.cleaned_data['activity_name']
+			date = form.cleaned_data['due_date']
+			description = form.cleaned_data['description']
 			
 			
 			event = Event(uid=request.user.userprofile, cid=c.cid, lid=label, event_name=event_name, date=date, description=description)
@@ -294,9 +294,9 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			
 			#Update the calendar event for the activity
 			event = Event.objects.get(uid=request.user.userprofile, cid=c.cid, event_name=a.activity_name)
-			event.date = request.POST['due_date']
-			event.description = request.POST['description']
-			event.name = request.POST['activity_name']
+			event.date = form.cleaned_data['due_date']
+			event.description = form.cleaned_data['description']
+			event.name = form.cleaned_data['activity_name']
 			event.save()
 			
 			if form.cleaned_data['status'] == 2 and a.released == 0:
@@ -648,7 +648,7 @@ def grades_files(request, department, class_number, year, semester, section):
 				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
 				if isProperFileType and isProperFileSize:	
 					try:
-						upload_grades(request.FILES['file_path'], request.POST['activity_name'])
+						upload_grades(request.FILES['file_path'], form_upload.cleaned_data['activity_name'])
 						message = "Successfully uploaded grades"
 					except:
 						error_message = "Error: Format of Excel file is incorrect"
@@ -662,7 +662,7 @@ def grades_files(request, department, class_number, year, semester, section):
 			form_download = DownloadGrade(request.POST, cid=c.cid)
 			form_upload = UploadGrade(cid=c.cid)
 			if form_download.is_valid():
-				file_and_name = download_grades(students, request.POST['activity_name'])
+				file_and_name = download_grades(students, form_download.cleaned_data['activity_name'])
 				file_to_send = file_and_name['file']
 				file_name = file_and_name['file_name']
 				response = HttpResponse(file_to_send, content_type='application/vnd.ms-excel')
@@ -779,8 +779,8 @@ def grades_form(request, department, class_number, year, semester, section):
 		if 'generate_form' in request.POST:
 			form = OnlineGrade(request.POST, cid=c.cid)
 			if form.is_valid():
-				activity = Activity.objects.get(aid=request.POST['activity_name'])
-				student_grades = Grade.objects.filter(aid=request.POST['activity_name'])
+				activity = Activity.objects.get(aid=form.cleaned_data['activity_name'])
+				student_grades = Grade.objects.filter(aid=form.cleaned_data['activity_name'])
 				
 				for student in student_grades:
 					existing_marks[int(student.uid.sfu_id)] = student.mark
