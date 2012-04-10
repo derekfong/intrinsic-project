@@ -312,7 +312,7 @@ def updateActivity(request, department, class_number, year, semester, section, a
 			return HttpResponseRedirect(url)
 	else:
 		tmp = Activity.objects.get(aid=aid)
-		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
+		form = ActivityForm(initial={'activity_name': tmp.activity_name, 'out_of': tmp.out_of, 'worth': tmp.worth, 'description': tmp.description, 'submission_file_type': tmp.submission_file_type, 'description_doc': tmp.description_doc, 'due_date': tmp.due_date, 'status': tmp.status, })
 
 	content = getContent(c, user)
 	content['form'] = form

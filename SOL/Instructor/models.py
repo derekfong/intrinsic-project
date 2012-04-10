@@ -37,7 +37,6 @@ class Quiz(models.Model):
 	start_date = models.DateTimeField(verbose_name="Start Date")
 	end_date = models.DateTimeField(verbose_name="End Date")
 	student_attempts = models.IntegerField(verbose_name="Student Attempts")
-	quiz_length = models.IntegerField(verbose_name="Length (in mins)")
 	def __unicode__(self):
 		return self.name
 
