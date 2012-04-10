@@ -46,7 +46,7 @@
 {% block student %}
 	
 	<h2 class="title">{{ class.department }} {{class.class_number }} - {{ activity.aid.activity_name }}</h2>
-	<p class="back"><button><a href=".">Back to Assignments</a></button></p>
+	<p class="back"><span class="linkButton"><a href=".">Back to Assignments</a></span></p>
 	{% if isMarked == 2 %}
 		{% if stats.mark__count > 0 %}
 			<h3 class="viewGrades">Grade Information</h3>

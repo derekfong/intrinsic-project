@@ -11,7 +11,7 @@
 {% block student %}
 	<h2 class="title">{{ quiz.name }} - View Attempts </h2>
 	<div class="table">
-		<button><a href="{{ classUrl }}quiz">Back to Quizzes</a></button><br>
+		<span class="linkButton"><a href="{{ classUrl }}quiz">Back to Quizzes</a></span><br>
 		<div id="accordion">
 		{% for attempt in attempts %}
 				<h3 class="accordionTitle">Attempt {{ forloop.counter }}</h3>

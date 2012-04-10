@@ -2,11 +2,8 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-#import djcelery
-#djcelery.setup_loader()
-
 ADMINS = (
-    ('Kevin Mann', 'kma50@sfu.ca'),
+    ('Kevin Mann', 'itsatme@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -65,8 +62,6 @@ STATIC_ROOT = ''
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
-
-#CHARTIT_JS_REL_PATH = '/chartit/js/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -148,7 +143,6 @@ INSTALLED_APPS = (
 	'SOL.Main',
 	'SOL.Student',
 )
-#INSTALLED_APPS += ( "djcelery", )
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

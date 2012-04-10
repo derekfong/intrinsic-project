@@ -2,7 +2,7 @@
 {% block student %}
 	<h2 class="title">{{ class.department }} {{ class.class_number }} - {{ class.class_name }} Syllabus</h2>
 	{% if syllabus %}
-		<p><button><a href="download">Download PDF</a></button></p>
+		<p class="linkButton"><a href="download">Download PDF</a></p>
 		{% if instructors.count > 0 %}
 			<h3 class="title">Instructors</h3>
 			<div class="table">

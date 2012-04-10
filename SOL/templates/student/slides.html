@@ -5,11 +5,14 @@
 		<h2 class="title">Lecture Slides</h2>
 		{% for slide in slides %}
 			<div class="table">
-				<div class="actWrapper">
-					<strong>{{ slide.title }}</strong> 
-						<button>
+				<div class="sylWrapper">
+					<span class="sylLeft">
+						<strong>{{ slide.title }}</strong> 
+					</span>
+					<span class="sylRight">
+						<span class="linkButton">
 							<a href="{{ MEDIA_URL }}{{ slide.file_path }}" title="{{ slide.title }}" target="_blank">View</a>
-						</button> 
+						</span> 
 					</span>
 				</div>
 				<div class="endAct"></div>

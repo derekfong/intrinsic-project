@@ -45,7 +45,8 @@
 					)
 					</span>
 					<span class="postLinks">
-						<button><a href="{{ announcement.anid }}">Edit</a></button> <button><a href="{{ announcement.anid }}/remove">Remove</a></button>
+						<span class="linkButton"><a href="{{ announcement.anid }}">Edit</a></span> 
+						<span class="linkButton"><a href="{{ announcement.anid }}/remove">Remove</a></span>
 					</span>
 				</div>
 				<div class="postBottom">
@@ -53,6 +54,5 @@
 				</div>
 			</div>
 		{% endfor %}
-		</div> 
 	</div>
 {% endblock %}
