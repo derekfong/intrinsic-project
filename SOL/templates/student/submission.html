@@ -29,8 +29,19 @@
 		
 		<div class="bottomPosts">
 			<h2 class="title">{{ activity.activity_name }} - Submission</h2>
-			{% if not error_message %}
-				<form action="" method="POST" enctype="multipart/form-data">
+			{% if activity.submission_file_type == 'No Submission' %}
+				<div id="updateFailure">
+					<h4 class="success">No Submission Required</h4>
+					<p class="success">{{ error_message }}</p>
+				</div>
+			{% else %}
+				{% if error_message %}
+					<div id="updateFailure">
+						<h4 class="success">Submission Error</h4>
+						<p class="success">{{ error_message }}</p>
+					</div>
+				{% endif %}
+					<form action="" method="POST" enctype="multipart/form-data">
 					<div class="table">
 						<div class="fieldWrapper">
 							<div class="fieldSylLeft">
@@ -57,11 +68,6 @@
 						</div>
 					</div>
 				</form>
-			{% else %}
-				<div id="updateFailure">
-					<h4 class="success">No Submission</h4>
-					<p class="success">{{ error_message }}</p>
-				</div>
 			{% endif %}
 		</div>
 		

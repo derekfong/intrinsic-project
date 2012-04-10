@@ -146,7 +146,6 @@ def activities_submit(request, department, class_number, year, semester, section
 						error_message = "Error: File type is incorrect - must be "+ activity.submission_file_type
 					elif not isProperFileSize:
 						error_message = "Error: File size exceeds the max of 8MB"
-					return HttpResponseRedirect("")
 			else:
 				form = SubmissionForm()
 	else:
