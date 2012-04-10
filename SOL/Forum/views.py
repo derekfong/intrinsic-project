@@ -69,15 +69,21 @@ def message_display(request, department, class_number, year, semester, section, 
 	# use course_id and topic_id as a superkey
 	current_topic = Topics.objects.get(course = current_course, id = topic_id)
 
+	classUrl = getClassUrl(current_course)
 	# at bottom of page, user will post their reply/entry
 	# model names avail: topic, user, and message
 	# user = user.request
 	if request.method == 'POST':
-		# user = request.user
-		# save the message user has given
-		user_post = Messages(topic = current_topic, user = request.user, message = request.POST['message'])
-		user_post.save()
+		if len(str(request.POST['message'])) <=1:
+			error_message = "Please fill out the message box before hitting Submit."
 
-	return render_to_response("forum/message_display.html", {'messages': msgs,}, context_instance=RequestContext(request))
+			return render_to_response("forum/message_display.html", {'messages': msgs, 'error_message': error_message,}, context_instance=RequestContext(request))
+
+		else: 
+			user_post = Messages(topic = current_topic, user = request.user, message = request.POST['message'])
+			user_post.save()
+			return HttpResponseRedirect(classUrl+"forum/" + topic_id)
+
+	return render_to_response("forum/message_display.html", {'messages': msgs, 'topic': current_topic}, context_instance=RequestContext(request))
 
 

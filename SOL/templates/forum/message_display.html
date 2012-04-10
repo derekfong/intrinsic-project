@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1> Messages for {{ course.course }}</h1>
+<h1> Messages for Topic {{ topic.topic_name }}</h1>
 
 <table border=1>
 {% for msg in messages %}
@@ -17,8 +17,10 @@
 <br />
 <form action ="" method="POST">
 {% csrf_token %}
-<br />Message: <textarea row="4" col="120" name="message"></textarea>
+<br />Message: 
+<br /><textarea row="4" col="120" name="message"></textarea>
 <br /><input type="submit" value="Submit" />
+<br />{% if error_message %} {{ error_message }} {% endif %}
 </form>
 
 {% endblock %}
