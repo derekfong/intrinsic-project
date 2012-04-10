@@ -124,18 +124,18 @@ def activities_submit(request, department, class_number, year, semester, section
 	form = ''
 	
 	if datetime.datetime.now() <= activity.due_date:
-		if request.method == 'POST':
-			form = SubmissionForm(request.POST, request.FILES)
-			if form.is_valid():
-				# Verify file type and size (8MB max)
-				uploaded_file = request.FILES['file_path']
-				max_file_size = 16777216
-				file_types_allowed = [activity.submission_file_type,]
-				isProperFileType = checkFileType(uploaded_file, file_types_allowed)
-				isProperFileSize = checkFileSize(uploaded_file, max_file_size)
-				if 'No Submission' == request.POST['submission_file_type']:
-					error_message = "No submission necessary for "+ activity.activity_name
-				else:
+		if 'No Submission' == activity.submission_file_type:
+			error_message = "No submission necessary for "+ activity.activity_name
+		else:
+			if request.method == 'POST':
+				form = SubmissionForm(request.POST, request.FILES)
+				if form.is_valid():
+					# Verify file type and size (8MB max)
+					uploaded_file = request.FILES['file_path']
+					max_file_size = 16777216
+					file_types_allowed = [activity.submission_file_type,]
+					isProperFileType = checkFileType(uploaded_file, file_types_allowed)
+					isProperFileSize = checkFileSize(uploaded_file, max_file_size)
 					if isProperFileType and isProperFileSize:	
 						num_of_submits = Submission.objects.filter(aid=aid, uid=user.userprofile.id).count()	
 						submit_activity = Submission(aid=activity, uid=user.userprofile, submit_number=num_of_submits+1)
@@ -146,8 +146,8 @@ def activities_submit(request, department, class_number, year, semester, section
 						error_message = "Error: File type is incorrect - must be "+ activity.submission_file_type
 					elif not isProperFileSize:
 						error_message = "Error: File size exceeds the max of 8MB"
-		else:
-			form = SubmissionForm()
+			else:
+				form = SubmissionForm()
 	else:
 		error_message = 'The due date ('+ activity.due_date.strftime("%B %d, %Y %I:%M%p") +') has passed for '+ activity.activity_name
 	
