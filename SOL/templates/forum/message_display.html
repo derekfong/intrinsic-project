@@ -7,16 +7,6 @@
 <div class="table">
 		<div field="sylWrapper">	
 {% for msg in messages %}
-<<<<<<< HEAD
-
-		<span class="sylLeft"><br />Post # {{ forloop.counter }}</span>
-		<span class="sylLeft">Date:</span>
-		<span class="sylRight"> {{ msg.creation_date }}</span>
-		<span class="sylLeft">Name:</span>
-		<span class="sylRight"> {{ msg.user }}</span>
-		<span class="sylLeft">Message: </span>
-		<span class="sylRight">{{ msg.message }}</span>
-=======
 	{% if msg.not_deleted %}
 			<span class="sylLeft"><br />Post # {{ forloop.counter }}</span>
 			<span class="sylLeft">Date:</span>
@@ -27,7 +17,6 @@
 			<span class="sylRight">{{ msg.message }}</span>
 			{% if instAccess %}<span class="sylRight"><br /><a href="{{ classUrl }}{{ msg.id }}/delete/">Remove</a></span>{% endif %}
 	{% endif %}
->>>>>>> forum
 {% endfor %}
 	</div>
 <br />

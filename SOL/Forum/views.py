@@ -28,30 +28,20 @@ def topic_display(request, department, class_number, year, semester, section):
 	
 	#course = Overview.objects.get(id = course_id)
 
-<<<<<<< HEAD
-	# bottom of page, user can post a new topic AND a new corresponding message
-	# post given: title, user, and message
-=======
 	# see if instructor or current user which means they are allowed to remove their posts
 	instructors = getInsts(current_course.cid)
 	tas = getTas(current_course.cid)	
->>>>>>> forum
 
 	if request.method == 'POST':
 		if len(str(request.POST['title'])) <=1 or len(str(request.POST['message'])) <=1:
 			error_message = "Please make sure all fields are filled."
 
-<<<<<<< HEAD
-			return render_to_response("forum/topic_display.html", {'error_message': error_message, 'topics': topics, 'classUrl': classUrl,}, context_instance=RequestContext(request))
-=======
 			return render_to_response("forum/topic_display.html", {'error_message': error_message, 'topics': topics, 'classUrl': classUrl,'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
->>>>>>> forum
 
 		else: 
 
 			user_topic = Topics(topic_name = request.POST['title'], course = current_course)
 			user_topic.save()
-<<<<<<< HEAD
 
 			new_topic = Topics.objects.get(topic_name = request.POST['title'], course=current_course, id=user_topic.id)
 
@@ -60,20 +50,6 @@ def topic_display(request, department, class_number, year, semester, section):
 			user_post.save()
 
 			return HttpResponseRedirect(classUrl+"forum/")
-	
-
-	return render_to_response("forum/topic_display.html", {'topics': topics, 'classUrl': classUrl,}, context_instance=RequestContext(request))
-=======
-
-			new_topic = Topics.objects.get(topic_name = request.POST['title'], course=current_course, id=user_topic.id)
-
-			# use new topic id that was just created
-			user_post = Messages(topic = new_topic, user = request.user, message = request.POST['message'])
-			user_post.save()
-
-			return HttpResponseRedirect(classUrl+"forum/")
-	
-
 
 
 	return render_to_response("forum/topic_display.html", {'topics': topics, 'classUrl': classUrl, 'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
@@ -96,38 +72,23 @@ def message_display(request, department, class_number, year, semester, section, 
 	current_topic = Topics.objects.get(course = current_course, id = topic_id)
 
 	classUrl = getClassUrl(current_course)
-<<<<<<< HEAD
-	# at bottom of page, user will post their reply/entry
-	# model names avail: topic, user, and message
-	# user = user.request
-=======
 
 	# see if instructor or current user which means they are allowed to remove their posts
 	instructors = getInsts(current_course.cid)
 	tas = getTas(current_course.cid)	
 
 
->>>>>>> forum
 	if request.method == 'POST':
 		if len(str(request.POST['message'])) <=1:
 			error_message = "Please fill out the message box before hitting Submit."
 
-<<<<<<< HEAD
-			return render_to_response("forum/message_display.html", {'messages': msgs, 'error_message': error_message,}, context_instance=RequestContext(request))
-=======
 			return render_to_response("forum/message_display.html", {'messages': msgs, 'topic': current_topic, 'error_message': error_message,'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
->>>>>>> forum
 
 		else: 
 			user_post = Messages(topic = current_topic, user = request.user, message = request.POST['message'])
 			user_post.save()
 			return HttpResponseRedirect(classUrl+"forum/" + topic_id)
 
-<<<<<<< HEAD
-	return render_to_response("forum/message_display.html", {'messages': msgs, 'topic': current_topic}, context_instance=RequestContext(request))
-
-
-=======
 	instructors = getInsts(current_course.cid)
 	tas = getTas(current_course.cid)	
 
@@ -160,4 +121,3 @@ def remove_post(request, department, class_number, year, semester, section, topi
 	classUrl = getClassUrl(current_course)
 
 	return HttpResponseRedirect(classUrl+"forum/" + topic_id)
->>>>>>> forum
