@@ -11,9 +11,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'synergydb',
+        'NAME': 'synergyDB',
         'USER': 'root',
-        'PASSWORD': 'snowball1',     
+        'PASSWORD': 'weather66',     
         'HOST': '127.0.0.1',          
         'PORT': '',                   
     }
@@ -44,7 +44,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/Users/kevin/Dropbox/intrinsic-project/SOL/static/'
+MEDIA_ROOT = '/home/allison/Desktop/CMPT470/copy/media/'
 #MEDIA_ROOT = '/var/www/intrinsic-project/SOL/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -73,7 +73,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	"/Users/kevin/Dropbox/intrinsic-project/SOL/static",
+	'/home/allison/Desktop/CMPT470/copy/SOL/static/',
+	#"/Users/kevin/Dropbox/intrinsic-project/SOL/static",
 	#"/var/www/intrinsic-project/SOL/static",
 )
 
@@ -113,7 +114,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
+#	"/Users/kevin/Dropbox/intrinsic-project/SOL/templates"
+	'/home/allison/Desktop/CMPT470/copy/SOL/templates/',
 	#"/var/www/intrinsic-project/SOL/templates",
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -142,6 +144,7 @@ INSTALLED_APPS = (
 	'SOL.Instructor',
 	'SOL.Main',
 	'SOL.Student',
+	'SOL.Forum',
 )
 
 EMAIL_USE_TLS = True
