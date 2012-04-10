@@ -104,6 +104,7 @@ class Activity(models.Model):
 	description = models.TextField(blank=True)
 	description_doc = models.FileField(upload_to='descriptions', blank=True, verbose_name="Add Description")
 	status = models.IntegerField(choices=STATUS_CHOICES)
+	released = models.BooleanField(default=False)
 	def __unicode__(self):
 		return u"%s"%self.cid+" "+self.activity_name
 	

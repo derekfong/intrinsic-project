@@ -203,41 +203,46 @@ def quizTake(request, department, class_number, year, semester, section, qid):
 	questions = QuizQuestion.objects.filter(qid=q.id)
 	
 	message = ''
-	#Grade the quiz and return the results to the students
-	if request.method == "POST":
-		finalMark = 0
-		#Make sure student has answered all questions
-		try: 
-			answers = []
-			for question in questions:
-				#Gets the students guess for the question
-				question.guess = int(request.POST.__getitem__(str(question.id)))
-				answer = question.answer
-				#Final Mark is incremented if student gets it right
-				if question.guess == answer:
-					question.result = 1
-					finalMark += 1
-				else:
-					question.result = 0
-			#Commits a quiz attempt to database
-			attempt = QuizAttempt(qid=q, uid=user.userprofile, time=datetime.datetime.now(), result=finalMark)
-			attempt.save()
-
-			#Commits a quiz result for each question answered to database
-			for question in questions:
-				qObj = QuizQuestion.objects.get(id=question.id)
-				QuizResult(attempt=attempt, question=qObj, guess=question.guess).save()
-			
-			content = getContent(c, user)
-			content["quiz"] = q
-			content["questions"]=questions
-			content["finalMark"] = finalMark
-
-			return render_to_response('student/quizResult.html', content, 
-				context_instance=RequestContext(request))
+	error_message = ''
+	if attempts.count() < q.student_attempts:
+		#Grade the quiz and return the results to the students
+		if request.method == "POST":
+			finalMark = 0
+			#Make sure student has answered all questions
+			try: 
+				answers = []
+				for question in questions:
+					#Gets the students guess for the question
+					question.guess = int(request.POST.__getitem__(str(question.id)))
+					answer = question.answer
+					#Final Mark is incremented if student gets it right
+					if question.guess == answer:
+						question.result = 1
+						finalMark += 1
+					else:
+						question.result = 0
 				
-		except KeyError:
-			message = 'You need to answer all questions'
+				#Commits a quiz attempt to database
+				attempt = QuizAttempt(qid=q, uid=user.userprofile, time=datetime.datetime.now(), result=finalMark)
+				attempt.save()
+
+				#Commits a quiz result for each question answered to database
+				for question in questions:
+					qObj = QuizQuestion.objects.get(id=question.id)
+					QuizResult(attempt=attempt, question=qObj, guess=question.guess).save()
+			
+				content = getContent(c, user)
+				content["quiz"] = q
+				content["questions"]=questions
+				content["finalMark"] = finalMark
+
+				return render_to_response('student/quizResult.html', content, 
+					context_instance=RequestContext(request))
+				
+			except KeyError:
+				message = 'You need to answer all questions'
+	else:
+		error_message='You have already taken this quiz the maximum times.'
 
 	
 	content = getContent(c, user)
@@ -246,6 +251,7 @@ def quizTake(request, department, class_number, year, semester, section, qid):
 	content["questions"]=questions
 	content["message"] = message
 	content["attempts"] = attempts
+	content["error_message"] = error_message
 		
 	return render_to_response('student/quizTake.html', content, 
 		context_instance=RequestContext(request))
