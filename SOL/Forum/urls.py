@@ -8,10 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('Forum.views',
 	url(r'^$', 'topic_display'),
 	url(r'^(?P<topic_id>\d+)/$', 'message_display'),
-<<<<<<< HEAD
-=======
 	url(r'^(?P<topic_id>\d+)/delete/$', 'remove_topic'),
 	url(r'^(?P<topic_id>\d+)/(?P<msg_id>\d+)/delete/$', 'remove_post'),
->>>>>>> forum
 
 )

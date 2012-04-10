@@ -53,8 +53,6 @@ def topic_display(request, department, class_number, year, semester, section):
 
 
 	return render_to_response("forum/topic_display.html", {'topics': topics, 'classUrl': classUrl, 'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
->>>>>>> forum
-
 
 
 # list out all messages for that course
