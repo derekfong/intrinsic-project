@@ -779,7 +779,7 @@ def grades_form(request, department, class_number, year, semester, section):
 		if 'generate_form' in request.POST:
 			form = OnlineGrade(request.POST, cid=c.cid)
 			if form.is_valid():
-				activity = Activity.objects.get(aid=form.request.POST['activity_name'])
+				activity = Activity.objects.get(aid=request.POST['activity_name'])
 				student_grades = Grade.objects.filter(aid=request.POST['activity_name'])
 				
 				for student in student_grades:
