@@ -8,16 +8,19 @@
 {% for topic in topics %}
 	<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
 	{% for msg in topic.messages_set.all %}
-	<br />Posted by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
+		{% if forloop.last %}
+	<br />Recent post by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
 	<br />
+		{% endif %}
 	{% endfor %}
 {% endfor %}</p>
 
 <form action ="" method="POST">
 {% csrf_token %}
 	Topic Title: <input type="text" name="title" />
-<br />Message: <textarea row="4" col="240" name="message">Msg here</textarea>
+<br />Message: <textarea row="4" col="240" name="message"></textarea>
 <br /><input type="submit" value="Submit" />
+<br />{% if error_message %} {{ error_message }} {% endif %}
 </form>
 
 {% endblock %}
