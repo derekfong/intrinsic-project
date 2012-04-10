@@ -4,7 +4,7 @@ from django.template import RequestContext, Context
 from Main.models import Course, ClassList, UserProfile
 from django.contrib.auth.models import User
 from Instructor.models import Activity, Announcement, CourseContent, Slide, Greeting, Quiz, QuizQuestion
-from Main.views import currentSemester
+from Main.views import currentSemester, checkFileType, checkFileSize
 from Student.models import Submission, QuizAttempt, QuizResult
 from Gradebook.models import Grade
 from Student.forms import SubmissionForm
