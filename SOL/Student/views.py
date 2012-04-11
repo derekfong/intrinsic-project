@@ -11,7 +11,7 @@ from Student.forms import SubmissionForm
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime, os
 from datetime import timedelta
-#from django_xhtml2pdf.utils import generate_pdf
+from django_xhtml2pdf.utils import generate_pdf
 	
 #Initial view for students
 def index(request, department, class_number, year, semester, section):
