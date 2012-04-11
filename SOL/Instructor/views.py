@@ -564,19 +564,21 @@ def quizQuestions(request, department, class_number, year, semester, section, qi
 	q = get_object_or_404(Quiz, pk=qid)
 	
 	#Create a formset of forms relating to the QuizQuestion model.
-	QuizFormSet = modelformset_factory(QuizQuestion, exclude=('qid'), extra=1)
+	QuizFormSet = modelformset_factory(QuizQuestion, can_delete=True, exclude=('qid'), extra=1)
 	#Restrict quizzes displayed to only those for that quiz
 	query = QuizQuestion.objects.filter(qid=qid)
 	if request.method == "POST":
-		#Copy POST data and send to formset		
-		data = request.POST.copy()
-		formset = QuizFormSet(data, queryset=query)
-		
+		formset = QuizFormSet(request.POST, queryset=query)
 		if formset.is_valid():
 			#Populate data for each form that isn't entered by the student
-			for form in formset:
-				quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
-				form.instance = quiz
+			for form in formset.forms:
+				if form.has_changed():
+					try: 
+						QuizQuestion.objects.get(id=form.cleaned_data["id"].id)
+						QuizQuestion.objects.filter(id=form.cleaned_data["id"].id).update(answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
+					except:
+						quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
+						form.instance = quiz
 			formset.save()
 			return HttpResponseRedirect("")
 	else: 

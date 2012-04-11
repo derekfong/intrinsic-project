@@ -29,9 +29,9 @@
 						<div class="actRight">
 							{% for result in attempt.results %}
 								{% if result.result %}
-									<div class="rightAnswer">
+									<div class="rightAnswerAttempt">
 								{% else %}
-									<div class="wrongAnswer">
+									<div class="wrongAnswerAttempt">
 								{% endif %}
 									<p class="qName">{{ result.question.question }}</p>
 									<ul>

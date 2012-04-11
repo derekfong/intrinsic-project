@@ -10,7 +10,7 @@
 			{% else %}
 				<div class="wrongAnswer">
 			{% endif %}
-			<p class="qName">{{ question.question }}</p>
+			<div class="qName">{{ question.question }}</div>
 			<ul>
 				{% if question.answer == 0 %}
 					<li><strong>{{ question.option1 }}</strong> - Correct Answer</li>

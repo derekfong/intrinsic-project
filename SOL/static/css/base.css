@@ -1,6 +1,4 @@
 html, body {
-	background-image: url('/static/images/bg.png');
-	background-position: center;
 	background: #A7A8A0;
 	color: #323232;
 	font-family: 'Gudea', sans-serif;
@@ -158,7 +156,7 @@ a:hover
 	margin: 10px;
 }
 
-#loginFail, .wrongAnswer
+#loginFail, .wrongAnswer, .wrongAnswerAttempt 
 {
 	background: #edc1c1;
 	border: 1px solid red;
@@ -177,12 +175,17 @@ p.error
 	padding-bottom: 10px;
 }
 
-#updateSuccess, .rightAnswer
+#updateSuccess, .rightAnswer, .rightAnswerAttempt 
 {
 	background: #d0f4d0;
 	border: 1px solid green;
 	margin-bottom: 10px;
 	padding-left: 10px;
+}
+
+.rightAnswerAttempt , .wrongAnswerAttempt
+{
+	width: 90%;
 }
 
 #updateFailure
@@ -253,7 +256,7 @@ h3.accordionTitle
 
 .qName
 {
-	padding-top: 10px;
+	padding: 10px 0 10px 0;
 	margin-top: 0px;
 	font-weight: bold;
 }
