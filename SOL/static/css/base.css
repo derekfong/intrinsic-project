@@ -274,3 +274,10 @@ h3.accordionTitle
 {
 	width: 700px;
 }
+
+.instructor ul, .instructor li
+{
+	padding-top: 2px;
+	padding-bottom: 4px;
+}
+
