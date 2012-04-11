@@ -574,9 +574,9 @@ def quizQuestions(request, department, class_number, year, semester, section, qi
 		
 		if formset.is_valid():
 			#Populate data for each form that isn't entered by the student
-			for form in formset:
-				quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
-				form.instance = quiz
+			#for form in formset:
+			#	quiz = QuizQuestion(qid=q, answer=form.cleaned_data["answer"], question=form.cleaned_data["question"], option1=form.cleaned_data["option1"], option2=form.cleaned_data["option2"], option3=form.cleaned_data["option3"], option4=form.cleaned_data["option4"])
+			#	form.instance = quiz
 			formset.save()
 			return HttpResponseRedirect("")
 	else: 
