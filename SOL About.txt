@@ -8,19 +8,19 @@ Login Information:
   - Password: apike
 
 ~ Other users and students can be found in the admin interface:
-  - General Username - first letter of first name, plus last name (e.g. for Henrik Sedin, it is “hsedin”). 
-  - General Password - last name, plus “pw” (e.g. for Henrik Sedin, it is “sedinpw”).
+  - General Username - first letter of first name, plus last name (e.g. for Henrik Sedin, it is �"hsedin"). 
+  - General Password - last name, plus �"pw" (e.g. for Henrik Sedin, it is �"sedinpw").
 
 Subtle Features:
 ----------------
 ~ Admin Interface: http://cmpt470.csil.sfu.ca:8012/admin/
-  - In ‘Upload user list’, you can import users from an Excel file.
-  - In ‘Upload class list’, you can import a class list from an Excel file.
+  - In 'Upload user list', you can import users from an Excel file.
+  - In 'Upload class list', you can import a class list from an Excel file.
 ~ Mobile version of the site
 ~ Opt-in email notifications in Settings
-~ In ‘View Grades’, there is a grade calculator
+~ In 'View Grades' there is a grade calculator
   - Helps figure out a final grade based on estimated marks on course activities 
-~ ‘Download PDF’ in Course Syllabus automatically generates a PDF (if the form to create a syllabus has been used)
+~ 'Download PDF' in Course Syllabus automatically generates a PDF (if the form to create a syllabus has been used)
 ~ Activities automatically create a calendar event with a customized class label.
 
 Working (Major) Features:
