@@ -62,9 +62,13 @@
 							{% if activity.pastDue %}
 								None
 							{% else %}
-								<span class="postLinks">
-									<span class="linkButton"><a href="{{ activity.aid }}/submission">Make Submission</a></span>
-								</span>
+								{% if not activity.submission_file_type == "No Submission" %}
+									<span class="postLinks">
+										<span class="linkButton"><a href="{{ activity.aid }}/submission">Make Submission</a></span>
+									</span>
+								{% else %}
+									None
+								{% endif %}
 							{% endif %}
 						</span>
 					</div>

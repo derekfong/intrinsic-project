@@ -4,15 +4,13 @@ from Main.models import UserProfile, Course
 from django.forms.models import ModelChoiceField
 import os
 
-# Create your models here.
+#Syllabus
 class CourseContent(models.Model):
-	#verbose name is just anothr label to use it as
-	# below info will be filled in on website by prof
 	cid = models.ForeignKey(Course, verbose_name="Course")
 	officeHrs = models.CharField(max_length=128, verbose_name="Office Hours")
 	officeLocation = models.CharField(max_length=128, verbose_name="Office Location")
 	phoneNumber = models.CharField(max_length=12, verbose_name="Phone Number")
-	TaOfficeLocation = models.CharField(max_length=128, verbose_name="TA Office Locat")
+	TaOfficeLocation = models.CharField(max_length=128, verbose_name="TA Office Location")
 	TaOfficeHrs = models.CharField(max_length=128, verbose_name="TA's Ofice Hours")
 	lectTime = models.CharField(max_length=128, verbose_name="Lecture Time")
 	prereq = models.CharField(max_length=128, verbose_name="Prerequisites")
@@ -24,8 +22,6 @@ class CourseContent(models.Model):
 	created_on = models.DateTimeField()
 	was_updated = models.BooleanField(default=0)
 	updated_on = models.DateTimeField()
-	file_path = models.FileField(upload_to='syllabus', blank=True, verbose_name="Upload Syllabus") #MAKE SUBMISSION FOLDER IN MEDIA ROOT
-		# syllabus will be dl'able as pdf, hence media rot needed	
 
 class Greeting(models.Model):
 	cid = models.ForeignKey(Course, verbose_name="Course")
@@ -54,10 +50,6 @@ class QuizQuestion(models.Model):
 	option3 = models.CharField(max_length=512, verbose_name="Option C")
 	option4 = models.CharField(max_length=512, verbose_name="Option D")
 	answer = models.IntegerField(choices=ANSWER_CHOICES)
-	#def __init__(self, *args, **kwargs):
-	#	qid=kwargs.pop('qid')
-	#	super(QuizQuestion, self).__init__(*args, **kwargs)
-	#	self.fields['name'] = ActivityModelChoiceField(queryset=Quiz.objects.get(id=qid), empty_label="<Choose Quiz>")
 
 def get_slide_path(instance, file_name):
 	course = instance.cid

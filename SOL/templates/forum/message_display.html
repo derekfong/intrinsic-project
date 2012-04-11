@@ -1,0 +1,35 @@
+{% extends "student/index.html" %}
+
+{% block student %}
+	{%if isCurrent %}
+		<h2 class="title"> Messages for Topic "{{ topic.topic_name }}"</h2>
+		<div class="table">	
+			{% for msg in messages %}
+				{% if msg.not_deleted %}
+					<div class="fieldWrapper">
+						<span class="fieldLeft">Response # {{ forloop.counter }}</span>
+						<span class="fieldRight"></span>
+						<span class="fieldLeft">Date:</span>
+						<span class="fieldRight"> {{ msg.creation_date }}</span>
+						<span class="fieldLeft">Name:</span>
+						<span class="fieldRight">{{ msg.user }}</span>
+						<span class="fieldLeft">Message: </span>
+						<span class="fieldRight">{{ msg.message }}</span>	
+					</div>
+				{% endif %}
+			{% endfor %}
+
+
+			<form action ="" method="POST">
+			{% csrf_token %}
+				<div class="fieldWrapper">
+					<div class="fieldLeft">Post Message:</div> 
+					<div class="fieldRight"><textarea row="5" col="120" name="message"></textarea></div>
+					<div class="fieldRight">{% if error_message %} {{ error_message }} {% endif %}</div>
+				</div>	
+					<div class="submit"><input type="submit" value="Submit" /></div>
+			</form>
+
+		</div>
+	{% endif %}
+{% endblock %}

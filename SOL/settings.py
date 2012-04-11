@@ -142,6 +142,7 @@ INSTALLED_APPS = (
 	'SOL.Instructor',
 	'SOL.Main',
 	'SOL.Student',
+	'SOL.Forum',
 )
 
 EMAIL_USE_TLS = True

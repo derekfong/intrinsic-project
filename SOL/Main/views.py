@@ -69,6 +69,7 @@ def setting(request):
 		if form.is_valid():
 			form.save()
 			message = 'You have succcessfully updated your settings.'
+			return HttpResponseRedirect("/accounts/settings/update/")
 	else:
 		try:
 			setting = Setting.objects.get(uid=user.id)
@@ -137,8 +138,8 @@ def getGlobalAnnouncements(user):
 			announcement.isNew = 1
 		else:
 			announcement.isNew = 0
-		if len(announcement.title) > 15:
-			announcement.title = announcement.title[:15] + '...' 
+		if len(announcement.title) > 13:
+			announcement.title = announcement.title[:13] + '...' 
 
 		if len(announcement.content) > 100:
 			announcement.content = announcement.content[:100] + '...'

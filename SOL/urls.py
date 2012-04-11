@@ -18,6 +18,8 @@ urlpatterns = patterns('',
 	
 	url(r'^course/(?P<department>[a-zA-z]+)/(?P<class_number>\d+)/(?P<year>\d+)/(?P<semester>[a-zA-z]+)/(?P<section>[a-zA-z]\d{3})/grades/', include('Gradebook.urls')),
 		
+	url(r'^course/(?P<department>[a-zA-z]+)/(?P<class_number>\d+)/(?P<year>\d+)/(?P<semester>[a-zA-z]+)/(?P<section>[a-zA-z]\d{3})/forum/', include('Forum.urls')),
+	
 	url(r'^course/(?P<department>[a-zA-z]+)/(?P<class_number>\d+)/(?P<year>\d+)/(?P<semester>[a-zA-z]+)/(?P<section>[a-zA-z]\d{3})/', include('Student.urls')),
 
 
