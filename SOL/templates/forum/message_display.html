@@ -3,6 +3,7 @@
 {% block student %}
 	{%if isCurrent %}
 		<h2 class="title"> Messages for Topic "{{ topic.topic_name }}"</h2>
+		<p class="linkButton"><a href="{{ classUrl }}forum">Back To Topic</a></p>
 		<div class="table">	
 			{% for msg in messages %}
 				{% if msg.not_deleted %}

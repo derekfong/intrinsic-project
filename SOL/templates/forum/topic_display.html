@@ -3,7 +3,6 @@
 {% block student %}
 	{%if isCurrent %}
 	<h2 class='title'>Current Topics</h2>
-
 	<div class="table">
 	{% if topics.count > 0 %}
 		{% for topic in topics %}
