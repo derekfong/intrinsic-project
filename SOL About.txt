@@ -8,8 +8,8 @@ Login Information:
   - Password: apike
 
 ~ Other users and students can be found in the admin interface:
-  - General Username - first letter of first name, plus last name (e.g. for Henrik Sedin, it is â"hsedin"). 
-  - General Password - last name, plus â"pw" (e.g. for Henrik Sedin, it is â"sedinpw").
+  - General Username - first letter of first name, plus last name (e.g. for Henrik Sedin, it is ï¿½"hsedin"). 
+  - General Password - last name, plus "pw" (e.g. for Henrik Sedin, it is "sedinpw").
 
 Subtle Features:
 ----------------
