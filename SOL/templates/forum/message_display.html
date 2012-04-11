@@ -1,6 +1,7 @@
 {% extends "student/index.html" %}
 
 {% block student %}
+<<<<<<< HEAD
 	{%if isCurrent %}
 		<h2 class="title"> Messages for Topic "{{ topic.topic_name }}"</h2>
 		<div class="table">	
@@ -32,4 +33,38 @@
 
 		</div>
 	{% endif %}
+=======
+
+<h2> Messages for Topic "{{ topic.topic_name }}"</h2>
+
+<div class="table">
+		<div field="sylWrapper">	
+{% for msg in messages %}
+	{% if msg.not_deleted %}
+			<span class="sylLeft"><br />Post # {{ forloop.counter }}</span>
+			<span class="sylLeft">Date:</span>
+			<span class="sylRight"> {{ msg.creation_date }}</span>
+			<span class="sylLeft">Name:</span>
+			<span class="sylRight"> {{ msg.user }}</span>
+			<span class="sylLeft">Message: </span>
+			<span class="sylRight">{{ msg.message }}</span>
+			{% if instAccess %}<span class="sylRight"><br /><a href="{{ classUrl }}{{ msg.id }}/delete/">Remove</a></span>{% endif %}
+	{% endif %}
+{% endfor %}
+	</div>
+<br />
+
+
+<form action ="" method="POST">
+{% csrf_token %}
+	<div class="sylWrapper">
+		<div class="fieldLeft"><br /><br/>Message:</div> 
+		<div class="fieldRight"><br /><br /><textarea row="5" col="120" name="message"></textarea></div>
+		<div class="fieldRight">{% if error_message %} {{ error_message }} {% endif %}</div>
+	</div>	
+		<div class="submit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Submit" /></div>
+</form>
+
+</div>
+>>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 {% endblock %}

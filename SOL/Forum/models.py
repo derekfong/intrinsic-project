@@ -1,6 +1,25 @@
 from django.db import models
+<<<<<<< HEAD
 from Main.models import Course, UserProfile
 
+=======
+from SOL.Main.models import Course
+
+"""
+schema for courses 
+	cid = models.AutoField(primary_key=True)
+	class_name = models.CharField(max_length=256)
+	class_number = models.CharField(max_length=3) # 225 of cmpt
+	department = models.CharField(max_length=4, choices=FACULTY_DEPT)
+	semester = models.CharField(max_length=16, choices=SEMESTER_CHOICES)
+	year = models.IntegerField(choices=YEAR_CHOICES)
+	section = models.CharField(max_length=4)
+"""
+
+
+
+# topics created per course...
+>>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 class Topics(models.Model):
 	topic_name = models.CharField(max_length = 125)
 	course = models.ForeignKey(Course)
@@ -19,8 +38,13 @@ class Messages(models.Model):
 
 	# if show is false, means it is deleted
 	not_deleted = models.BooleanField(default = True) 
+<<<<<<< HEAD
 
 
+=======
+	
+	
+>>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 	def __unicode__(self):
 		return self.message
 

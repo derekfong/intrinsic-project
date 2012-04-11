@@ -12,4 +12,5 @@ urlpatterns = patterns('Student.views',
 	url(r'^quiz/$', 'quiz'),
 	url(r'^quiz/(?P<qid>\d+)/$', 'quizTake'),
 	url(r'^quiz/results/(?P<qid>\d+)/$', 'quizResults'),
+	url(r'^forum/', include('Forum.urls')),
 )
