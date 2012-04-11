@@ -1,0 +1,58 @@
+Synergy Online Learning - About File
+~ Group 12 (Intrinsic) - Creators: Kevin Mann, Derek Fong, Allison Ng
+
+Login Information:
+------------------
+~ Superuser, instructor (CMPT 470), student (CMPT 404):
+  - Username: apike
+  - Password: apike
+
+~ Other users and students can be found in the admin interface:
+  - General Username - first letter of first name, plus last name (e.g. for Henrik Sedin, it is “hsedin”). 
+  - General Password - last name, plus “pw” (e.g. for Henrik Sedin, it is “sedinpw”).
+
+Subtle Features:
+----------------
+~ Admin Interface: http://cmpt470.csil.sfu.ca:8012/admin/
+  - In ‘Upload user list’, you can import users from an Excel file.
+  - In ‘Upload class list’, you can import a class list from an Excel file.
+~ Mobile version of the site
+~ Opt-in email notifications in Settings
+~ In ‘View Grades’, there is a grade calculator
+  - Helps figure out a final grade based on estimated marks on course activities 
+~ ‘Download PDF’ in Course Syllabus automatically generates a PDF (if the form to create a syllabus has been used)
+~ Activities automatically create a calendar event with a customized class label.
+
+Working (Major) Features:
+-------------------------
+~ Announcements
+  - New announcements appear on the sidebar
+  - Option to be emailed to specific class list 
+~ Syllabus Form
+  - Create via a form with an option to download as PDF
+~ Grades
+  - Instructor or T.A. can download and upload grades (via Excel files), or input grades via an online form for each activity
+  - Students can view their grades, as well as statistics and a histogram for the activity
+  - Grade calculator allows students to view progress with hypothetical grades
+~ Calendar
+  - Can create/remove/edit events
+  - When an activity (e.g. an assignment) is posted by an instructor, a calendar event is automatically made for each student in the class
+  - All events for a class are color coded with the same label color
+~ Quizzes
+  - Ability to create attempt-limited quizzes
+  - Display of correct and wrong answers, as well as results after quiz completion
+  - Instructor can access student grades through instructor page for quizzes
+~ Uploads and Submissions
+  - Students can submit their assignments for each activity
+  - Instructors can download a zip of all student submissions for an activity
+  - Instructors can upload course slides
+~ Notifications
+  - Option to enable emails about announcements and new grades
+
+External Resources:
+~ xhtml2pdf (for generating PDFs)
+~ xlrd (for reading in Excel files)
+~ xlwt (for writing Excel files)
+~ jQuery:
+  - Button, Accordion
+  - Time Picker Addon (http://trentrichardson.com/examples/timepicker/)
