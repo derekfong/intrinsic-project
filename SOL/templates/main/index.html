@@ -14,17 +14,19 @@
 	{% if flavour == "full" %}
 		<h2 class="title">Announcements</h2>
 		{% if globalAnnouncements.count > 0 %}
+			<div class="sideAnnounce">
 			{% for announcement in globalAnnouncements %}
 				<div class="announceTitle">
 					{{ announcement.cid.department }} {{ announcement.cid.class_number }}: {{ announcement.title }} 
 					{% if announcement.isNew %}
-						<img src="/static/images/new.png" alt="back"> 
+						<img src="/static/images/new.png" alt="back" title="new"> 
 					{% endif %}
 				</div>
 				<div class="announceContent">
 					{{ announcement.content }}
 				</div>
 			{% endfor %}
+			</div>
 		{% else %}
 			<div class="announceContent">
 				No announcements

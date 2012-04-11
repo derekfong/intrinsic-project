@@ -2,6 +2,7 @@
 
 {% block instructorcontent %}
 	<h2 class="title">{{ quiz.name }} - Question Generation</h2>
+	<p class="linkButton"><a href="{{ classUrl }}instructor/quiz/create/">Back to Quiz</a></p>
 	<div class="table">
 		<form action="" method="post">
 			{% csrf_token %}

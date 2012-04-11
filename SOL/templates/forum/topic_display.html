@@ -1,0 +1,43 @@
+{% extends "student/index.html" %}
+
+{% block student %}
+	{%if isCurrent %}
+	<h2 class='title'>Current Topics</h2>
+
+	<div class="table">
+	{% if topics.count > 0 %}
+		{% for topic in topics %}
+			<strong><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name|title }}</a></strong>
+			{% for msg in topic.messages_set.all %}
+				{% if forloop.last %}
+					<br>Recent post by <strong>{{ msg.user }}</strong> at {{ msg.creation_date }}
+					{% if instAccess %}
+						<br>
+						<span class="linkButton"><a href="{{ classUrl}}forum/{{ topic.id }}/delete/">Remove</a></span>
+					{% endif %}
+					<br>
+					{% endif %}
+			{% endfor %}
+			<br>
+		{% endfor %}
+	{% else %}
+		There are no topics to display.
+	{% endif %}
+	</div>
+
+	<div class="table">
+		<form action ="" method="POST">
+		{% csrf_token %}
+			<div class="sylWrapper">
+				<div class="fieldLeft">Topic Title:</div>
+				<div class="fieldRight"> <input type="text" name="title" /></div>
+				<div class="fieldLeft">Message:</div>
+				<div class="fieldRight"><textarea row="4" col="240" name="message"></textarea></div>
+			</div>
+				<div class="fieldRight">{% if error_message %} {{ error_message }} {% endif %}</div>
+				<div class="submit"><input type="submit" value="Submit" /></div>
+		</form>
+	</div>
+	
+	{% endif %}
+{% endblock %}

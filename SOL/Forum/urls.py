@@ -1,20 +1,12 @@
 from django.conf.urls.defaults import patterns, include, url
-from board.views import *
+from Forum.views import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'forum.views.home', name='home'),
-    # url(r'^forum/', include('forum.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-	url(r'^$', 'board.views.index'),
-	url(r'^(?P<course_id>\d+)/board/$', 'board.views.message_display'),
-	# url(r'^admin/', include(admin.site.urls)),
+urlpatterns = patterns('Forum.views',
+	url(r'^$', 'topic_display'),
+	url(r'^(?P<topic_id>\d+)/$', 'message_display'),
+	url(r'^(?P<topic_id>\d+)/delete/$', 'remove_topic'),
 )

@@ -115,7 +115,7 @@ def updateSyllabus(request, department, class_number, year, semester, section, s
 	else:
 		#Initializes the form with existing syllabus information
 		course = CourseContent.objects.get(cid=c.cid)
-		form = CourseForm(initial={'officeHrs': course.officeHrs, 'officeLocation': course.officeLocation, 'phoneNumber': course.phoneNumber, 'TaOfficeLocation': course.TaOfficeLocation, 'TaOfficeHrs': course.TaOfficeHrs, 'lectTime': course.lectTime, 'prereq': course.prereq, 'books': course.books, 'topics': course.topics, 'markingScheme': course.markingScheme, 'academicHonesty': course.academicHonesty, 'additionalInfo': course.additionalInfo, 'file_path': course.file_path,})
+		form = CourseForm(initial={'officeHrs': course.officeHrs, 'officeLocation': course.officeLocation, 'phoneNumber': course.phoneNumber, 'TaOfficeLocation': course.TaOfficeLocation, 'TaOfficeHrs': course.TaOfficeHrs, 'lectTime': course.lectTime, 'prereq': course.prereq, 'books': course.books, 'topics': course.topics, 'markingScheme': course.markingScheme, 'academicHonesty': course.academicHonesty, 'additionalInfo': course.additionalInfo,})
 	
 	content = getContent(c, user)
 	content['form'] = form
@@ -367,7 +367,7 @@ def getSubmissions(request, department, class_number, year, semester, section, a
 	
 	# Establish a zip file of all submission for the activity
 	#class_folder = '/var/www/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
-	class_folder = '/Users/kevin/Dropbox/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
+	class_folder = '/Users/kevin/Dropbox/intrinsic-project Apr10/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
 	#class_folder = '/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/submissions/%s' %year +'/'+ semester +'/'+ department +'/'+ class_number +'/'+ section +'/'
 	
 	zip_name = activity_name + '.zip'
@@ -545,9 +545,9 @@ def quizUpdate(request, department, class_number, year, semester, section, qid):
 	if request.method == 'POST':
 		form = QuizForm(request.POST)
 		if form.is_valid():
-			Quiz.objects.filter(id=q.id).update(name=form.cleaned_data["name"], start_date=form.cleaned_data["start_date"], end_date=form.cleaned_data["end_date"])
+			Quiz.objects.filter(id=q.id).update(name=form.cleaned_data["name"], start_date=form.cleaned_data["start_date"], end_date=form.cleaned_data["end_date"], student_attempts=form.cleaned_data["student_attempts"])
 			url = getClassUrl(c) + 'instructor/quiz/create/'
-			return HttpResponseRedirect("")
+			return HttpResponseRedirect(url)
 	else:
 		form = QuizForm(initial={'name': q.name, 'start_date': q.start_date, 'end_date': q.end_date, 'student_attempts': q.student_attempts} )
 
@@ -760,8 +760,8 @@ def download_grades(student_list, aid):
 	#mark_file.save("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
 	#file_to_send = file("/Users/derek/Desktop/LOCAL/intrinsic-project/SOL/media/marks/"+file_name)
 	
-	mark_file.save("/Users/kevin/Dropbox/intrinsic-project/SOL/media/marks/"+file_name)
-	file_to_send = file("/Users/kevin/Dropbox/intrinsic-project/SOL/media/marks/"+file_name)
+	mark_file.save("/Users/kevin/Dropbox/intrinsic-project Apr10/SOL/media/marks/"+file_name)
+	file_to_send = file("/Users/kevin/Dropbox/intrinsic-project Apr10/SOL/media/marks/"+file_name)
 	return { 'file': file_to_send, 'file_name': file_name }
 
 # View for rendering the grade form for mark input
