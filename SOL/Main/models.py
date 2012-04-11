@@ -112,11 +112,7 @@ class Course(models.Model):
 	# Create a folder in submissions for the course when the course is created
 	def save(self, *args, **kwargs):
 		#base_path = '/var/www/intrinsic-project/SOL/media/submissions'
-<<<<<<< HEAD
 		base_path = '/Users/kevin/Dropbox/intrinsic-project Apr10/SOL/media/submissions'
-=======
-		base_path = '/home/allison/Desktop/CMPT470/copy/SOL/media/submissions'
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 		year = str(self.year)
 		semester = self.semester
 		dept = self.department

@@ -7,17 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from SOL.Student.views import *
 
-<<<<<<< HEAD
-=======
-"""
-# this will go to the course
-def index(request):
-	# one message board per course (for that semseter)
-	courses = Course.objects.all()
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 
-	return render_to_response("forum/index.html", {'courses': courses}, context_instance=RequestContext(request))
-"""
 
 # choose which topic to view
 def topic_display(request, department, class_number, year, semester, section):
@@ -26,17 +16,9 @@ def topic_display(request, department, class_number, year, semester, section):
 	current_course = getClassObject(department, class_number, year, semester, section, user)
 
 	# list all topics of a course
-<<<<<<< HEAD
 	topics = Topics.objects.filter(course = current_course.cid, not_deleted=True)
 	classUrl = getClassUrl(current_course)
 	
-=======
-	topics = Topics.objects.filter(course = current_course.cid)
-	classUrl = getClassUrl(current_course)
-	
-	#course = Overview.objects.get(id = course_id)
-
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 	# see if instructor or current user which means they are allowed to remove their posts
 	instructors = getInsts(current_course.cid)
 	tas = getTas(current_course.cid)	
@@ -45,7 +27,6 @@ def topic_display(request, department, class_number, year, semester, section):
 		if len(str(request.POST['title'])) <=1 or len(str(request.POST['message'])) <=1:
 			error_message = "Please make sure all fields are filled."
 
-<<<<<<< HEAD
 
 			content = getContent(current_course, user)
 			content['error_message'] = error_message
@@ -68,23 +49,6 @@ def topic_display(request, department, class_number, year, semester, section):
 
 			return HttpResponseRedirect(classUrl+"forum/")
 
-=======
-			return render_to_response("forum/topic_display.html", {'error_message': error_message, 'topics': topics, 'classUrl': classUrl,'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
-
-		else: 
-
-			user_topic = Topics(topic_name = request.POST['title'], course = current_course)
-			user_topic.save()
-
-			new_topic = Topics.objects.get(topic_name = request.POST['title'], course=current_course, id=user_topic.id)
-
-			# use new topic id that was just created
-			user_post = Messages(topic = new_topic, user = request.user, message = request.POST['message'])
-			user_post.save()
-
-			return HttpResponseRedirect(classUrl+"forum/")
-
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 	content = getContent(current_course, user)
 	content['topics'] = topics
 	content['classUrl'] = classUrl
@@ -118,7 +82,6 @@ def message_display(request, department, class_number, year, semester, section, 
 		if len(str(request.POST['message'])) <=1:
 			error_message = "Please fill out the message box before hitting Submit."
 
-<<<<<<< HEAD
 			content = getContent(current_course, user)
 			content['messages'] = msgs
 			content['classUrl'] = classUrl
@@ -127,9 +90,6 @@ def message_display(request, department, class_number, year, semester, section, 
 			content['instAccess'] = instAccess(instructors, tas, user)
 
 			return render_to_response("forum/message_display.html", content, context_instance=RequestContext(request))
-=======
-			return render_to_response("forum/message_display.html", {'messages': msgs, 'topic': current_topic, 'error_message': error_message,'instAccess': instAccess(instructors, tas, user),}, context_instance=RequestContext(request))
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 
 		else: 
 			user_post = Messages(topic = current_topic, user = request.user, message = request.POST['message'])
@@ -141,10 +101,7 @@ def message_display(request, department, class_number, year, semester, section, 
 
 	content = getContent(current_course, user)
 	content['messages'] = msgs
-<<<<<<< HEAD
 	content['classUrl'] = classUrl
-=======
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 	content['topic'] = current_topic
 	content['instAccess'] = instAccess(instructors, tas, user)
 
@@ -165,20 +122,4 @@ def remove_topic(request, department, class_number, year, semester, section, top
 
 	return HttpResponseRedirect(classUrl+"forum/")
 
-<<<<<<< HEAD
-=======
-
-def remove_post(request, department, class_number, year, semester, section, topic_id, msg_id):
-	user = request.user
-
-	current_message = Messages.objects.get(id = msg_id)
-
-	current_course = getClassObject(department, class_number, year, semester, section, user)
-	current_message.not_deleted = False
-	current_message.save()
-	classUrl = getClassUrl(current_course)
-
-	return HttpResponseRedirect(classUrl+"forum/" + topic_id)
-
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 

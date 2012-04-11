@@ -2,7 +2,6 @@
 
 {% block student %}
 	{%if isCurrent %}
-<<<<<<< HEAD
 	<h2 class='title'>Current Topics</h2>
 
 	<div class="table">
@@ -24,23 +23,6 @@
 	{% else %}
 		There are no topics to display.
 	{% endif %}
-=======
-	<h2>Current Topics</h2>
-
-	<div class="table">
-	{% for topic in topics %}
-		{% if topic.not_deleted %}
-			<br /><a href="{{ classUrl }}forum/{{ topic.id }}/">{{ topic.topic_name }}</a>
-			{% for msg in topic.messages_set.all %}
-				{% if forloop.last %}
-			<br />Recent post by <b>{{ msg.user }}</b> at {{ msg.creation_date }}
-			{% if instAccess %}<br /><a href="{{ classUrl}}forum/{{ topic.id }}/delete/">Remove</a>{% endif %}
-			<br />
-				{% endif %}
-			{% endfor %}
-		{% endif %}
-	{% endfor %}</p>
->>>>>>> 0ff23bd7a9fb65b84f6bbe5022acd0e5a3ab3e87
 	</div>
 
 	<div class="table">
