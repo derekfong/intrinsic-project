@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>SOL/settings.py</string>
+	<string>SOL/templates/forum/message_display.html</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -77,6 +77,20 @@
 			<key>firstVisibleLine</key>
 			<integer>96</integer>
 		</dict>
+		<key>SOL/Forum/__init__.py</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>SOL/Forum/models.py</key>
 		<dict>
 			<key>caret</key>
@@ -91,7 +105,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>SOL/Forum/views.py</key>
+		<key>SOL/Forum/tests.py</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -104,6 +118,34 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+		</dict>
+		<key>SOL/Forum/urls.py</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>53</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>SOL/Forum/views.py</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>105</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>24</integer>
 		</dict>
 		<key>SOL/Gradebook/models.py</key>
 		<dict>
@@ -725,6 +767,34 @@
 				<integer>0</integer>
 				<key>line</key>
 				<integer>1</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>SOL/templates/forum/message_display.html</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>52</integer>
+				<key>line</key>
+				<integer>5</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>SOL/templates/forum/topic_display.html</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>5</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -1359,12 +1429,17 @@
 	<key>openDocuments</key>
 	<array>
 		<string>SOL/settings.py</string>
+		<string>SOL/Forum/urls.py</string>
 		<string>SOL/templates/calendar/day_events.html</string>
 		<string>SOL/templates/calendar/index.html</string>
 		<string>SOL/Forum/views.py</string>
 		<string>SOL/templates/calendar/label.html</string>
 		<string>SOL/Main/models.py</string>
 		<string>SOL/Forum/models.py</string>
+		<string>SOL/Forum/tests.py</string>
+		<string>SOL/Forum/__init__.py</string>
+		<string>SOL/templates/forum/message_display.html</string>
+		<string>SOL/templates/forum/topic_display.html</string>
 		<string>SOL/Main/tests.py</string>
 		<string>SOL/Main/urls.py</string>
 		<string>SOL/templates/registration/password_reset_complete.html</string>
